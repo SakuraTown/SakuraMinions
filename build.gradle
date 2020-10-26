@@ -2,13 +2,27 @@ plugins {
     id 'java'
 }
 
-group 'org.example'
+group 'com.entiv'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = "https://maven.enginehub.org/repo/" } // WorldEdit
+    maven { url = "https://mvn.intellectualsites.com/content/groups/public/" } // PlotSquared
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenLocal()
+        mavenCentral()
+    }
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT'
+    implementation("com.plotsquared:PlotSquared-Core:5.13.3") // PlotSquared Core API
 }
+
+[compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
+libsDirName = 'C:\\Users\\EnTIv\\Desktop\\minecraft\\server\\paper-1.8.8\\plugins'
