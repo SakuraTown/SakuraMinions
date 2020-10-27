@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 public class BasicCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        System.out.println("asd?");
         return true;
     }
 }
