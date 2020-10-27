@@ -26,5 +26,5 @@ dependencies {
 
 [compileJava,compileTestJava]*.options*.encoding = 'UTF-8'
 
-// 自行填写插件导出目录
-libsDirName = ''
+// 插件导出目录
+libsDirName = './'
