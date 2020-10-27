@@ -1,4 +1,9 @@
 name: SakuraMinions
-main: com.entiv.sakuraminions.Main
+main: com.sakuratown.sakuraminions.Main
 version: 1.0-SNAPSHOT
 api-version: "1.16"
+
+commands:
+  SakuraMinions:
+    description: open sho
+    aliases: [sm, Minions]

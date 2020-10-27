@@ -2,8 +2,8 @@ Minion:
   # 矿工
   Miner:
 
-    # 允许获取方块的设置
-    BlockSettings:
+    # 允许获取物品的设置
+    ItemSettings:
 
       # 获取原石的权重是 0.3
       COBBLESTONE: 0.3
@@ -16,20 +16,14 @@ Minion:
       # 工人效率设置
       Amount:
 
-        # 每十分钟能获取到 50 个方块
-        Default: 50
-
         # 升级工人效率需要花费 500 金币
         Cost: 500
 
-        # 升级后每 10 分钟多获取 100 个方块
+        # 每升级一次 10 分钟多获取 100 个方块
         Upgrade: 100
 
       # 工人背包配置
-      Storage:
-
-        # 一开始有 3 行箱子
-        Default: 3
+      Size:
 
         # 升级工人背包需要花费 500 金币
         Cost: 500
