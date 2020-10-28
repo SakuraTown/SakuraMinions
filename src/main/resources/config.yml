@@ -1,17 +1,17 @@
-Minion:
+Minions:
   # 矿工
   Miner:
 
     # 允许获取物品的设置
-    ItemSettings:
+    Item:
 
       # 获取原石的权重是 0.3
-      COBBLESTONE: 0.3
-      DIAMOND: 0.3
-      COAL: 0.3
+      COBBLESTONE: 50
+      DIAMOND: 40
+      COAL: 10
 
     # 工人升级设置
-    UpgradeSettings:
+    Upgrade:
 
       # 工人效率设置
       Amount:
@@ -29,26 +29,6 @@ Minion:
         Cost: 500
 
         # 每次升级增加 3 行箱子
-        Upgrade: 3
-
-  # 农民工
-  Farmer:
-
-    BlockSettings:
-
-      POTATO: 0.5
-      WHEAT: 0.5
-
-    UpgradeSettings:
-
-      Amount:
-        Default: 50
-        Cost: 500
-        Upgrade: 100
-
-      Storage:
-        Default: 3
-        Cost: 500
         Upgrade: 3
 
 Message:
