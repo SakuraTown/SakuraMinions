@@ -2,14 +2,10 @@ package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class Minion {
@@ -28,6 +24,37 @@ public class Minion {
         inventory = Bukkit.createInventory(null, row * 9, "工人背包");
     }
 
+    public String getRandomMaterial() {
+
+        Main plugin = Main.getInstance();
+
+        FileConfiguration config = plugin.getConfig();
+        ConfigurationSection configurationSection = config.getConfigurationSection("Minions." + type + ".Item");
+
+        int totalWeight = getTotalWeight(configurationSection);
+
+        int chance = 0;
+        double randomNum = Math.random() * totalWeight;
+
+        Set<String> itemSet = configurationSection.getKeys(false);
+
+        String randomMaterial = null;
+
+        for (String material : itemSet) {
+
+            int weight = configurationSection.getInt(material);
+            chance += weight;
+
+            if (randomNum <= chance) {
+                randomMaterial = material;
+                break;
+            }
+
+        }
+
+        return randomMaterial;
+    }
+
     void upgradeSize(int row) {
         this.row += row;
     }
@@ -36,46 +63,22 @@ public class Minion {
         this.amount += amount;
     }
 
-    private void loadConfigItems() {
+    private int getTotalWeight(ConfigurationSection configurationSection) {
 
-        Main plugin = Main.getInstance();
+        if (configurationSection == null) {
+            throw new NullPointerException("配置文件有误, 请检查配置文件");
+        }
 
-        ConfigurationSection config = plugin.getConfig();
-        ConfigurationSection itemConfigurationSection = config.getConfigurationSection("Minions." + type + ".Item");
-
-        if (itemConfigurationSection == null) return;
-
-        Set<String> itemSet = itemConfigurationSection.getKeys(false);
+        Set<String> itemSet = configurationSection.getKeys(false);
 
         int totalWeight = 0;
 
         for (String material : itemSet) {
-            int weight = itemConfigurationSection.getInt(material);
+            int weight = configurationSection.getInt(material);
             totalWeight += weight;
         }
 
-        String randomMaterial = getRandomMaterial(totalWeight, itemSet, itemConfigurationSection);
-    }
-
-    public String getRandomMaterial(int totalWeight, Set<String> itemSet, ConfigurationSection itemConfigurationSection) {
-
-        int chance = 0;
-        double randomNum = Math.random() * totalWeight;
-
-        for (String material : itemSet) {
-
-            int weight = itemConfigurationSection.getInt(material);
-            chance += weight;
-
-            System.out.println(chance);
-            System.out.println(randomNum);
-
-            if (randomNum <= chance) {
-                return material;
-            }
-        }
-
-        return null;
+        return totalWeight;
     }
 
 }
