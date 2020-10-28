@@ -1,17 +1,17 @@
-Minions:
+Minion:
   # 矿工
   Miner:
 
     # 允许获取物品的设置
-    Item:
+    ItemSettings:
 
       # 获取原石的权重是 0.3
-      COBBLESTONE: 50
-      DIAMOND: 40
-      COAL: 10
+      COBBLESTONE: 0.3
+      DIAMOND: 0.3
+      COAL: 0.3
 
     # 工人升级设置
-    Upgrade:
+    UpgradeSettings:
 
       # 工人效率设置
       Amount:
@@ -31,5 +31,43 @@ Minions:
         # 每次升级增加 3 行箱子
         Upgrade: 3
 
+  # 农民工
+  Farmer:
+
+    BlockSettings:
+
+      POTATO: 0.5
+      WHEAT: 0.5
+
+    UpgradeSettings:
+
+      Amount:
+        Default: 50
+        Cost: 500
+        Upgrade: 100
+
+      Storage:
+        Default: 3
+        Cost: 500
+        Upgrade: 3
+
 Message:
   NoMinions: 你还没有工人
+
+## 工人背包菜单
+Menu:
+  ## 样式，Top 为顶部 Bottom 为底部 菜单一共占9个格子只有翻页按钮和占位符
+  Style: Bottom
+  ## Slot是9个按钮的配置 从左往右由1开始 LastPage(上一页)、NextPage(下一页)、PlaceHolder(无实际功能，仅占位)
+  LastPage:
+    Material: GLISTERING_MELON_SLICE
+    Name: "§d上一页"
+    Slot: 1,2,3,4
+  PlaceHolder:
+    Material: LIGHT_BLUE_STAINED_GLASS_PANE
+    Name: " "
+    Slot: 5
+  NextPage:
+    Material: GLISTERING_MELON_SLICE
+    Name: "§d下一页"
+    Slot: 6,7,8,9
