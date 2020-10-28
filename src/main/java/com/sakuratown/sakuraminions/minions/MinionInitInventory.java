@@ -2,7 +2,6 @@ package com.sakuratown.sakuraminions.minions;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 
 public class MinionInitInventory{
-    public static ArrayList<Inventory> MinionInitInventory(InventoryHolder holder, int row) {
+    public static ArrayList<Inventory> InitMinionInventory(InventoryHolder holder, int row) {
         ArrayList<Inventory> inventories = new ArrayList<>();
         if (row <= 6) {
             Inventory inventory = Bukkit.createInventory(holder, row * 9, "工人背包");
@@ -54,8 +53,8 @@ public class MinionInitInventory{
                 }
             case 2: //最后一页 只有上一页的选项
                 turnPage.setItemMeta(turnPageMeta);
-                inv.setItem(45, turnPage);
-                for (int j = 46; j <= 53; j++) {
+                inv.setItem(inv.getSize()-9, turnPage);
+                for (int j = inv.getSize()-8; j <= inv.getSize()-1; j++) {
                     inv.setItem(j, placeHolder);
                 }
             default: //中间页 有上一页和下一页
