@@ -1,27 +1,24 @@
 package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuraminions.Main;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
 
 import java.util.Set;
 
-public class Minion {
+public class Minion{
 
     String type;
     int row;
     int amount;
-
-    Inventory inventory;
+    MinionInventory inventories;
 
     public Minion(String type, int row, int amount) {
+
         this.type = type;
         this.row = row;
         this.amount = amount;
-
-        inventory = Bukkit.createInventory(null, row * 9, "工人背包");
+        inventories = new MinionInventory(type,row);
     }
 
     public String getRandomMaterial() {
