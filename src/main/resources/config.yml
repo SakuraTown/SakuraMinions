@@ -62,12 +62,12 @@ Menu:
   LastPage:
     Material: GLISTERING_MELON_SLICE
     Name: "§d上一页"
-    Slot: 1,2,3,4
+    Slots: 1,2,3,4
   PlaceHolder:
     Material: LIGHT_BLUE_STAINED_GLASS_PANE
     Name: " "
-    Slot: 5
+    Slots: 5
   NextPage:
     Material: GLISTERING_MELON_SLICE
     Name: "§d下一页"
-    Slot: 6,7,8,9
+    Slots: 6,7,8,9
