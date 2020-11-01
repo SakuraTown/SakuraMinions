@@ -45,7 +45,7 @@ public class MinionInventory implements InventoryHolder {
         if (page == 1) {
             return;
         }
-        String style = Config.getmenuStyle();
+        String style = Config.getMenuStyle();
         final int x = style.equals("Bottom") ? 45 : 0;//底部或顶部 此值决定了按钮的位置（slot）
         for (int i = 1; i < page; i++) {
             Inventory inventory = inventoryList.get(i-1);
