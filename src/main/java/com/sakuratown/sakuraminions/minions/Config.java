@@ -1,4 +1,5 @@
 package com.sakuratown.sakuraminions.minions;
+
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,10 +18,6 @@ public class Config {
     private static String menuStyle;
     private static ConfigurationSection menuSection;
 
-    public Config(){
-        reload();
-    }
-
     public static String getMenuStyle() {
         return menuStyle;
     }
@@ -29,12 +26,12 @@ public class Config {
         return menuSection;
     }
 
-    public static void reload(){
+    public static void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(new File(Main.getInstance().getDataFolder(), "config.yml"));
         menuLoad();
     }
 
-    private static void menuLoad(){
+    private static void menuLoad() {
         menuSection = config.getConfigurationSection("Menu");
         menuStyle = menuSection.getString("Style");
     }

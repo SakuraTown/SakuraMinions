@@ -8,11 +8,13 @@ public class InventoryGUI {
     MinionInventory inventories;
 
     public InventoryGUI(MinionInventory inventories) {
-    this.inventories = inventories;
+        this.inventories = inventories;
 
     }
-    public void showInventoryGUI(int page,Player player){
-        Inventory inventory = inventories.getInventoryList().get(page-1);
+
+    public void showInventoryGUI(int page, Player player) {
+        Inventory inventory = inventories.getInventoryList().get(page - 1);
+        inventories.setNowPage(page);
         player.openInventory(inventory);
     }
 
