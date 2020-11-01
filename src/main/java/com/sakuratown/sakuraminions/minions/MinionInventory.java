@@ -27,10 +27,11 @@ public class MinionInventory implements InventoryHolder {
     }
 
     private void initInventory() {
+
         Inventory[] initInventory = new Inventory[page];
         for (int i = 0; i < page; i++) {
             if (i == (page-1)) {
-                initInventory[i] = Bukkit.createInventory(this, (row - 6 * (i+1) + 6) * 9, type+":"+(i+1));
+                initInventory[i] = Bukkit.createInventory(this, (row%6+page)*9, type+":"+(i+1));
             } else {
                 initInventory[i] = Bukkit.createInventory(this, 54, type+":"+(i+1));
             }
@@ -45,42 +46,46 @@ public class MinionInventory implements InventoryHolder {
         if (page == 1) {
             return;
         }
+        ArrayList<MenuButton> menuButtonsFirst = new ArrayList<>(menuButtons);
+        ArrayList<MenuButton> menuButtonsEnd = new ArrayList<>(menuButtons);
+
         String style = Config.getMenuStyle();
         final int x = style.equals("Bottom") ? 45 : 0;//底部或顶部 此值决定了按钮的位置（slot）
+        Inventory[] inventories = new Inventory[page];
         for (int i = 1; i < page; i++) {
-            Inventory inventory = inventoryList.get(i-1);
+            inventories[i-1] = inventoryList.get(i-1);
             if (i == 1) {
-                for (int n = 0; n < menuButtons.size(); n++) {
-                    MenuButton button = menuButtons.get(n);
+                for (int n = 0; n < menuButtonsFirst.size(); n++) {
+                    MenuButton button = menuButtonsFirst.get(n);
                     if (button.getType().equals("LastPage")) {
-                        menuButtons.set(n, new MenuButton("PlaceHolder", button.getSlot()));
+                        menuButtonsFirst.set(n, new MenuButton("PlaceHolder", button.getSlot()));
                     }
                 }
-                for (MenuButton button : menuButtons) {
-                    inventory.setItem(x + button.getSlot() - 1, button.getItemStack());
+                for (MenuButton button : menuButtonsFirst) {
+                    inventories[i-1].setItem(x + button.getSlot() - 1, button.getItemStack());
                 }
             } else {
                 for (MenuButton button : menuButtons) {
-                    inventory.setItem(x + button.getSlot() - 1, button.getItemStack());
+                    inventories[i-1].setItem(x + button.getSlot() - 1, button.getItemStack());
                 }
             }
-            inventoryList.set(i, inventory);
+            inventoryList.set(i-1, inventories[i-1]);
         }
-        Inventory inventory = inventoryList.get(page - 1);
-        for (int n = 0; n < menuButtons.size(); n++) {
-            MenuButton button = menuButtons.get(n);
-            if (button.getType().equals("NextPagePage")) {
-                menuButtons.set(n, new MenuButton("PlaceHolder", button.getSlot()));
+        inventories[page-1]= inventoryList.get(page - 1);
+        for (int n = 0; n < menuButtonsEnd.size(); n++) {
+            MenuButton button = menuButtonsEnd.get(n);
+            if (button.getType().equals("NextPage")) {
+                menuButtonsEnd.set(n, new MenuButton("PlaceHolder", button.getSlot()));
             }
         }
-        for (MenuButton button : menuButtons) {
+        for (MenuButton button : menuButtonsEnd) {
             if (x == 45) {
-                inventory.setItem(inventory.getSize() - 10 + button.getSlot(), button.getItemStack());
+                inventories[page-1].setItem(inventories[page-1].getSize() - 10 + button.getSlot(), button.getItemStack());
             } else {
-                inventory.setItem(button.getSlot() - 1, button.getItemStack());
+                inventories[page-1].setItem(button.getSlot() - 1, button.getItemStack());
             }
         }
-        inventoryList.set(page - 1, inventory);
+        inventoryList.set(page - 1, inventories[page-1]);
 
     }
 
