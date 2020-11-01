@@ -33,12 +33,16 @@ public class Minion{
         FileConfiguration config = plugin.getConfig();
         ConfigurationSection configurationSection = config.getConfigurationSection("Minions." + type + ".Item");
 
-        int totalWeight = getTotalWeight(configurationSection);
+        if (configurationSection == null) {
+            throw new NullPointerException("配置文件有误, 请检查配置文件");
+        }
+
+        Set<String> itemSet = configurationSection.getKeys(false);
+
+        int totalWeight = getTotalWeight(configurationSection, itemSet);
 
         int chance = 0;
         double randomNum = Math.random() * totalWeight;
-
-        Set<String> itemSet = configurationSection.getKeys(false);
 
         String randomMaterial = null;
 
@@ -65,13 +69,7 @@ public class Minion{
         this.amount += amount;
     }
 
-    private int getTotalWeight(ConfigurationSection configurationSection) {
-
-        if (configurationSection == null) {
-            throw new NullPointerException("配置文件有误, 请检查配置文件");
-        }
-
-        Set<String> itemSet = configurationSection.getKeys(false);
+    private int getTotalWeight(ConfigurationSection configurationSection, Set<String> itemSet) {
 
         int totalWeight = 0;
 

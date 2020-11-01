@@ -1,11 +1,8 @@
 package com.sakuratown.sakuraminions;
 
-import com.plotsquared.core.api.PlotAPI;
+import com.sakuratown.sakuraminions.command.MainCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main extends JavaPlugin {
 
@@ -24,7 +21,7 @@ public class Main extends JavaPlugin {
         saveDefaultConfig();
         getServer().getConsoleSender().sendMessage(message);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getPluginCommand("SakuraMinions").setExecutor(new BasicCommand());
+        Bukkit.getPluginCommand("SakuraMinions").setExecutor(new MainCommand());
     }
 
     @Override

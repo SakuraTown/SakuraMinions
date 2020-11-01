@@ -1,4 +1,5 @@
 package com.sakuratown.sakuraminions.minions;
+import com.sakuratown.sakuraminions.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -9,19 +10,27 @@ import java.io.File;
 
 
 public class Config {
-    private static Plugin plugin;
+
     private static FileConfiguration config;
 
     //工人背包配置
     private static String menuStyle;
     private static ConfigurationSection menuSection;
 
-    public Config(Plugin _plugin){
-        plugin = _plugin;
+    public Config(){
         reload();
     }
+
+    public static String getMenuStyle() {
+        return menuStyle;
+    }
+
+    public static ConfigurationSection getMenuSection() {
+        return menuSection;
+    }
+
     public static void reload(){
-        config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
+        config = YamlConfiguration.loadConfiguration(new File(Main.getInstance().getDataFolder(), "config.yml"));
         menuLoad();
     }
 
@@ -29,8 +38,6 @@ public class Config {
         menuSection = config.getConfigurationSection("Menu");
         menuStyle = menuSection.getString("Style");
     }
-    public static String getmenuStyle(){return menuStyle;}
-    public static ConfigurationSection getMenuSection(){ return menuSection; }
 
 
 }

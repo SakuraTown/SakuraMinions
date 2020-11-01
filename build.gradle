@@ -20,6 +20,7 @@ allprojects {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:19.0.0'
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.1-R0.1-SNAPSHOT'
     implementation("com.plotsquared:PlotSquared-Core:5.13.3") // PlotSquared Core API
 }
