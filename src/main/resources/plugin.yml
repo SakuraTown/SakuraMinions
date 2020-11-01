@@ -5,5 +5,5 @@ api-version: "1.16"
 
 commands:
   SakuraMinions:
-    description: open sho
-    aliases: [sm, Minions]
+    description: 樱花工人插件指令
+    aliases: [sm, minions]
