@@ -16,9 +16,8 @@ public class PlayerListener implements Listener {
         if (item == null) return;
 
         if (item.getType() == Material.EGG) {
-
-            Minion minion = new Minion("miner", 9, 50);
-            minion.openInventory(event.getPlayer());
+            Minion minion = new Minion("Miner", 1, 50);
+            System.out.println(minion.getRandomMaterial());
         }
     }
 }
