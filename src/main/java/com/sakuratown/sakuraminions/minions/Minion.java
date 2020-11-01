@@ -3,6 +3,7 @@ package com.sakuratown.sakuraminions.minions;
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import java.util.Set;
 
@@ -12,6 +13,7 @@ public class Minion{
     int row;
     int amount;
     MinionInventory inventories;
+    InventoryGUI inventoryGUI;
 
     public Minion(String type, int row, int amount) {
 
@@ -19,8 +21,11 @@ public class Minion{
         this.row = row;
         this.amount = amount;
         inventories = new MinionInventory(type,row);
+        inventoryGUI = new InventoryGUI(inventories);
     }
-
+    public void showGuI(int page,Player player){
+        inventoryGUI.showInventoryGUI(page,player);
+    }
     public String getRandomMaterial() {
 
         Main plugin = Main.getInstance();
