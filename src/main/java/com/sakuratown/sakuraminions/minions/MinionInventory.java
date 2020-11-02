@@ -247,25 +247,25 @@ public class MinionInventory implements InventoryHolder {
         if (itemList.size() > (row * 9)) {
             return false;
         }
-        for (ItemStack item : itemList) { //填充物品
+        for (ItemStack item : itemList) { //填充物品 从第一个物品开始
             for (Inventory inv : inventoryList) {
-                if (tempItemStack != null) {
-                    if (getFreeSpace(inv, tempItemStack) > 0) {
-                        tempItemMap = inv.addItem(tempItemStack);
-                        if (!tempItemMap.isEmpty()) {
+                if (tempItemStack != null) {  //此处是在上一页物品填充有剩余的情况下尝试填充到新页
+                    if (getFreeSpace(inv, tempItemStack) > 0) {//检查剩余空间
+                        tempItemMap = inv.addItem(tempItemStack); //填充
+                        if (!tempItemMap.isEmpty()) { //如果有剩余退出循环，把剩余填充到下一页
                             tempItemStack = tempItemMap.get(0);
                             break;
                         }
-                        break;
+                        break;//没有剩余退出循环，避免填充到下一页
                     }
                 }
-                if (getFreeSpace(inv, item) > 0) {
-                    tempItemMap = inv.addItem(item);
-                    if (!tempItemMap.isEmpty()) {
+                if (getFreeSpace(inv, item) > 0) { //当前物品在这个容器有空间
+                    tempItemMap = inv.addItem(item); //填充
+                    if (!tempItemMap.isEmpty()) { //如果有剩余 ，储存到暂存等待第二页的尝试
                         tempItemStack = tempItemMap.get(0);
                         break;
                     }
-                    break;
+                    break;//没有剩余退出循环，避免填充到下一页
                 }
             }
         }
