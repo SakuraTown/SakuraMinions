@@ -40,7 +40,7 @@ public class Minion{
     }
     public String getRandomMaterial() {
 
-        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type.concat(".ItemSettings"));
+        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type.concat(".Item"));
         if (configurationSection == null) {
             throw new NullPointerException("配置文件有误, 请检查配置文件");
         }
