@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class Minion{
+public class Minion {
 
     String type;
     int row;
@@ -22,13 +22,15 @@ public class Minion{
         this.type = type;
         this.row = row;
         this.amount = amount;
-        inventories = new MinionInventory(type,row);
+        inventories = new MinionInventory(type, row);
         inventoryGUI = new InventoryGUI(inventories);
     }
-    public void showGuI(int page,Player player){
+
+    public void showGuI(int page, Player player) {
         inventoryGUI.setInventories(inventories);
-        inventoryGUI.showInventoryGUI(page,player);
+        inventoryGUI.showInventoryGUI(page, player);
     }
+
     public void addRandomItem(){
         Material randomMaterial = Material.getMaterial(getRandomMaterial());
         ItemStack item;
@@ -38,9 +40,11 @@ public class Minion{
             item =  new ItemStack(randomMaterial,1);}
         addItem(item);
     }
+
     public String getRandomMaterial() {
 
-        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type.concat(".Item"));
+        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type + ".Item");
+
         if (configurationSection == null) {
             throw new NullPointerException("配置文件有误, 请检查配置文件");
         }
@@ -73,18 +77,22 @@ public class Minion{
         inventories.addRow(row);
         this.row += row;
     }
-    public MinionInventory getMinionInventory(){
+
+    public MinionInventory getMinionInventory() {
         return inventories;
     }
+
     void upgradeAmount(int amount) {
         this.amount += amount;
     }
-    public void addItem(ItemStack item){
+
+    public void addItem(ItemStack item) {
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         itemStacks.add(item);
         inventories.addItem(itemStacks);
     }
-    public void addItem(ArrayList<ItemStack> itemStacks){
+
+    public void addItem(ArrayList<ItemStack> itemStacks) {
         inventories.addItem(itemStacks);
     }
 

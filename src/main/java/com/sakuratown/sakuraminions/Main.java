@@ -22,8 +22,10 @@ public class Main extends JavaPlugin {
                 "§a樱花工人插件§e v" + getDescription().getVersion() + " §a已启用",
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
+
         saveDefaultConfig();
         Config.reloadConfig();
+
         getServer().getConsoleSender().sendMessage(message);
         Bukkit.getPluginManager().registerEvents(new InventoryGUIListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);

@@ -35,6 +35,7 @@ public class Config {
         menuSection = config.getConfigurationSection("Menu");
         menuStyle = menuSection.getString("Style");
         minionSection = config.getConfigurationSection("Minions");
+
     }
 
 
