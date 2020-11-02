@@ -1,5 +1,6 @@
 package com.sakuratown.sakuraminions.minions;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import org.bukkit.entity.Player;
@@ -28,9 +29,18 @@ public class Minion{
         inventoryGUI.setInventories(inventories);
         inventoryGUI.showInventoryGUI(page,player);
     }
+    public void addRandomItem(){
+        Material randomMaterial = Material.getMaterial(getRandomMaterial());
+        ItemStack item;
+        if(randomMaterial == null){
+            item =  new ItemStack(Material.STONE,1);
+        }else {
+            item =  new ItemStack(randomMaterial,1);}
+        addItem(item);
+    }
     public String getRandomMaterial() {
 
-        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type + ".Item");
+        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type.concat(".ItemSettings"));
         if (configurationSection == null) {
             throw new NullPointerException("配置文件有误, 请检查配置文件");
         }
