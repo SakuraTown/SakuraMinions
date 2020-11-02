@@ -49,16 +49,10 @@ public class MinionInventory implements InventoryHolder {
             return false;
         }
         this.row += row;
-        if (this.row <= 6) {  //容器理论页数（加菜单）
+        if (this.row <= 6) {
             page = 1;
-        } else if (this.row <= 10) {
-            page = 2;
         } else {
-            if (this.row % 5 == 0) {
-                page = this.row / 5;
-            } else {
-                page = this.row / 5 + 1;
-            }
+            page = this.row % 5 == 0 ? (this.row / 5) : (this.row / 5 + 1);
         }
         return addInventory(row);
     }
@@ -67,6 +61,7 @@ public class MinionInventory implements InventoryHolder {
         int oldRow = row - extra;
         int oldPage;
         int endInvSurplus;//最后一页的剩余(容器)排数
+
         if (oldRow <= 6) {
             oldPage = 1;
             endInvSurplus = 6 - oldRow;
