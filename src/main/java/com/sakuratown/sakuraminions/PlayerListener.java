@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class PlayerListener implements Listener {
     Minion minion;
+
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
 
@@ -20,11 +21,15 @@ public class PlayerListener implements Listener {
         if (item.getType() == Material.EGG) {
             minion = new Minion("miner", 1, 50);
         }
-        if (item.getType() == Material.STONE) {
-            minion.showGuI(1,event.getPlayer());
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlock(3).getType() == Material.STONE) {
+            minion.showGuI(1, event.getPlayer());
         }
-        if (item.getType() == Material.SAND){
+        if (item.getType() == Material.SAND) {
             minion.upgradeSize(2);
+        }
+        if (item.getType() == Material.OAK_LOG) {
+            ItemStack itemStack = new ItemStack(Material.OAK_LOG, 40);
+            minion.addItem(itemStack);
         }
     }
 

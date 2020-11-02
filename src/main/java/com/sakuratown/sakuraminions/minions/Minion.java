@@ -3,7 +3,9 @@ package com.sakuratown.sakuraminions.minions;
 import org.bukkit.configuration.ConfigurationSection;
 
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public class Minion{
@@ -61,9 +63,16 @@ public class Minion{
         inventories.addRow(row);
         this.row += row;
     }
-
+    public MinionInventory getMinionInventory(){
+        return inventories;
+    }
     void upgradeAmount(int amount) {
         this.amount += amount;
+    }
+    public void addItem(ItemStack item){
+        ArrayList<ItemStack> itemStacks = new ArrayList<>();
+        itemStacks.add(item);
+        inventories.addItem(itemStacks);
     }
 
     private int getTotalWeight(ConfigurationSection configurationSection, Set<String> itemSet) {

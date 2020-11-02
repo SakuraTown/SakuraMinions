@@ -157,8 +157,12 @@ public class MinionInventory implements InventoryHolder {
         setNowPage(page);
         player.openInventory(inventory);
     }
-    public Inventory getCurrentInventory(){
-        return  currentInventory;
+
+    public Inventory getCurrentInventory() {
+        return currentInventory;
+    }
+    public void setCurrentInventory(Inventory inv) {
+        currentInventory = inv;
     }
 
     public void clearMenuButton(Inventory inv) {
@@ -233,11 +237,12 @@ public class MinionInventory implements InventoryHolder {
 
     }
 
-    public boolean addInventory(ArrayList<ItemStack> itemList) { //往背包塞物品
+    public boolean addItem(ArrayList<ItemStack> itemList) { //往背包塞物品
         if (itemList.isEmpty()) {
             return false;
         }
         int n = 0;
+        int total = itemList.size();
         Map<Integer, ItemStack> tempItemMap;
         ItemStack tempItemStack;
         if (itemList.size() > (row * 9)) {
@@ -245,20 +250,26 @@ public class MinionInventory implements InventoryHolder {
         }
         for (Inventory inv : inventoryList) {
             for (int i = n; i < itemList.size(); i++) {
+                if(i <0){i=0;}
                 if (getFreeSpace(inv, itemList.get(i)) > 0) {
                     tempItemMap = inv.addItem(itemList.get(i));
+                    --total;
                     if (!tempItemMap.isEmpty()) {
                         tempItemStack = tempItemMap.get(0);
                         itemList.set(i, tempItemStack);
                         n = i - 1;
+                        ++total;
                         break;
                     }
-                    ;
                 } else {
                     n = i;
                     break;
                 }
             }
+            if (total <= 0) {
+                break;
+            }
+
         }
         return true;
     }
