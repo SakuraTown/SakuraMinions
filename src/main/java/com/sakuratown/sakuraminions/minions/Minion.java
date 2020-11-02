@@ -1,6 +1,8 @@
 package com.sakuratown.sakuraminions.minions;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,6 +31,16 @@ public class Minion {
         inventoryGUI.showInventoryGUI(page, player);
     }
 
+    public void addRandomItem(){
+        Material randomMaterial = Material.getMaterial(getRandomMaterial());
+        ItemStack item;
+        if(randomMaterial == null){
+            item =  new ItemStack(Material.STONE,1);
+        }else {
+            item =  new ItemStack(randomMaterial,1);}
+        addItem(item);
+    }
+
     public String getRandomMaterial() {
 
         ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type + ".Item");
@@ -39,7 +51,6 @@ public class Minion {
 
         Set<String> itemSet = configurationSection.getKeys(false);
 
-        System.out.println(itemSet);
         int totalWeight = getTotalWeight(configurationSection, itemSet);
 
         int chance = 0;
