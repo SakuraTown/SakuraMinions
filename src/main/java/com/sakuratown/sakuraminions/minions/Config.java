@@ -20,6 +20,7 @@ public class Config {
     public static String getMenuStyle() {
         return menuStyle;
     }
+
     public static ConfigurationSection getMinionSection(){return minionSection;}
 
     public static ConfigurationSection getMenuSection() {
@@ -35,7 +36,6 @@ public class Config {
         menuSection = config.getConfigurationSection("Menu");
         menuStyle = menuSection.getString("Style");
         minionSection = config.getConfigurationSection("Minions");
-
     }
 
 
