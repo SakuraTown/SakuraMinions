@@ -161,6 +161,7 @@ public class MinionInventory implements InventoryHolder {
     public Inventory getCurrentInventory() {
         return currentInventory;
     }
+
     public void setCurrentInventory(Inventory inv) {
         currentInventory = inv;
     }
@@ -241,35 +242,32 @@ public class MinionInventory implements InventoryHolder {
         if (itemList.isEmpty()) {
             return false;
         }
-        int n = 0;
-        int total = itemList.size();
         Map<Integer, ItemStack> tempItemMap;
-        ItemStack tempItemStack;
+        ItemStack tempItemStack = null;
         if (itemList.size() > (row * 9)) {
             return false;
         }
-        for (Inventory inv : inventoryList) {
-            for (int i = n; i < itemList.size(); i++) {
-                if(i <0){i=0;}
-                if (getFreeSpace(inv, itemList.get(i)) > 0) {
-                    tempItemMap = inv.addItem(itemList.get(i));
-                    --total;
-                    if (!tempItemMap.isEmpty()) {
-                        tempItemStack = tempItemMap.get(0);
-                        itemList.set(i, tempItemStack);
-                        n = i - 1;
-                        ++total;
+        for (ItemStack item : itemList) { //填充物品
+            for (Inventory inv : inventoryList) {
+                if (tempItemStack != null) {
+                    if (getFreeSpace(inv, tempItemStack) > 0) {
+                        tempItemMap = inv.addItem(tempItemStack);
+                        if (!tempItemMap.isEmpty()) {
+                            tempItemStack = tempItemMap.get(0);
+                            break;
+                        }
                         break;
                     }
-                } else {
-                    n = i;
+                }
+                if (getFreeSpace(inv, item) > 0) {
+                    tempItemMap = inv.addItem(item);
+                    if (!tempItemMap.isEmpty()) {
+                        tempItemStack = tempItemMap.get(0);
+                        break;
+                    }
                     break;
                 }
             }
-            if (total <= 0) {
-                break;
-            }
-
         }
         return true;
     }

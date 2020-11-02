@@ -9,6 +9,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+
 public class PlayerListener implements Listener {
     Minion minion;
 
@@ -28,8 +30,16 @@ public class PlayerListener implements Listener {
             minion.upgradeSize(2);
         }
         if (item.getType() == Material.OAK_LOG) {
-            ItemStack itemStack = new ItemStack(Material.OAK_LOG, 40);
-            minion.addItem(itemStack);
+            ItemStack itemStack1 = new ItemStack(Material.OAK_LOG, 64);
+            ItemStack itemStack2 = new ItemStack(Material.ACACIA_LOG, 64);
+            ItemStack itemStack3 = new ItemStack(Material.STONE, 64);
+            ItemStack itemStack4 = new ItemStack(Material.DIAMOND, 2);
+            ArrayList<ItemStack> itemStacks = new ArrayList<>();
+            itemStacks.add(itemStack1);
+            itemStacks.add(itemStack2);
+            itemStacks.add(itemStack3);
+            itemStacks.add(itemStack4);
+            minion.addItem(itemStacks);
         }
     }
 

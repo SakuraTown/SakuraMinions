@@ -74,6 +74,9 @@ public class Minion{
         itemStacks.add(item);
         inventories.addItem(itemStacks);
     }
+    public void addItem(ArrayList<ItemStack> itemStacks){
+        inventories.addItem(itemStacks);
+    }
 
     private int getTotalWeight(ConfigurationSection configurationSection, Set<String> itemSet) {
 
