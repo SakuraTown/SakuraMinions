@@ -1,10 +1,10 @@
 package com.sakuratown.sakuraminions.minions;
 
+import com.sakuratown.sakuraminions.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Consumer;
 
 import java.util.ArrayList;
@@ -75,24 +75,22 @@ public class MenuButton {
     }
 
     public ItemStack setMenuButton(String type) { //type 为LastPage、NextPage和PlaceHolder之一。
-        ItemStack button;
-        ConfigurationSection menuSection = Config.getMenuSection();
-        if (type != null) {
-            String materialName = menuSection.getString(type + ".Material");
-            if (materialName != null) {
-                Material buttonMaterial = Material.getMaterial(materialName);
-                if (buttonMaterial != null) {
-                    button = new ItemStack(buttonMaterial);
-                    ItemMeta buttonMeta = button.getItemMeta();
-                    buttonMeta.setDisplayName(menuSection.getString(type + ".Name"));
-                    button.setItemMeta(buttonMeta);
-                    return button;
-                } else {
-                    return new ItemStack(Material.STONE);
-                }
-            }
-        }
-        return new ItemStack(Material.STONE);
-    }
 
+        ConfigurationSection menuSection = Config.getMenuSection();
+        String materialName = menuSection.getString(type + ".Material");
+
+        if (materialName == null || Material.getMaterial(materialName) == null) {
+            return new ItemStack(Material.STONE);
+        }
+
+        Material material = Material.getMaterial(materialName);
+
+        if (material == null) {
+            return new ItemStack(Material.STONE);
+        }
+
+        String displayName = menuSection.getString(type + ".Name");
+        return new ItemBuilder(material).name(displayName).build();
+    }
 }
+
