@@ -15,6 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import static org.bukkit.event.inventory.InventoryType.PLAYER;
 
 public class InventoryGUIListener implements Listener {
+    public static void denyClick(InventoryClickEvent event, Inventory targetInventory) {
+
+        int size = targetInventory.getSize();
+
+        if (event.getRawSlot() < size || event.isShiftClick()) {
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -86,14 +95,5 @@ public class InventoryGUIListener implements Listener {
         if (!(holder instanceof MinionInventory)) return null;
 
         return (MinionInventory) holder;
-    }
-
-    public static void denyClick(InventoryClickEvent event, Inventory targetInventory) {
-
-        int size = targetInventory.getSize();
-
-        if (event.getRawSlot() < size || event.isShiftClick()) {
-            event.setCancelled(true);
-        }
     }
 }

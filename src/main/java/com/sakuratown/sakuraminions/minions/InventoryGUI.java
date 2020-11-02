@@ -5,6 +5,7 @@ import org.bukkit.inventory.Inventory;
 
 public class InventoryGUI {
     MinionInventory inventories;
+    private MenuButton[] menuButtons;
 
     public InventoryGUI(MinionInventory inventories) {
         this.inventories = inventories;

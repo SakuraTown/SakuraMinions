@@ -3,9 +3,7 @@ package com.sakuratown.sakuraminions.minions;
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 

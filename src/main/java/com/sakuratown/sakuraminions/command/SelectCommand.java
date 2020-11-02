@@ -1,6 +1,5 @@
 package com.sakuratown.sakuraminions.command;
 
-import com.sakuratown.sakuraminions.Main;
 import org.bukkit.command.CommandSender;
 
 public class SelectCommand extends SimpleSubCommand {
