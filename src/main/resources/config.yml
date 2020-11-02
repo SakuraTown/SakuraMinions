@@ -6,9 +6,9 @@ Minions:
     Item:
 
       # 获取原石的权重是 0.3
-      COBBLESTONE: 0.3
-      DIAMOND: 0.3
-      COAL: 0.3
+      COBBLESTONE: 30
+      DIAMOND: 30
+      COAL: 30
 
     # 工人升级设置
     Upgrade:
