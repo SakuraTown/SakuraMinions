@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuraminions.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -24,15 +25,12 @@ public class Minion{
         inventoryGUI = new InventoryGUI(inventories);
     }
     public void showGuI(int page,Player player){
+        inventoryGUI.setInventories(inventories);
         inventoryGUI.showInventoryGUI(page,player);
     }
     public String getRandomMaterial() {
 
-        Main plugin = Main.getInstance();
-
-        FileConfiguration config = plugin.getConfig();
-        ConfigurationSection configurationSection = config.getConfigurationSection("Minions." + type + ".Item");
-
+        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type + ".Item");
         if (configurationSection == null) {
             throw new NullPointerException("配置文件有误, 请检查配置文件");
         }
@@ -61,7 +59,8 @@ public class Minion{
         return randomMaterial;
     }
 
-    void upgradeSize(int row) {
+    public void upgradeSize(int row) {
+        inventories.addRow(row);
         this.row += row;
     }
 
