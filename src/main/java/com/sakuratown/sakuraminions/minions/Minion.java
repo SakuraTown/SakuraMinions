@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Set;
 
-public class Minion{
+public class Minion {
 
     String type;
     int row;
@@ -20,12 +20,14 @@ public class Minion{
         this.type = type;
         this.row = row;
         this.amount = amount;
-        inventories = new MinionInventory(type,row);
+        inventories = new MinionInventory(type, row);
         inventoryGUI = new InventoryGUI(inventories);
     }
-    public void showGuI(int page,Player player){
-        inventoryGUI.showInventoryGUI(page,player);
+
+    public void showGuI(int page, Player player) {
+        inventoryGUI.showInventoryGUI(page, player);
     }
+
     public String getRandomMaterial() {
 
         Main plugin = Main.getInstance();

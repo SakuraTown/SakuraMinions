@@ -21,18 +21,6 @@ public class MenuButton {
         this.slot = slot;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
     public static ArrayList<MenuButton> initMenuButton() {
         ArrayList<MenuButton> menuButtons = new ArrayList<>();
         createButton(menuButtons, "LastPage");
@@ -56,6 +44,36 @@ public class MenuButton {
         }
     }
 
+    private static int[] initSlot(String slotConfig) {
+        int[] slots;
+        if (slotConfig.contains(",")) {
+
+            String[] split = slotConfig.split(",");
+            slots = new int[split.length];
+
+            for (int i = 0; i < split.length; i++) {
+                slots[i] = Integer.parseInt(split[i]);
+            }
+
+        } else {
+            slots = new int[1];
+            slots[0] = Integer.parseInt(slotConfig);
+        }
+        return slots;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getSlot() {
+        return slot;
+    }
+
     public ItemStack setMenuButton(String type) { //type 为LastPage、NextPage和PlaceHolder之一。
         ItemStack button;
         ConfigurationSection menuSection = Config.getMenuSection();
@@ -75,24 +93,6 @@ public class MenuButton {
             }
         }
         return new ItemStack(Material.STONE);
-    }
-
-    private static int[] initSlot(String slotConfig) {
-        int[] slots;
-        if (slotConfig.contains(",")) {
-
-            String[] split = slotConfig.split(",");
-            slots = new int[split.length];
-
-            for (int i = 0; i < split.length; i++) {
-                slots[i] = Integer.parseInt(split[i]);
-            }
-
-        } else {
-            slots = new int[1];
-            slots[0] = Integer.parseInt(slotConfig);
-        }
-        return slots;
     }
 
 }

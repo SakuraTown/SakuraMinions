@@ -12,10 +12,10 @@ import java.util.Map;
 public class MinionInventory implements InventoryHolder {
 
     private ArrayList<MenuButton> menuButtons;
-    private ArrayList<Inventory> inventoryList;
-    private String type;
-    private int row;
-    private int page;
+    private final ArrayList<Inventory> inventoryList;
+    private final String type;
+    private final int row;
+    private final int page;
     private int nowPage = 1;
 
 
@@ -25,6 +25,21 @@ public class MinionInventory implements InventoryHolder {
         page = (row / 6) + 1; //容器理论页数（加菜单）
         inventoryList = new ArrayList<>();
         initInventory();
+    }
+
+    public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
+
+        int amount = 0;
+
+        for (ItemStack invStack : inventory.getStorageContents()) {
+            if (invStack == null) {
+                amount += itemStack.getMaxStackSize();
+            } else if (invStack.isSimilar(itemStack)) {
+                amount += invStack.getMaxStackSize() - invStack.getAmount();
+            }
+        }
+
+        return amount;
     }
 
     private void initInventory() {
@@ -46,12 +61,12 @@ public class MinionInventory implements InventoryHolder {
         return page;
     }
 
-    public void setNowPage(int page) {
-        nowPage = page;
-    }
-
     public int getNowPage() {
         return nowPage;
+    }
+
+    public void setNowPage(int page) {
+        nowPage = page;
     }
 
     public void showInventoryGUI(int page, Player player) {
@@ -128,7 +143,6 @@ public class MinionInventory implements InventoryHolder {
                         n = i - 1;
                         break;
                     }
-                    ;
                 } else {
                     n = i;
                     break;
@@ -140,21 +154,6 @@ public class MinionInventory implements InventoryHolder {
 
     public ArrayList<Inventory> getInventoryList() {
         return inventoryList;
-    }
-
-    public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
-
-        int amount = 0;
-
-        for (ItemStack invStack : inventory.getStorageContents()) {
-            if (invStack == null) {
-                amount += itemStack.getMaxStackSize();
-            } else if (invStack.isSimilar(itemStack)) {
-                amount += invStack.getMaxStackSize() - invStack.getAmount();
-            }
-        }
-
-        return amount;
     }
 
     @Override

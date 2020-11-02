@@ -7,10 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-
 public class Main extends JavaPlugin {
 
     private static Main plugin;
+
+    public static Main getInstance() {
+        return plugin;
+    }
 
     @Override
     public void onEnable() {
@@ -35,10 +38,6 @@ public class Main extends JavaPlugin {
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
-    }
-
-    public static Main getInstance() {
-        return plugin;
     }
 
 }

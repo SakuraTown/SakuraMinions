@@ -54,6 +54,7 @@ public class Message {
         }
 
     }
+
     public static String toColor(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
@@ -88,7 +89,7 @@ public class Message {
     }
 
     public static String replace(String message, String... replace) {
-        
+
         if (replace.length % 2 != 0) {
             throw new IllegalArgumentException("replace 参数应为2的倍数！");
         }
