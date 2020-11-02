@@ -27,21 +27,14 @@ public class InventoryGUIListener implements Listener {
         Player player = ((Player) event.getWhoClicked()).getPlayer();
         Inventory inventory = event.getInventory();
         ItemStack currentItem = event.getCurrentItem();
-        Bukkit.broadcastMessage("1");
         MinionInventory gui = getGui(event);
         if (gui == null) return;
-        Bukkit.broadcastMessage("2");
         Inventory inventory1 = gui.getCurrentInventory();
-        Bukkit.broadcastMessage(String.valueOf(event.getRawSlot()));
-        Bukkit.broadcastMessage(String.valueOf(inventory1.getSize()));
         if(event.getRawSlot() > inventory1.getSize()-1){return;}
-        Bukkit.broadcastMessage("3");
         int nowPage = gui.getNowPage();
         if (currentItem == null) {
             return;
         }
-        Bukkit.broadcastMessage("4");
-        Bukkit.broadcastMessage("----");
         if (currentItem.getItemMeta().getDisplayName().equals(Config.getMenuSection().getString("LastPage.Name"))) {
             event.setCancelled(true);
             gui.showInventoryGUI(--nowPage, player);
