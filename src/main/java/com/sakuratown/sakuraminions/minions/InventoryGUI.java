@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 public class InventoryGUI {
+
     MinionInventory inventories;
     private MenuButton[] menuButtons;
 
@@ -17,6 +18,7 @@ public class InventoryGUI {
         inventories.setNowPage(page);
         player.openInventory(inventory);
     }
+
     public void setInventories(MinionInventory inventories){
         this.inventories = inventories;
     }

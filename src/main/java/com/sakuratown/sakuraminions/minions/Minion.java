@@ -43,7 +43,7 @@ public class Minion {
 
     public String getRandomMaterial() {
 
-        ConfigurationSection configurationSection = Config.getMinionSection().getConfigurationSection(type + ".Item");
+        ConfigurationSection configurationSection = Config.getMinionSection(type).getConfigurationSection(".Item");
 
         if (configurationSection == null) {
             throw new NullPointerException("配置文件有误, 请检查配置文件");
@@ -51,7 +51,7 @@ public class Minion {
 
         Set<String> itemSet = configurationSection.getKeys(false);
 
-        int totalWeight = getTotalWeight(configurationSection, itemSet);
+        int totalWeight = getTotalWeight(configurationSection);
 
         int chance = 0;
         double randomNum = Math.random() * totalWeight;
@@ -96,7 +96,9 @@ public class Minion {
         inventories.addItem(itemStacks);
     }
 
-    private int getTotalWeight(ConfigurationSection configurationSection, Set<String> itemSet) {
+    private int getTotalWeight(ConfigurationSection configurationSection) {
+
+        Set<String> itemSet = configurationSection.getKeys(false);
 
         int totalWeight = 0;
 

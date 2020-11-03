@@ -25,44 +25,50 @@ public class InventoryGUIListener implements Listener {
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
 
-        if (!(event.getWhoClicked() instanceof Player)) return;
         Player player = ((Player) event.getWhoClicked()).getPlayer();
+        if (player == null) return;
+
         ItemStack currentItem = event.getCurrentItem();
         MinionInventory gui = getGui(event);
+
         if (gui == null) return;
-        Inventory inventory1 = gui.getCurrentInventory();
-        if(event.getRawSlot() > inventory1.getSize()-1){return;}
+
+        Inventory inventory = gui.getCurrentInventory();
+
+        if (event.getRawSlot() > inventory.getSize() - 1) {
+            return;
+        }
+
         int nowPage = gui.getNowPage();
+
         if (currentItem == null) {
             return;
         }
 
         String displayName = currentItem.getItemMeta().getDisplayName();
 
+        // config 类返回一个 itemStack 然后在这里比较它不香吗? 这样判断有点繁琐噢
         if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
-            event.setCancelled(true);
             gui.showInventoryGUI(--nowPage, player);
             gui.setNowPage(nowPage);
+            event.setCancelled(true);
         }
 
         if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
-            event.setCancelled(true);
             gui.showInventoryGUI(++nowPage, player);
             gui.setNowPage(nowPage);
+            event.setCancelled(true);
         }
 
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
             event.setCancelled(true);
-
         }
 
 
     }
 
     @EventHandler
-    public void inventoryCloseEvent(InventoryOpenEvent event){//这个打开事件是防止打开工人背包后快速点击按钮会失灵的情况
-        if (!(event.getPlayer() instanceof Player)) return;
-        Player player = ((Player) event.getPlayer()).getPlayer();
+    public void inventoryOpenEvent(InventoryOpenEvent event) {
         MinionInventory gui = getGui(event);
         if (gui == null) return;
         gui.setCurrentInventory(event.getInventory());

@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Set;
 
 
 public class Config {
@@ -15,13 +17,14 @@ public class Config {
     //工人背包配置
     private static String menuStyle;
     private static ConfigurationSection menuSection;
-    private static ConfigurationSection minionSection;
 
     public static String getMenuStyle() {
         return menuStyle;
     }
 
-    public static ConfigurationSection getMinionSection(){return minionSection;}
+    public static ConfigurationSection getMinionSection(String type) {
+        return config.getConfigurationSection("Minions." + type);
+    }
 
     public static ConfigurationSection getMenuSection() {
         return menuSection;
@@ -35,8 +38,5 @@ public class Config {
     private static void menuLoad() {
         menuSection = config.getConfigurationSection("Menu");
         menuStyle = menuSection.getString("Style");
-        minionSection = config.getConfigurationSection("Minions");
     }
-
-
 }
