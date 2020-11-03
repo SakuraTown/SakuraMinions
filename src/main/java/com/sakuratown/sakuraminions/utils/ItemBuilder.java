@@ -58,6 +58,7 @@ public class ItemBuilder {
     public ItemBuilder addLore(String... lore) {
 
         List<String> itemLore = itemMeta.getLore();
+        if (itemLore == null) return this;
 
         itemLore.addAll(Arrays.asList(Message.toColor(lore)));
 
@@ -69,6 +70,7 @@ public class ItemBuilder {
     public ItemBuilder addLore(List<String> lore) {
 
         List<String> itemLore = itemMeta.getLore();
+        if (itemLore == null) return this;
 
         itemLore.addAll(Message.toColor(lore));
 

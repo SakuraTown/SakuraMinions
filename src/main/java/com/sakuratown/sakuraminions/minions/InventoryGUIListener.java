@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -30,18 +30,17 @@ public class InventoryGUIListener implements Listener {
         Player player = ((Player) event.getWhoClicked()).getPlayer();
         Inventory clickedInventory = event.getClickedInventory();
 
-        if (player == null || clickedInventory == null || clickedInventory.getType() == InventoryType.PLAYER) return;
+        if (player == null || clickedInventory == null) return;
 
-        ItemStack currentItem = event.getCurrentItem();
         MinionInventory gui = getGui(event.getInventory());
-
         if (gui == null) return;
+
+        denyPutItem(event, clickedInventory);
 
         int nowPage = gui.getNowPage();
 
-        if (currentItem == null) {
-            return;
-        }
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) return;
 
         String displayName = currentItem.getItemMeta().getDisplayName();
 
@@ -53,7 +52,6 @@ public class InventoryGUIListener implements Listener {
 
         if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
             gui.showInventoryGUI(++nowPage, player);
-            gui.setNowPage(nowPage);
             event.setCancelled(true);
         }
 
@@ -61,6 +59,11 @@ public class InventoryGUIListener implements Listener {
             gui.sortItems();
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void inventoryDragEvent(InventoryDragEvent event) {
+        denyPutItem(event);
     }
 
     @EventHandler
@@ -77,4 +80,28 @@ public class InventoryGUIListener implements Listener {
 
         return (MinionInventory) holder;
     }
+
+    private void denyPutItem(InventoryClickEvent event, Inventory clickedInventory) {
+
+        if ((event.getClick().isShiftClick() && clickedInventory.getType() == InventoryType.PLAYER)) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (event.getCursor() != null && clickedInventory == event.getInventory()) {
+            event.setCancelled(true);
+        }
+    }
+
+    private void denyPutItem(InventoryDragEvent event) {
+        Inventory inventory = event.getInventory();
+
+        for (int i : event.getRawSlots()) {
+
+            if (i < inventory.getSize()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
 }
