@@ -24,40 +24,30 @@ public class MinionInventory implements InventoryHolder {
     public MinionInventory(String type, int row) {
         this.row = row;
         this.type = type;
-        if (row == 6) {
-            page = 1;
-        } else {
-            page = (row / 6) + 1; //容器理论页数（加菜单）
-        }
-        if (row <= 6) {
-            page = 1;
-        } else if (row <= 10) {
-            page = 2;
-        } else {
-            if (row % 5 == 0) {
-                page = row / 5;
-            } else {
-                page = row / 5 + 1;
-            }
-        }
+
+        setPage();
         inventoryList = new ArrayList<>();
         initInventory();
     }
 
-    public boolean addRow(int row) {
+    public void addRow(int row) {
         if (row <= 0) {
-            return false;
+            return;
         }
-        this.row += row;
-        if (this.row <= 6) {
+
+        setPage();
+        addInventory(row);
+    }
+
+    private void setPage() {
+        if (row <= 6) {
             page = 1;
         } else {
             page = this.row % 5 == 0 ? (this.row / 5) : (this.row / 5 + 1);
         }
-        return addInventory(row);
     }
 
-    private boolean addInventory(int extra) { //成功返回true
+    private void addInventory(int extra) { //成功返回true
         int oldRow = row - extra;
         int oldPage;
         int endInvSurplus;//最后一页的剩余(容器)排数
@@ -86,7 +76,7 @@ public class MinionInventory implements InventoryHolder {
             inventoryList.set(inventoryList.size() - 1, inv);
             addMenu(inventoryList, menuButtons);
             currentInventory = inventoryList.get(0);
-            return true;
+            return;
         } else {
             Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
             clearMenuButton(invTemp);
@@ -116,7 +106,6 @@ public class MinionInventory implements InventoryHolder {
         }
         addMenu(inventoryList, menuButtons);
         currentInventory = inventoryList.get(0);
-        return true;
     }
 
     private void initInventory() {
