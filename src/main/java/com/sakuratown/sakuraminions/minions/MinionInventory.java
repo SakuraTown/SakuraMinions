@@ -13,15 +13,19 @@ import java.util.Map;
 
 public class MinionInventory implements InventoryHolder {
 
-    private ArrayList<MenuButton> menuButtons;
     private final ArrayList<Inventory> inventoryList;
+    private final String type;
+    private ArrayList<MenuButton> menuButtons;
     private Inventory currentInventory;
-    private String type;
     private int row;
     private int maxPage;
     private int nowPage = 1;
 
+
     public MinionInventory(String type, int row) {
+        this.row = row;
+        this.type = type;
+
         setMaxPage();
         inventoryList = new ArrayList<>();
         initInventory();
@@ -43,15 +47,15 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void addRow(int row) {
-        if (row <= 0) return;
-
+        if (row <= 0) {
+            return;
+        }
         this.row += row;
-
         setMaxPage();
         addInventory(row);
     }
 
-    public void setMaxPage() {
+    private void setMaxPage() {
         if (this.row <= 6) {
             maxPage = 1;
         } else {
