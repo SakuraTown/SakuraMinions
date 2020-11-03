@@ -66,20 +66,18 @@ public class MinionInventory implements InventoryHolder {
         int oldRow = row - extra;
         int oldPage;
         int endInvSurplus;//最后一页的剩余(容器)排数
-
         if (oldRow <= 6) {
             oldPage = 1;
             endInvSurplus = 6 - oldRow;
-        }  else {
+        } else {
             if (oldRow % 5 == 0) {
                 oldPage = oldRow / 5;
                 endInvSurplus = 0;
             } else {
                 oldPage = oldRow / 5 + 1;
-                endInvSurplus = 6 - ((oldRow % 5) + 1);
+                endInvSurplus = 5 - oldRow % 5;
             }
         }
-
         if (extra <= endInvSurplus) {
             Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
             clearMenuButton(invTemp);
@@ -97,32 +95,29 @@ public class MinionInventory implements InventoryHolder {
             Inventory inv = Bukkit.createInventory(this, 54, type + ":" + oldPage);
             inv.setContents(itemStacks);
             inventoryList.set(inventoryList.size() - 1, inv);
-            int extraEndRow = extra - endInvSurplus;
-            int extraPage;
-            if (extraEndRow % 5 == 0) {
-                extraPage = extraEndRow / 5;
-            } else {
-                extraPage = extraEndRow / 5 + 1;
-            }
+            int extraRow = extra - endInvSurplus; //填完现有的最后一页还多的行数(不含菜单)
+            int extraEndRow = (extra - endInvSurplus) % 5 == 0 ? 6 : (extra - endInvSurplus) % 5 + 1; //最后一页的行数(包括菜单1个)
+            int extraPage = extraRow % 5 == 0 ? extraRow / 5 : extraRow / 5 + 1; //多增加的页数
             Inventory[] addInventories = new Inventory[extraPage];
             for (int i = 1; i < extraPage; i++) {
+
                 addInventories[i - 1] = Bukkit.createInventory(this, 54, type + ":" + (oldPage + i));
                 inventoryList.add(addInventories[i - 1]);
+
             }
             if (oldPage == 1 && extraPage == 1) {
-                addInventories[0] = Bukkit.createInventory(this, (extraEndRow % 5 + 2) * 9, type + ":" +2);
-
+                addInventories[0] = Bukkit.createInventory(this, (extraEndRow + 1) * 9, type + ":" + 2);
+                inventoryList.add(addInventories[0]);
             } else {
-                addInventories[extraPage - 1] = Bukkit.createInventory(this, (extraEndRow % 5 + 1) * 9, type + ":" + (extraPage+oldPage));
+                addInventories[extraPage - 1] = Bukkit.createInventory(this, extraEndRow * 9, type + ":" + (extraPage + oldPage));
+                inventoryList.add(addInventories[extraPage - 1]);
             }
-            inventoryList.add(addInventories[extraPage - 1]);
         }
         addMenuButton();
         currentInventory = inventoryList.get(0);
     }
 
     private void initInventory() {
-
         Inventory[] initInventory = new Inventory[maxPage];
         for (int i = 0; i < maxPage; i++) {
             if (i == (maxPage - 1)) {
@@ -186,23 +181,20 @@ public class MinionInventory implements InventoryHolder {
                     itemStacks[i] = null;
                 }
             }
-
         }
         inv.setContents(itemStacks);
     }
 
-    public void addMenuButton() {
-        int page = inventoryList.size();
-        if (page == 1) {
+    public void addMenuButton() { //有问题
+        if (maxPage == 1) {
             return;
         }
         ArrayList<MenuButton> menuButtonsFirst = new ArrayList<>(menuButtons);
         ArrayList<MenuButton> menuButtonsEnd = new ArrayList<>(menuButtons);
-
         String style = Config.getMenuStyle();
         final int x = style.equals("Bottom") ? 45 : 0;//底部或顶部 此值决定了按钮的位置（slot）
-        Inventory[] inventories = new Inventory[page];
-        for (int i = 1; i < page; i++) {
+        Inventory[] inventories = new Inventory[maxPage];
+        for (int i = 1; i < maxPage; i++) {
             inventories[i - 1] = inventoryList.get(i - 1);
             if (i == 1) {
                 for (int n = 0; n < menuButtonsFirst.size(); n++) {
@@ -221,7 +213,8 @@ public class MinionInventory implements InventoryHolder {
             }
             inventoryList.set(i - 1, inventories[i - 1]);
         }
-        inventories[page - 1] = inventoryList.get(page - 1);
+
+        inventories[maxPage - 1] = inventoryList.get(maxPage - 1);
         for (int n = 0; n < menuButtonsEnd.size(); n++) {
             MenuButton button = menuButtonsEnd.get(n);
             if (button.getType().equals("NextPage")) {
@@ -230,12 +223,12 @@ public class MinionInventory implements InventoryHolder {
         }
         for (MenuButton button : menuButtonsEnd) {
             if (x == 45) {
-                inventories[page - 1].setItem(inventories[page - 1].getSize() - 10 + button.getSlot(), button.getItemStack());
+                inventories[maxPage - 1].setItem(inventories[maxPage - 1].getSize() - 10 + button.getSlot(), button.getItemStack());
             } else {
-                inventories[page - 1].setItem(button.getSlot() - 1, button.getItemStack());
+                inventories[maxPage - 1].setItem(button.getSlot() - 1, button.getItemStack());
             }
         }
-        inventoryList.set(page - 1, inventories[page - 1]);
+        inventoryList.set(maxPage - 1, inventories[maxPage - 1]);
 
     }
 
