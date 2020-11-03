@@ -13,19 +13,17 @@ import java.util.Map;
 
 public class MinionInventory implements InventoryHolder {
 
-    private final ArrayList<Inventory> inventoryList;
-    private final String type;
     private ArrayList<MenuButton> menuButtons;
+    private final ArrayList<Inventory> inventoryList;
     private Inventory currentInventory;
+    private String type;
     private int row;
     private int maxPage;
     private int nowPage = 1;
 
-
     public MinionInventory(String type, int row) {
         this.row = row;
         this.type = type;
-
         setMaxPage();
         inventoryList = new ArrayList<>();
         initInventory();
@@ -51,6 +49,7 @@ public class MinionInventory implements InventoryHolder {
             return;
         }
         this.row += row;
+
         setMaxPage();
         addInventory(row);
     }
@@ -114,10 +113,10 @@ public class MinionInventory implements InventoryHolder {
                 inventoryList.add(addInventories[i - 1]);
             }
             if (oldPage == 1 && extraPage == 1) {
-                addInventories[0] = Bukkit.createInventory(this, (extraEndRow % 5 + 2) * 9, type + ":" + extraPage);
+                addInventories[0] = Bukkit.createInventory(this, (extraEndRow % 5 + 2) * 9, type + ":" +2);
 
             } else {
-                addInventories[extraPage - 1] = Bukkit.createInventory(this, (extraEndRow % 5 + 1) * 9, type + ":" + extraPage);
+                addInventories[extraPage - 1] = Bukkit.createInventory(this, (extraEndRow % 5 + 1) * 9, type + ":" + (extraPage+oldPage));
             }
             inventoryList.add(addInventories[extraPage - 1]);
         }
