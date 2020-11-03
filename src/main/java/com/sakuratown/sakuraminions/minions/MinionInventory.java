@@ -70,10 +70,7 @@ public class MinionInventory implements InventoryHolder {
         if (oldRow <= 6) {
             oldPage = 1;
             endInvSurplus = 6 - oldRow;
-        } else if (oldRow <= 10) {
-            oldPage = 2;
-            endInvSurplus = 6 - ((oldRow % 6) + 2);
-        } else {
+        }  else {
             if (oldRow % 5 == 0) {
                 oldPage = oldRow / 5;
                 endInvSurplus = 0;
