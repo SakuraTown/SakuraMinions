@@ -45,7 +45,6 @@ public class InventoryGUIListener implements Listener {
 
         String displayName = currentItem.getItemMeta().getDisplayName();
 
-        // config 类返回一个 itemStack 然后在这里比较它不香吗? 这样判断有点繁琐噢
         if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
             gui.showInventoryGUI(--nowPage, player);
             gui.setNowPage(nowPage);
@@ -59,6 +58,7 @@ public class InventoryGUIListener implements Listener {
         }
 
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
+            gui.sortItems();
             event.setCancelled(true);
         }
     }

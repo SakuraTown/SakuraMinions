@@ -8,6 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 public class MinionInventory implements InventoryHolder {
@@ -270,6 +272,44 @@ public class MinionInventory implements InventoryHolder {
             }
         }
         return true;
+    }
+    public void sortItems(){
+        for(Inventory iv : inventoryList){
+            clearMenuButton(iv);
+        }
+        ArrayList<ItemStack> itemStackList = new ArrayList<>();
+        for(Inventory inv : inventoryList){ //获取全部物品储存到itemStackList
+            ItemStack[] items = inv.getContents();
+            for(ItemStack item : items){
+                if(item != null){//过滤null
+                itemStackList.add(item);
+                }
+            }
+        }
+        if(itemStackList.isEmpty()){return;}
+        ArrayList<ItemStack> tempItemStackList = new ArrayList<>();
+        Iterator<ItemStack> iter = itemStackList.iterator();
+        while(iter.hasNext()){
+            ItemStack tempItem1 = iter.next();
+            tempItemStackList.add(tempItem1);
+            iter.remove();
+            while (iter.hasNext()){
+                ItemStack tempItem2 = iter.next();
+                if(tempItem2.isSimilar(tempItem1)){
+                    tempItemStackList.add(tempItem2);
+                    iter.remove();
+                }
+            }
+            iter = itemStackList.iterator();
+        }
+        clearItems();
+        addItem(tempItemStackList);
+    }
+    public void clearItems(){
+        for(Inventory inv : inventoryList){
+            inv.clear();
+        }
+        addMenu(inventoryList,menuButtons);
     }
 
     public ArrayList<Inventory> getInventoryList() {

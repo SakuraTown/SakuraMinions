@@ -30,6 +30,9 @@ public class Minion {
         inventoryGUI.setInventories(inventories);
         inventoryGUI.showInventoryGUI(page, player);
     }
+    public void sortItem(){
+        inventories.sortItems();
+    }
 
     public void addRandomItem(){
         Material randomMaterial = Material.getMaterial(getRandomMaterial());
