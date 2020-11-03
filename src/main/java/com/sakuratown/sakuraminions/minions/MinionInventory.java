@@ -8,44 +8,54 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
 public class MinionInventory implements InventoryHolder {
 
     private ArrayList<MenuButton> menuButtons;
-    private ArrayList<Inventory> inventoryList;
+    private final ArrayList<Inventory> inventoryList;
     private Inventory currentInventory;
     private String type;
     private int row;
-    private int page;
+    private int maxPage;
     private int nowPage = 1;
 
-
     public MinionInventory(String type, int row) {
-        this.row = row;
-        this.type = type;
-
-        setPage();
+        setMaxPage();
         inventoryList = new ArrayList<>();
         initInventory();
     }
 
-    public void addRow(int row) {
-        if (row <= 0) {
-            return;
+    public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
+
+        int amount = 0;
+
+        for (ItemStack invStack : inventory.getStorageContents()) {
+            if (invStack == null) {
+                amount += itemStack.getMaxStackSize();
+            } else if (invStack.isSimilar(itemStack)) {
+                amount += invStack.getMaxStackSize() - invStack.getAmount();
+            }
         }
 
-        setPage();
+        return amount;
+    }
+
+    public void addRow(int row) {
+        if (row <= 0) return;
+
+        this.row += row;
+
+        setMaxPage();
         addInventory(row);
     }
 
-    private void setPage() {
-        if (row <= 6) {
-            page = 1;
+    public void setMaxPage() {
+        if (this.row <= 6) {
+            maxPage = 1;
         } else {
-            page = this.row % 5 == 0 ? (this.row / 5) : (this.row / 5 + 1);
+            maxPage = this.row % 5 == 0 ? (this.row / 5) : (this.row / 5 + 1);
         }
     }
 
@@ -69,6 +79,7 @@ public class MinionInventory implements InventoryHolder {
                 endInvSurplus = 6 - ((oldRow % 5) + 1);
             }
         }
+
         if (extra <= endInvSurplus) {
             Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
             clearMenuButton(invTemp);
@@ -76,7 +87,7 @@ public class MinionInventory implements InventoryHolder {
             Inventory inv = Bukkit.createInventory(this, invTemp.getSize() + extra * 9, type + ":" + oldPage);
             inv.setContents(itemStacks);
             inventoryList.set(inventoryList.size() - 1, inv);
-            addMenu(inventoryList, menuButtons);
+            addMenuButton();
             currentInventory = inventoryList.get(0);
             return;
         } else {
@@ -106,17 +117,17 @@ public class MinionInventory implements InventoryHolder {
             }
             inventoryList.add(addInventories[extraPage - 1]);
         }
-        addMenu(inventoryList, menuButtons);
+        addMenuButton();
         currentInventory = inventoryList.get(0);
     }
 
     private void initInventory() {
 
-        Inventory[] initInventory = new Inventory[page];
-        for (int i = 0; i < page; i++) {
-            if (i == (page - 1)) {
+        Inventory[] initInventory = new Inventory[maxPage];
+        for (int i = 0; i < maxPage; i++) {
+            if (i == (maxPage - 1)) {
                 if (row >= 6) {
-                    initInventory[i] = Bukkit.createInventory(this, (row % 6 + page) * 9, type + ":" + (i + 1));
+                    initInventory[i] = Bukkit.createInventory(this, (row % 6 + maxPage) * 9, type + ":" + (i + 1));
                 } else {
                     initInventory[i] = Bukkit.createInventory(this, (row % 6) * 9, type + ":" + (i + 1));
                 }
@@ -126,20 +137,20 @@ public class MinionInventory implements InventoryHolder {
             inventoryList.add(initInventory[i]);
         }
         menuButtons = MenuButton.initMenuButton();
-        addMenu(inventoryList, menuButtons);
+        addMenuButton();
         currentInventory = inventoryList.get(0);
     }
 
-    public int getPage() {
-        return page;
-    }
-
-    public void setNowPage(int page) {
-        nowPage = page;
+    public int getMaxPage() {
+        return maxPage;
     }
 
     public int getNowPage() {
         return nowPage;
+    }
+
+    public void setNowPage(int page) {
+        nowPage = page;
     }
 
     public void showInventoryGUI(int page, Player player) {
@@ -180,8 +191,7 @@ public class MinionInventory implements InventoryHolder {
         inv.setContents(itemStacks);
     }
 
-
-    public void addMenu(ArrayList<Inventory> inventoryList, ArrayList<MenuButton> menuButtons) {
+    public void addMenuButton() {
         int page = inventoryList.size();
         if (page == 1) {
             return;
@@ -262,29 +272,33 @@ public class MinionInventory implements InventoryHolder {
         }
         return true;
     }
-    public void sortItems(){
-        for(Inventory iv : inventoryList){
+
+    public void sortItems() {
+        for (Inventory iv : inventoryList) {
             clearMenuButton(iv);
         }
         ArrayList<ItemStack> itemStackList = new ArrayList<>();
-        for(Inventory inv : inventoryList){ //获取全部物品储存到itemStackList
+        for (Inventory inv : inventoryList) { //获取全部物品储存到itemStackList
             ItemStack[] items = inv.getContents();
-            for(ItemStack item : items){
-                if(item != null){//过滤null
-                itemStackList.add(item);
+            for (ItemStack item : items) {
+                if (item != null) { //过滤null
+                    itemStackList.add(item);
                 }
             }
         }
-        if(itemStackList.isEmpty()){return;}
+        if (itemStackList.isEmpty()) {
+            addMenuButton();
+            return;
+        }
         ArrayList<ItemStack> tempItemStackList = new ArrayList<>();
         Iterator<ItemStack> iter = itemStackList.iterator();
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             ItemStack tempItem1 = iter.next();
             tempItemStackList.add(tempItem1);
             iter.remove();
-            while (iter.hasNext()){
+            while (iter.hasNext()) {
                 ItemStack tempItem2 = iter.next();
-                if(tempItem2.isSimilar(tempItem1)){
+                if (tempItem2.isSimilar(tempItem1)) {
                     tempItemStackList.add(tempItem2);
                     iter.remove();
                 }
@@ -294,30 +308,16 @@ public class MinionInventory implements InventoryHolder {
         clearItems();
         addItem(tempItemStackList);
     }
-    public void clearItems(){
-        for(Inventory inv : inventoryList){
+
+    public void clearItems() {
+        for (Inventory inv : inventoryList) {
             inv.clear();
         }
-        addMenu(inventoryList,menuButtons);
+        addMenuButton();
     }
 
     public ArrayList<Inventory> getInventoryList() {
         return inventoryList;
-    }
-
-    public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
-
-        int amount = 0;
-
-        for (ItemStack invStack : inventory.getStorageContents()) {
-            if (invStack == null) {
-                amount += itemStack.getMaxStackSize();
-            } else if (invStack.isSimilar(itemStack)) {
-                amount += invStack.getMaxStackSize() - invStack.getAmount();
-            }
-        }
-
-        return amount;
     }
 
     @Override
