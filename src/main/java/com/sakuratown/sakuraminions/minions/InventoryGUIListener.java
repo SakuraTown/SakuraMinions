@@ -1,11 +1,13 @@
 package com.sakuratown.sakuraminions.minions;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -26,18 +28,14 @@ public class InventoryGUIListener implements Listener {
     public void inventoryClickEvent(InventoryClickEvent event) {
 
         Player player = ((Player) event.getWhoClicked()).getPlayer();
-        if (player == null) return;
+        Inventory clickedInventory = event.getClickedInventory();
+
+        if (player == null || clickedInventory == null || clickedInventory.getType() == InventoryType.PLAYER) return;
 
         ItemStack currentItem = event.getCurrentItem();
-        MinionInventory gui = getGui(event);
+        MinionInventory gui = getGui(event.getInventory());
 
         if (gui == null) return;
-
-        Inventory inventory = gui.getCurrentInventory();
-
-        if (event.getRawSlot() > inventory.getSize() - 1) {
-            return;
-        }
 
         int nowPage = gui.getNowPage();
 
@@ -63,19 +61,16 @@ public class InventoryGUIListener implements Listener {
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
             event.setCancelled(true);
         }
-
-
     }
 
     @EventHandler
     public void inventoryOpenEvent(InventoryOpenEvent event) {
-        MinionInventory gui = getGui(event);
+        MinionInventory gui = getGui(event.getInventory());
         if (gui == null) return;
         gui.setCurrentInventory(event.getInventory());
     }
 
-    private MinionInventory getGui(InventoryEvent event) {
-        Inventory inventory = event.getInventory();
+    private MinionInventory getGui(Inventory inventory) {
         InventoryHolder holder = inventory.getHolder();
 
         if (!(holder instanceof MinionInventory)) return null;
