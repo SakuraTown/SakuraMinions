@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,13 +28,12 @@ public class InventoryGUIListener implements Listener {
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
 
-        Player player = ((Player) event.getWhoClicked()).getPlayer();
+
+        Player player = event.getWhoClicked() instanceof Player ? (Player) event.getWhoClicked() : null;
         Inventory clickedInventory = event.getClickedInventory();
-
-        if (player == null || clickedInventory == null) return;
-
         MinionInventory gui = getGui(event.getInventory());
-        if (gui == null) return;
+
+        if (player == null || clickedInventory == null || gui == null) return;
 
         denyPutItem(event, clickedInventory);
 
@@ -88,7 +88,10 @@ public class InventoryGUIListener implements Listener {
             return;
         }
 
-        if (event.getCursor() != null && clickedInventory == event.getInventory()) {
+        ItemStack cursor = event.getCursor();
+        if (cursor == null) return;
+
+        if (cursor.getType() != Material.AIR && clickedInventory == event.getInventory()) {
             event.setCancelled(true);
         }
     }
