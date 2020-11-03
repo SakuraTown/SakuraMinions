@@ -100,10 +100,8 @@ public class MinionInventory implements InventoryHolder {
             int extraPage = extraRow % 5 == 0 ? extraRow / 5 : extraRow / 5 + 1; //多增加的页数
             Inventory[] addInventories = new Inventory[extraPage];
             for (int i = 1; i < extraPage; i++) {
-
                 addInventories[i - 1] = Bukkit.createInventory(this, 54, type + ":" + (oldPage + i));
                 inventoryList.add(addInventories[i - 1]);
-
             }
             if (oldPage == 1 && extraPage == 1) {
                 addInventories[0] = Bukkit.createInventory(this, (extraEndRow + 1) * 9, type + ":" + 2);
@@ -116,7 +114,6 @@ public class MinionInventory implements InventoryHolder {
         addMenuButton();
         currentInventory = inventoryList.get(0);
     }
-
     private void initInventory() {
         Inventory[] initInventory = new Inventory[maxPage];
         for (int i = 0; i < maxPage; i++) {
