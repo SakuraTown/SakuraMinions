@@ -267,12 +267,12 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void sortItems() {
-        for (Inventory iv : inventoryList) {
-            clearMenuButton(iv);
+        for (Inventory inventory : inventoryList) {
+            clearMenuButton(inventory);
         }
         ArrayList<ItemStack> itemStackList = new ArrayList<>();
-        for (Inventory inv : inventoryList) { //获取全部物品储存到itemStackList
-            ItemStack[] items = inv.getContents();
+        for (Inventory inventory : inventoryList) { //获取全部物品储存到itemStackList
+            ItemStack[] items = inventory.getContents();
             for (ItemStack item : items) {
                 if (item != null) { //过滤null
                     itemStackList.add(item);

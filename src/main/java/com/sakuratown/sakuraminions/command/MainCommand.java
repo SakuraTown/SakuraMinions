@@ -22,7 +22,4 @@ public class MainCommand extends SimpleCommand {
         registerSubCommand(new GiveCommand("give"));
         registerSubCommand(new ReloadCommand("reload"));
     }
-
-
-
 }
