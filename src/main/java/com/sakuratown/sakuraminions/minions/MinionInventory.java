@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -264,18 +265,8 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void sortItems() {
-        for (Inventory inventory : inventoryList) {
-            clearMenuButton(inventory);
-        }
-        ArrayList<ItemStack> itemStackList = new ArrayList<>();
-        for (Inventory inventory : inventoryList) { //获取全部物品储存到itemStackList
-            ItemStack[] items = inventory.getContents();
-            for (ItemStack item : items) {
-                if (item != null) { //过滤null
-                    itemStackList.add(item);
-                }
-            }
-        }
+        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
+        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
         if (itemStackList.isEmpty()) {
             addMenuButton();
             return;
@@ -298,7 +289,43 @@ public class MinionInventory implements InventoryHolder {
         clearItems();
         addItem(tempItemStackList);
     }
+    public HashMap<String,Integer> getItemList(){//统计所有的物品到Hashmap todo:待测试
+        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
+        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
+        Iterator<ItemStack> iter = itemStackList.iterator();
+        HashMap<String,Integer> itemList = new HashMap<>();
+        while (iter.hasNext()) {
+            ItemStack tempItem1 = iter.next();
+            String materialName = tempItem1.getType().name();
+            iter.remove();
+            itemList.put(materialName,tempItem1.getAmount());
+            while (iter.hasNext()) {
+                ItemStack tempItem2 = iter.next();
+                if (tempItem2.isSimilar(tempItem1)) {
+                    itemList.put(materialName,itemList.get(materialName)+tempItem2.getAmount());
+                    iter.remove();
+                }
+            }
+            iter = itemStackList.iterator();
+        }
+        return itemList;
+    }
 
+    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories){
+        ArrayList<ItemStack> itemStackList = new ArrayList<>();
+        for (Inventory inventory : inventories) {
+            clearMenuButton(inventory);
+        }
+        for (Inventory inventory : inventories) { //获取全部物品储存到itemStackList
+            ItemStack[] items = inventory.getContents();
+            for (ItemStack item : items) {
+                if (item != null) { //过滤null
+                    itemStackList.add(item);
+                }
+            }
+        }
+        return itemStackList;
+    }
     public void clearItems() {
         for (Inventory inv : inventoryList) {
             inv.clear();
