@@ -28,7 +28,7 @@ public class MinionInventory implements InventoryHolder {
         this.row = row;
         setMaxPage();
         inventoryList = new ArrayList<>();
-        initInventory();
+        initInventory(row);
 
     }
 
@@ -52,7 +52,6 @@ public class MinionInventory implements InventoryHolder {
             return;
         }
         this.row += row;
-
         setMaxPage();
         addInventory(row);
     }
@@ -70,8 +69,6 @@ public class MinionInventory implements InventoryHolder {
         if(inventoryList.size() ==0){
             Inventory inv =  Bukkit.createInventory(this,9,type + ":" + 1);
             inventoryList.add(inv);
-            extra = row;
-            oldRow = 0;
         }
         int oldPage;
         int endInvSurplus;//最后一页的剩余(容器)排数
@@ -126,9 +123,9 @@ public class MinionInventory implements InventoryHolder {
         currentInventory = inventoryList.get(0);
     }
 
-    private void initInventory() {
+    private void initInventory(int row) {
         menuButtons = MenuButton.initMenuButton();
-        addRow(0);
+        addRow(row);
         addMenuButton();
         currentInventory = inventoryList.get(0);
     }
