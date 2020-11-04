@@ -7,10 +7,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class MinionInventory implements InventoryHolder {
 
@@ -21,7 +18,7 @@ public class MinionInventory implements InventoryHolder {
     private int row;
     private int maxPage;
     private int nowPage = 1;
-    private HashMap<String,Integer> currentPages;
+    private HashMap<String, Integer> currentPages;
 
     public MinionInventory(String type, int row) {
         this.type = type;
@@ -48,7 +45,7 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void addRow(int row) {
-        if (row < 0) {
+        if (row <= 0) {
             return;
         }
         this.row += row;
@@ -64,63 +61,54 @@ public class MinionInventory implements InventoryHolder {
         }
     }
 
-    private void addInventory(int extra) { //成功返回true
+    private void addInventory(int extra) {
         int oldRow = row - extra;
-        if(inventoryList.size() ==0){
-            Inventory inv =  Bukkit.createInventory(this,9,type + ":" + 1);
-            inventoryList.add(inv);
-        }
-        int oldPage;
+        int oldPage = inventoryList.size();//原来的容器页数
         int endInvSurplus;//最后一页的剩余(容器)排数
-        if (oldRow <= 6) {
-            oldPage = 1;
-            endInvSurplus = 6 - oldRow;
-        } else {
-            if (oldRow % 5 == 0) {
-                oldPage = oldRow / 5;
-                endInvSurplus = 0;
-            } else {
-                oldPage = oldRow / 5 + 1;
-                endInvSurplus = 5 - oldRow % 5;
-            }
+        endInvSurplus = oldRow <= 6 ? 6 - oldRow : oldRow % 5 == 0 ? 0 : 5 - oldRow % 5; //计算最后一页剩余的行数
+        //如果是初始化，先赋予一个一行的容器，再做添加
+        if (oldPage == 0) {
+            Inventory inv = Bukkit.createInventory(this, 9, type + ":" + 1);
+            inventoryList.add(inv);
+            oldPage = 1;//因为初始化所以是一页
+            extra -=1; //减去初始化的1行
         }
-
+        //添加的行数小于最后一页剩余的可填充行数
         if (extra <= endInvSurplus) {
-
-            Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
-            clearMenuButton(invTemp);
-            ItemStack[] itemStacks = invTemp.getContents();
-            Inventory inv = Bukkit.createInventory(this, invTemp.getSize() + extra * 9, type + ":" + oldPage);
-            inv.setContents(itemStacks);
-            inventoryList.set(inventoryList.size() - 1, inv);
+            setLastInventory(inventoryList.get(oldPage-1).getSize()+extra * 9);
             addMenuButton();
             currentInventory = inventoryList.get(0);
             return;
         } else {
-            Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
-            clearMenuButton(invTemp);
-            ItemStack[] itemStacks = invTemp.getContents();
-            Inventory inv = Bukkit.createInventory(this, 54, type + ":" + oldPage);
-            inv.setContents(itemStacks);
-            inventoryList.set(inventoryList.size() - 1, inv);
+            //添加的行数超过最后一页剩余的可填充行数
+            setLastInventory(54);
             int extraRow = extra - endInvSurplus; //填完现有的最后一页还多的行数(不含菜单)
             int extraEndRow = (extra - endInvSurplus) % 5 == 0 ? 6 : (extra - endInvSurplus) % 5 + 1; //最后一页的行数(包括菜单1个)
             int extraPage = extraRow % 5 == 0 ? extraRow / 5 : extraRow / 5 + 1; //多增加的页数
             Inventory[] addInventories = new Inventory[extraPage];
+            //填充中间页
             for (int i = 1; i < extraPage; i++) {
                 addInventories[i - 1] = Bukkit.createInventory(this, 54, type + ":" + (oldPage + i));
-                inventoryList.add(addInventories[i - 1]);
             }
-            if (oldPage == 1 && extraPage == 1) {
+            // 最后创建最后一页
+            if (oldPage == 1 && extraPage == 1) { //第一页和额外页为1的特殊情况
                 addInventories[0] = Bukkit.createInventory(this, (extraEndRow + 1) * 9, type + ":" + 2);
-                inventoryList.add(addInventories[0]);
             } else {
                 addInventories[extraPage - 1] = Bukkit.createInventory(this, extraEndRow * 9, type + ":" + (extraPage + oldPage));
-                inventoryList.add(addInventories[extraPage - 1]);
             }
+            inventoryList.addAll(Arrays.asList(addInventories));
         }
         addMenuButton();
         currentInventory = inventoryList.get(0);
+    }
+
+    private void setLastInventory(int size) {//设置最后一页的行数
+        Inventory invTemp = inventoryList.get(inventoryList.size() - 1);
+        clearMenuButton(invTemp);
+        ItemStack[] itemStacks = invTemp.getContents();
+        Inventory inv = Bukkit.createInventory(this, size, type + ":" + inventoryList.size());
+        inv.setContents(itemStacks);
+        inventoryList.set(inventoryList.size() - 1, inv);
     }
 
     private void initInventory(int row) {
