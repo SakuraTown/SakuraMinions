@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -277,18 +278,8 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void sortItems() {
-        for (Inventory inventory : inventoryList) {
-            clearMenuButton(inventory);
-        }
-        ArrayList<ItemStack> itemStackList = new ArrayList<>();
-        for (Inventory inventory : inventoryList) { //获取全部物品储存到itemStackList
-            ItemStack[] items = inventory.getContents();
-            for (ItemStack item : items) {
-                if (item != null) { //过滤null
-                    itemStackList.add(item);
-                }
-            }
-        }
+        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
+        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
         if (itemStackList.isEmpty()) {
             addMenuButton();
             return;
@@ -310,6 +301,48 @@ public class MinionInventory implements InventoryHolder {
         }
         clearItems();
         addItem(tempItemStackList);
+    }
+
+    public HashMap<String, Integer> getItemList() {//统计所有的物品到Hashmap todo:待测试
+        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
+        HashMap<String, Integer> itemList = new HashMap<>();
+        for (Inventory inventory : inventories) {
+            clearMenuButton(inventory);
+            if (inventory.isEmpty()) {
+                continue;
+            }
+            ItemStack[] items = inventory.getContents();
+            for (ItemStack item : items) {
+                if (item == null) {//过滤null
+                    continue;
+                }
+                String itemName = item.getType().name();
+                if (!itemList.containsKey(itemName)) {
+                    itemList.put(itemName, item.getAmount());
+                } else {
+                    itemList.put(itemName, itemList.get(itemName) + item.getAmount());
+                }
+
+            }
+
+        }
+        return itemList;
+    }
+
+    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories) {
+        ArrayList<ItemStack> itemStackList = new ArrayList<>();
+        for (Inventory inventory : inventories) {
+            clearMenuButton(inventory);
+        }
+        for (Inventory inventory : inventories) { //获取全部物品储存到itemStackList
+            ItemStack[] items = inventory.getContents();
+            for (ItemStack item : items) {
+                if (item != null) { //过滤null
+                    itemStackList.add(item);
+                }
+            }
+        }
+        return itemStackList;
     }
 
     public void clearItems() {
