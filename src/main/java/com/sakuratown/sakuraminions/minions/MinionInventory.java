@@ -13,10 +13,10 @@ import java.util.Map;
 
 public class MinionInventory implements InventoryHolder {
 
-    private ArrayList<MenuButton> menuButtons;
-    private final ArrayList<Inventory> inventoryList;
-    private Inventory currentInventory;
+    private final ArrayList<Inventory> inventoryList = new ArrayList<>();
     private final String type;
+    private ArrayList<MenuButton> menuButtons;
+    private Inventory currentInventory;
     private int row;
     private int maxPage;
     private int nowPage = 1;
@@ -24,8 +24,8 @@ public class MinionInventory implements InventoryHolder {
     public MinionInventory(String type, int row) {
         this.row = row;
         this.type = type;
+
         setMaxPage();
-        inventoryList = new ArrayList<>();
         initInventory();
     }
 
@@ -114,20 +114,33 @@ public class MinionInventory implements InventoryHolder {
         addMenuButton();
         currentInventory = inventoryList.get(0);
     }
+
     private void initInventory() {
-        Inventory[] initInventory = new Inventory[maxPage];
+
         for (int i = 0; i < maxPage; i++) {
-            if (i == (maxPage - 1)) {
-                if (row >= 6) {
-                    initInventory[i] = Bukkit.createInventory(this, (row % 6 + maxPage) * 9, type + ":" + (i + 1));
-                } else {
-                    initInventory[i] = Bukkit.createInventory(this, (row % 6) * 9, type + ":" + (i + 1));
-                }
+
+            int page = i + 1;
+            Inventory inventory;
+
+            if (maxPage == 1) {
+
+                inventory = Bukkit.createInventory(this, row * 9, type + ":" + page);
+
+            } else if (page == maxPage) {
+
+                int lastPageBlankRow = row % 5 == 0 ? 5 : row % 5;
+                int lastPageRow = lastPageBlankRow + 1;
+                inventory = Bukkit.createInventory(this, lastPageRow * 9, type + ":" + page);
+
             } else {
-                initInventory[i] = Bukkit.createInventory(this, 54, type + ":" + (i + 1));
+
+                inventory = Bukkit.createInventory(this, 54, type + ":" + page);
+
             }
-            inventoryList.add(initInventory[i]);
+
+            inventoryList.add(inventory);
         }
+
         menuButtons = MenuButton.initMenuButton();
         addMenuButton();
         currentInventory = inventoryList.get(0);
