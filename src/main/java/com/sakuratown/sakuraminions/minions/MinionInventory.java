@@ -115,6 +115,7 @@ public class MinionInventory implements InventoryHolder {
         addMenuButton();
         currentInventory = inventoryList.get(0);
     }
+
     private void initInventory() {
         Inventory[] initInventory = new Inventory[maxPage];
         for (int i = 0; i < maxPage; i++) {
@@ -289,29 +290,34 @@ public class MinionInventory implements InventoryHolder {
         clearItems();
         addItem(tempItemStackList);
     }
-    public HashMap<String,Integer> getItemList(){//统计所有的物品到Hashmap todo:待测试
+
+    public HashMap<String, Integer> getItemList() {//统计所有的物品到Hashmap todo:待测试
         ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
-        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
-        Iterator<ItemStack> iter = itemStackList.iterator();
-        HashMap<String,Integer> itemList = new HashMap<>();
-        while (iter.hasNext()) {
-            ItemStack tempItem1 = iter.next();
-            String materialName = tempItem1.getType().name();
-            iter.remove();
-            itemList.put(materialName,tempItem1.getAmount());
-            while (iter.hasNext()) {
-                ItemStack tempItem2 = iter.next();
-                if (tempItem2.isSimilar(tempItem1)) {
-                    itemList.put(materialName,itemList.get(materialName)+tempItem2.getAmount());
-                    iter.remove();
-                }
+        HashMap<String, Integer> itemList = new HashMap<>();
+        for (Inventory inventory : inventories) {
+            clearMenuButton(inventory);
+            if (inventory.isEmpty()) {
+                continue;
             }
-            iter = itemStackList.iterator();
+            ItemStack[] items = inventory.getContents();
+            for (ItemStack item : items) {
+                if (item == null) {//过滤null
+                    continue;
+                }
+                String itemName = item.getType().name();
+                if (!itemList.containsKey(itemName)) {
+                    itemList.put(itemName, item.getAmount());
+                } else {
+                    itemList.put(itemName, itemList.get(itemName) + item.getAmount());
+                }
+
+            }
+
         }
         return itemList;
     }
 
-    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories){
+    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories) {
         ArrayList<ItemStack> itemStackList = new ArrayList<>();
         for (Inventory inventory : inventories) {
             clearMenuButton(inventory);
@@ -326,6 +332,7 @@ public class MinionInventory implements InventoryHolder {
         }
         return itemStackList;
     }
+
     public void clearItems() {
         for (Inventory inv : inventoryList) {
             inv.clear();
