@@ -1,5 +1,6 @@
 package com.sakuratown.sakuraminions.command;
 
+import com.sakuratown.sakuralibrary.command.SimpleSubCommand;
 import org.bukkit.command.CommandSender;
 
 public class UpgradeAmountCommand extends SimpleSubCommand {
@@ -12,7 +13,7 @@ public class UpgradeAmountCommand extends SimpleSubCommand {
     }
 
     @Override
-    void onCommand(CommandSender sender, String[] args) {
+    public void onCommand(CommandSender sender, String[] args) {
 
     }
 }
