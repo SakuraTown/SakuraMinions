@@ -16,7 +16,7 @@ public class MinionInventory implements InventoryHolder {
     private ArrayList<MenuButton> menuButtons;
     private final ArrayList<Inventory> inventoryList;
     private Inventory currentInventory;
-    private String type;
+    private final String type;
     private int row;
     private int maxPage;
     private int nowPage = 1;

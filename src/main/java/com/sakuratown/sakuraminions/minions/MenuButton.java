@@ -1,6 +1,6 @@
 package com.sakuratown.sakuraminions.minions;
 
-import com.sakuratown.sakuraminions.utils.ItemBuilder;
+import com.sakuratown.sakuralibrary.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;

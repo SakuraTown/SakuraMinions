@@ -1,4 +1,4 @@
-package com.sakuratown.sakuraminions.command;
+package com.sakuratown.sakuralibrary.command;
 
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.command.CommandSender;
@@ -11,12 +11,12 @@ public abstract class SimpleSubCommand {
     String description;
     String permission;
 
-    SimpleSubCommand(String subCommand) {
+    public SimpleSubCommand(String subCommand) {
         this.command = subCommand;
         this.permission = Main.getInstance().getName() + "." + subCommand;
     }
 
-    abstract void onCommand(CommandSender sender, String[] args);
+    public abstract void onCommand(CommandSender sender, String[] args);
 
     public void setUsage(String usage) {
         this.usage = usage;
