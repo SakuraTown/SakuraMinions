@@ -71,10 +71,13 @@ public abstract class SimpleCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> tabComplete = new ArrayList<>();
-        for (SimpleSubCommand subCommand : subCommands) {
-            tabComplete.add(subCommand.command);
+        if (args.length == 1) {
+            List<String> tabComplete = new ArrayList<>();
+            for (SimpleSubCommand subCommand : subCommands) {
+                tabComplete.add(subCommand.command);
+            }
+            return tabComplete;
         }
-        return tabComplete;
+        return null;
     }
 }
