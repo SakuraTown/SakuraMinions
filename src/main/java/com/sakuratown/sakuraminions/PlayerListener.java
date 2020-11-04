@@ -31,9 +31,9 @@ public class PlayerListener implements Listener {
         }
         if (item.getType() == Material.OAK_LOG) {
             ItemStack itemStack1 = new ItemStack(Material.OAK_LOG, 64);
-            ItemStack itemStack2 = new ItemStack(Material.ACACIA_LOG, 64);
+            ItemStack itemStack2 = new ItemStack(Material.SAND, 64);
             ItemStack itemStack3 = new ItemStack(Material.STONE, 64);
-            ItemStack itemStack4 = new ItemStack(Material.DIAMOND, 2);
+            ItemStack itemStack4 = new ItemStack(Material.EGG, 64);
             ArrayList<ItemStack> itemStacks = new ArrayList<>();
             itemStacks.add(itemStack1);
             itemStacks.add(itemStack2);
