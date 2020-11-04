@@ -5,10 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -16,18 +13,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryGUIListener implements Listener {
 
-    public static void denyClick(InventoryClickEvent event, Inventory targetInventory) {
-
-        int size = targetInventory.getSize();
-
-        if (event.getRawSlot() < size || event.isShiftClick()) {
-            event.setCancelled(true);
-        }
-    }
-
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
-
 
         Player player = event.getWhoClicked() instanceof Player ? (Player) event.getWhoClicked() : null;
         Inventory clickedInventory = event.getClickedInventory();
@@ -56,7 +43,6 @@ public class InventoryGUIListener implements Listener {
         }
 
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
-            gui.sortItems();
             event.setCancelled(true);
         }
     }
@@ -71,6 +57,12 @@ public class InventoryGUIListener implements Listener {
         MinionInventory gui = getGui(event.getInventory());
         if (gui == null) return;
         gui.setCurrentInventory(event.getInventory());
+    }
+    @EventHandler
+    public void inventoryCloseEvent(InventoryCloseEvent event) {//关闭后自动排序
+        MinionInventory gui = getGui(event.getInventory());
+        if (gui == null) return;
+        gui.sortItems();
     }
 
     private MinionInventory getGui(Inventory inventory) {

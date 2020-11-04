@@ -4,7 +4,7 @@ Minions:
 
     # 允许获取物品的设置
     Item:
-
+      # 物品名称标准在这里查：https://bukkit.windit.net/javadoc/org/bukkit/Material.html
       # 获取原石的权重是 0.3
       COBBLESTONE: 30
       DIAMOND: 30
