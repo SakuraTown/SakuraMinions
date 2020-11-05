@@ -13,7 +13,6 @@ public class MinionInventory implements InventoryHolder {
 
     private final ArrayList<Inventory> inventoryList = new ArrayList<>();
     private final String type;
-    private ArrayList<MenuButton> menuButtons;
     private int row;
     private int maxPage;
     private HashMap<String, Integer> playerLookingPage;
@@ -87,7 +86,6 @@ public class MinionInventory implements InventoryHolder {
             inventoryList.add(inventory);
         }
 
-        menuButtons = MenuButton.initMenuButton();
         addMenuButton();
     }
 
@@ -154,52 +152,23 @@ public class MinionInventory implements InventoryHolder {
         inv.setContents(itemStacks);
     }
 
-    //TODO 这里应该接受一个页数参数, 来给指定页数添加按钮
-    public void addMenuButton() { //有问题 有什么问题??
+
+    public void addMenuButton() {// todo:没解决，有bug，功能未完善
         if (maxPage == 1) {
             return;
         }
-        ArrayList<MenuButton> menuButtonsFirst = new ArrayList<>(menuButtons);
-        ArrayList<MenuButton> menuButtonsEnd = new ArrayList<>(menuButtons);
-        String style = Config.getMenuStyle();
-        final int x = style.equals("Bottom") ? 45 : 0;//底部或顶部 此值决定了按钮的位置（slot）
-        Inventory[] inventories = new Inventory[maxPage];
-        for (int i = 1; i < maxPage; i++) {
-            inventories[i - 1] = inventoryList.get(i - 1);
-            if (i == 1) {
-                for (int n = 0; n < menuButtonsFirst.size(); n++) {
-                    MenuButton button = menuButtonsFirst.get(n);
-                    if (button.getType().equals("LastPage")) {
-                        menuButtonsFirst.set(n, new MenuButton("PlaceHolder", button.getSlot()));
-                    }
-                }
-                for (MenuButton button : menuButtonsFirst) {
-                    inventories[i - 1].setItem(x + button.getSlot() - 1, button.getItemStack());
-                }
-            } else {
-                for (MenuButton button : menuButtons) {
-                    inventories[i - 1].setItem(x + button.getSlot() - 1, button.getItemStack());
-                }
-            }
-            inventoryList.set(i - 1, inventories[i - 1]);
+        int styleControl = MenuButton.type.equals("Top") ? -1 :44;
+        for(int i =0; i< MenuButton.fistMenu.length;i++){ //第一页
+            inventoryList.get(0).setItem(styleControl+i+1,MenuButton.fistMenu[i]);
         }
-
-        inventories[maxPage - 1] = inventoryList.get(maxPage - 1);
-        for (int n = 0; n < menuButtonsEnd.size(); n++) {
-            MenuButton button = menuButtonsEnd.get(n);
-            if (button.getType().equals("NextPage")) {
-                menuButtonsEnd.set(n, new MenuButton("PlaceHolder", button.getSlot()));
+        for(int n = 1 ;n < maxPage;n++){//中间页
+            for(int i =0; i< MenuButton.midMenu.length;i++){
+                inventoryList.get(n).setItem(styleControl+i+1,MenuButton.midMenu[i]);
             }
         }
-        for (MenuButton button : menuButtonsEnd) {
-            if (x == 45) {
-                inventories[maxPage - 1].setItem(inventories[maxPage - 1].getSize() - 10 + button.getSlot(), button.getItemStack());
-            } else {
-                inventories[maxPage - 1].setItem(button.getSlot() - 1, button.getItemStack());
-            }
+        for(int i = 0; i< MenuButton.lastMenu.length;i++){//最后一页
+            inventoryList.get(inventoryList.size()-1).setItem(inventoryList.get(inventoryList.size()-1).getSize()-10+i,MenuButton.midMenu[i]);
         }
-        inventoryList.set(maxPage - 1, inventories[maxPage - 1]);
-
     }
 
     public void addItem(List<ItemStack> itemList) { //往背包塞物品

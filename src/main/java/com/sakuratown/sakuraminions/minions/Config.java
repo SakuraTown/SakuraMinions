@@ -6,8 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Set;
+
 
 
 public class Config {
@@ -33,6 +32,7 @@ public class Config {
     public static void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(new File(Main.getInstance().getDataFolder(), "config.yml"));
         menuLoad();
+        MenuButton.loadMenuButton();
     }
 
     private static void menuLoad() {
