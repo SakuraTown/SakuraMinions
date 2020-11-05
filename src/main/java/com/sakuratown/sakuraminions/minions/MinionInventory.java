@@ -19,7 +19,7 @@ public class MinionInventory implements InventoryHolder {
     private ArrayList<MenuButton> menuButtons;
     private int row;
     private int maxPage;
-    private HashMap<String ,Integer> playerLookingPage;
+    private HashMap<String, Integer> playerLookingPage;
 
     public MinionInventory(String type, int row) {
         this.row = row;
@@ -73,7 +73,7 @@ public class MinionInventory implements InventoryHolder {
 
             if (maxPage == 1) {
 
-                inventory = Bukkit.createInventory(this, row * 9, type + ":" + page);
+                inventory = Bukkit.createInventory(this, row * 9, type + ":" + 1);
 
             } else if (page == maxPage) {
 
@@ -129,12 +129,12 @@ public class MinionInventory implements InventoryHolder {
         return false;
     }
 
-    public int getPlayerPage(Player player,int num) { //获取玩家页数  num ：0为当前/上一次的页，正数+ 负数-
+    public int getPlayerPage(Player player, int num) { //获取玩家页数  num ：0为当前/上一次的页，正数+ 负数-
         String playerName = player.getName();
-        if(!playerLookingPage.containsKey(playerName)){//没看过的话设置第一页
-            playerLookingPage.put(playerName,1);
+        if (!playerLookingPage.containsKey(playerName)) {//没看过的话设置第一页
+            playerLookingPage.put(playerName, 1);
         }
-        playerLookingPage.merge(playerName,num,Integer::sum);
+        playerLookingPage.merge(playerName, num, Integer::sum);
         return playerLookingPage.get(playerName);
     }
 
@@ -206,34 +206,34 @@ public class MinionInventory implements InventoryHolder {
         if (itemList.isEmpty()) {
             return false;
         }
-        Map<Integer, ItemStack> tempItemMap;
-        ItemStack tempItemStack = null;
         if (itemList.size() > (row * 9)) {
             return false;
         }
         for (ItemStack item : itemList) { //填充物品 从第一个物品开始
-            for (Inventory inv : inventoryList) {
-                if (tempItemStack != null) {  //此处是在上一页物品填充有剩余的情况下尝试填充到新页
-                    if (getFreeSpace(inv, tempItemStack) > 0) {//检查剩余空间
-                        tempItemMap = inv.addItem(tempItemStack); //填充
-                        if (!tempItemMap.isEmpty()) { //如果有剩余退出循环，把剩余填充到下一页
-                            tempItemStack = tempItemMap.get(0);
-                            break;
-                        }
-                        break;//没有剩余退出循环，避免填充到下一页
-                    }
-                }
-                if (getFreeSpace(inv, item) > 0) { //当前物品在这个容器有空间
-                    tempItemMap = inv.addItem(item); //填充
-                    if (!tempItemMap.isEmpty()) { //如果有剩余 ，储存到暂存等待第二页的尝试
-                        tempItemStack = tempItemMap.get(0);
-                        break;
-                    }
-                    break;//没有剩余退出循环，避免填充到下一页
-                }
-            }
+            addItem(item);
         }
         return true;
+    }
+
+    public boolean addItem(ItemStack item) {
+        Map<Integer, ItemStack> tempItemMap;
+        ItemStack tempItemStack = null;
+        for (Inventory inv : inventoryList) {
+            if (tempItemStack != null) {
+                tempItemMap = inv.addItem(tempItemStack);
+                if (tempItemMap.isEmpty()) {
+                    return true;
+                }
+                tempItemStack = tempItemMap.get(0);
+                continue;
+            }
+            tempItemMap = inv.addItem(item);
+            if (tempItemMap.isEmpty()) {
+                return true;
+            }
+            tempItemStack = tempItemMap.get(0);
+        }
+        return false;
     }
 
     public void sortItems() {
