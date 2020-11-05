@@ -7,10 +7,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class MinionInventory implements InventoryHolder {
 
@@ -32,12 +29,12 @@ public class MinionInventory implements InventoryHolder {
     public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
 
         int amount = 0;
-        int maxStackSize = itemStack.getMaxStackSize();
+
         for (ItemStack invStack : inventory.getStorageContents()) {
             if (invStack == null) {
-                amount += maxStackSize;
+                amount += 64;
             } else if (invStack.isSimilar(itemStack)) {
-                amount += (maxStackSize - invStack.getAmount());
+                amount += 64 - invStack.getAmount();
             }
         }
 
@@ -51,13 +48,14 @@ public class MinionInventory implements InventoryHolder {
 
         this.row += row;
 
-        int lastPage = inventoryList.size() - 1;
+        int lastPage = inventoryList.size();
+
         ItemStack[] contents = getPageContents(lastPage);
-        inventoryList.remove(lastPage);
+        inventoryList.remove(lastPage - 1);
 
         initInventory();
 
-        inventoryList.get(lastPage).setContents(contents);
+        inventoryList.get(lastPage - 1).setContents(contents);
     }
 
     private void initInventory() {
@@ -68,7 +66,6 @@ public class MinionInventory implements InventoryHolder {
         for (int i = inventoryList.size(); i < maxPage; i++) {
 
             int page = inventoryList.size() + 1;
-
             Inventory inventory;
 
             if (maxPage == 1) {
@@ -103,13 +100,16 @@ public class MinionInventory implements InventoryHolder {
     }
 
     private ItemStack[] getPageContents(int page) {
-        Inventory inventory = inventoryList.get(page);
+        Inventory inventory = inventoryList.get(page - 1);
         ItemStack[] contents = inventory.getContents();
         for (int i = 0; i < contents.length; i++) {
+
             ItemStack itemStack = contents[i];
+
             if (isButton(itemStack)) {
                 contents[i] = null;
             }
+
         }
         return contents;
     }
@@ -202,38 +202,26 @@ public class MinionInventory implements InventoryHolder {
 
     }
 
-    public boolean addItem(ArrayList<ItemStack> itemList) { //往背包塞物品
+    public void addItem(List<ItemStack> itemList) { //往背包塞物品
         if (itemList.isEmpty()) {
-            return false;
+            return;
         }
         if (itemList.size() > (row * 9)) {
-            return false;
+            return;
         }
         for (ItemStack item : itemList) { //填充物品 从第一个物品开始
             addItem(item);
         }
-        return true;
     }
 
-    public boolean addItem(ItemStack item) {
-        Map<Integer, ItemStack> tempItemMap;
-        ItemStack tempItemStack = null;
+    public void addItem(ItemStack item) {
+        Map<Integer, ItemStack> tempItemMap = new HashMap<>() {{ put(0, item); }};
         for (Inventory inv : inventoryList) {
-            if (tempItemStack != null) {
-                tempItemMap = inv.addItem(tempItemStack);
-                if (tempItemMap.isEmpty()) {
-                    return true;
-                }
-                tempItemStack = tempItemMap.get(0);
-                continue;
-            }
-            tempItemMap = inv.addItem(item);
+            tempItemMap = inv.addItem(tempItemMap.get(0));
             if (tempItemMap.isEmpty()) {
-                return true;
+                return;
             }
-            tempItemStack = tempItemMap.get(0);
         }
-        return false;
     }
 
     public void sortItems() {
@@ -260,33 +248,36 @@ public class MinionInventory implements InventoryHolder {
         }
         clearItems();
         addItem(tempItemStackList);
+
+        //TODO 等待优化中
+//        List<ItemStack> itemStackList = new ArrayList<>();
+//        getItemCount().forEach((string, amount) -> {
+//            Material type = Material.valueOf(string);
+//            ItemStack itemStack = new ItemStack(type, amount);
+//            itemStackList.add(itemStack);
+//        });
+//        System.out.println(itemStackList);
+//        addItem(itemStackList);
     }
 
-//    public HashMap<String, Integer> getItemList() {//统计所有的物品到Hashmap todo:待测试
-//        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
-//        HashMap<String, Integer> itemList = new HashMap<>();
-//        for (Inventory inventory : inventories) {
-//            clearMenuButton(inventory);
-//            if (inventory.isEmpty()) {
-//                continue;
-//            }
-//            ItemStack[] items = inventory.getContents();
-//            for (ItemStack item : items) {
-//                if (item == null) {//过滤null
-//                    continue;
-//                }
-//                String itemName = item.getType().name();
-//                if (!itemList.containsKey(itemName)) {
-//                    itemList.put(itemName, item.getAmount());
-//                } else {
-//                    itemList.put(itemName, itemList.get(itemName) + item.getAmount());
-//                }
-//
-//            }
-//
-//        }
-//        return itemList;
-//    }
+    public HashMap<String, Integer> getItemCount() {
+        HashMap<String, Integer> itemCount = new HashMap<>();
+
+        for (int i = 0; i < inventoryList.size(); i++) {
+            ItemStack[] pageContents = getPageContents(i);
+            ItemStack itemStack = pageContents[i];
+
+            if (itemStack == null) continue;
+
+            String name = itemStack.getType().name();
+            int amount = itemStack.getAmount();
+
+            itemCount.merge(name, amount, Integer::sum);
+
+        }
+        return itemCount;
+    }
+
 
     public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories) {
         ArrayList<ItemStack> itemStackList = new ArrayList<>();
