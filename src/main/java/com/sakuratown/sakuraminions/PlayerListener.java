@@ -6,9 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.ArrayList;
 
 public class PlayerListener implements Listener {
@@ -24,7 +24,7 @@ public class PlayerListener implements Listener {
             minion = new Minion("Miner", 1, 50);
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlock(3).getType() == Material.STONE) {
-            minion.showGuI(1, event.getPlayer());
+            minion.showGuI(event.getPlayer());
         }
         if (item.getType() == Material.SAND) {
             minion.upgradeSize(2);
@@ -32,8 +32,8 @@ public class PlayerListener implements Listener {
         if (item.getType() == Material.OAK_LOG) {
             ItemStack itemStack1 = new ItemStack(Material.OAK_LOG, 64);
             ItemStack itemStack2 = new ItemStack(Material.SAND, 64);
-            ItemStack itemStack3 = new ItemStack(Material.STONE, 64);
-            ItemStack itemStack4 = new ItemStack(Material.EGG, 64);
+            ItemStack itemStack3 = new ItemStack(Material.STONE, 100);
+            ItemStack itemStack4 = new ItemStack(Material.EGG, 16);
             ArrayList<ItemStack> itemStacks = new ArrayList<>();
             itemStacks.add(itemStack1);
             itemStacks.add(itemStack2);
@@ -44,6 +44,15 @@ public class PlayerListener implements Listener {
         if (item.getType() == Material.NETHER_STAR){
             minion.addRandomItem();
         }
+        if(item.getType() == Material.COBBLESTONE){
+            ItemStack itemStack4 = new ItemStack(Material.DIAMOND_AXE, 1);
+            Bukkit.broadcastMessage(String.valueOf(itemStack4.getMaxStackSize()));
+        }
+
+    }
+    @EventHandler
+    public void onEntityInteractEvent(EntityInteractEvent event){
+
     }
 
 }

@@ -19,29 +19,20 @@ public class InventoryGUIListener implements Listener {
         Player player = event.getWhoClicked() instanceof Player ? (Player) event.getWhoClicked() : null;
         Inventory clickedInventory = event.getClickedInventory();
         MinionInventory gui = getGui(event.getInventory());
-
         if (player == null || clickedInventory == null || gui == null) return;
 
         denyPutItem(event, clickedInventory);
-
-        int nowPage = gui.getNowPage();
-
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
-
         String displayName = currentItem.getItemMeta().getDisplayName();
-
         if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
-            gui.showInventoryGUI(--nowPage, player);
-            gui.setNowPage(nowPage);
+            gui.showInventoryGUI(gui.getPlayerPage(player,-1), player);
             event.setCancelled(true);
         }
-
         if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
-            gui.showInventoryGUI(++nowPage, player);
+            gui.showInventoryGUI(gui.getPlayerPage(player,1), player);
             event.setCancelled(true);
         }
-
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
             event.setCancelled(true);
         }
@@ -56,7 +47,6 @@ public class InventoryGUIListener implements Listener {
     public void inventoryOpenEvent(InventoryOpenEvent event) {
         MinionInventory gui = getGui(event.getInventory());
         if (gui == null) return;
-        gui.setCurrentInventory(event.getInventory());
         gui.sortItems();
     }
 
