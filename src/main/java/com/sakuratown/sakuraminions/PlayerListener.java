@@ -32,8 +32,8 @@ public class PlayerListener implements Listener {
         if (item.getType() == Material.OAK_LOG) {
             ItemStack itemStack1 = new ItemStack(Material.OAK_LOG, 64);
             ItemStack itemStack2 = new ItemStack(Material.SAND, 64);
-            ItemStack itemStack3 = new ItemStack(Material.STONE, 64);
-            ItemStack itemStack4 = new ItemStack(Material.EGG, 64);
+            ItemStack itemStack3 = new ItemStack(Material.STONE, 100);
+            ItemStack itemStack4 = new ItemStack(Material.EGG, 16);
             ArrayList<ItemStack> itemStacks = new ArrayList<>();
             itemStacks.add(itemStack1);
             itemStacks.add(itemStack2);
@@ -45,6 +45,8 @@ public class PlayerListener implements Listener {
             minion.addRandomItem();
         }
         if(item.getType() == Material.COBBLESTONE){
+            ItemStack itemStack4 = new ItemStack(Material.DIAMOND_AXE, 1);
+            Bukkit.broadcastMessage(String.valueOf(itemStack4.getMaxStackSize()));
         }
 
     }

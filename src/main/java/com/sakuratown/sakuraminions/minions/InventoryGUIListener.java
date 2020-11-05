@@ -19,7 +19,6 @@ public class InventoryGUIListener implements Listener {
         Player player = event.getWhoClicked() instanceof Player ? (Player) event.getWhoClicked() : null;
         Inventory clickedInventory = event.getClickedInventory();
         MinionInventory gui = getGui(event.getInventory());
-
         if (player == null || clickedInventory == null || gui == null) return;
 
         denyPutItem(event, clickedInventory);
@@ -48,7 +47,6 @@ public class InventoryGUIListener implements Listener {
     public void inventoryOpenEvent(InventoryOpenEvent event) {
         MinionInventory gui = getGui(event.getInventory());
         if (gui == null) return;
-        gui.setCurrentInventory(event.getInventory());
         gui.sortItems();
     }
 

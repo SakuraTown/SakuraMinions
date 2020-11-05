@@ -17,7 +17,6 @@ public class MinionInventory implements InventoryHolder {
     private final ArrayList<Inventory> inventoryList = new ArrayList<>();
     private final String type;
     private ArrayList<MenuButton> menuButtons;
-    private Inventory currentInventory;
     private int row;
     private int maxPage;
     private HashMap<String ,Integer> playerLookingPage;
@@ -33,12 +32,12 @@ public class MinionInventory implements InventoryHolder {
     public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
 
         int amount = 0;
-
+        int maxStackSize = itemStack.getMaxStackSize();
         for (ItemStack invStack : inventory.getStorageContents()) {
             if (invStack == null) {
-                amount += 64;
+                amount += maxStackSize;
             } else if (invStack.isSimilar(itemStack)) {
-                amount += 64 - invStack.getAmount();
+                amount += (maxStackSize - invStack.getAmount());
             }
         }
 
@@ -93,7 +92,6 @@ public class MinionInventory implements InventoryHolder {
 
         menuButtons = MenuButton.initMenuButton();
         addMenuButton();
-        currentInventory = inventoryList.get(0);
     }
 
     private int countMaxPage() {
@@ -131,7 +129,7 @@ public class MinionInventory implements InventoryHolder {
         return false;
     }
 
-    public int getPlayerPage(Player player,int num) { //获取玩家页数  num ：0为当前页，正数+ 负数-
+    public int getPlayerPage(Player player,int num) { //获取玩家页数  num ：0为当前/上一次的页，正数+ 负数-
         String playerName = player.getName();
         if(!playerLookingPage.containsKey(playerName)){//没看过的话设置第一页
             playerLookingPage.put(playerName,1);
@@ -143,16 +141,7 @@ public class MinionInventory implements InventoryHolder {
 
     public void showInventoryGUI(int page, Player player) {
         Inventory inventory = inventoryList.get(page - 1);
-        currentInventory = inventory;
         player.openInventory(inventory);
-    }
-
-    public Inventory getCurrentInventory() {
-        return currentInventory;
-    }
-
-    public void setCurrentInventory(Inventory inv) {
-        currentInventory = inv;
     }
 
     public void clearMenuButton(Inventory inv) {
