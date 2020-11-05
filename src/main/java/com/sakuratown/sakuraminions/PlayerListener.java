@@ -6,9 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.ArrayList;
 
 public class PlayerListener implements Listener {
@@ -24,7 +24,8 @@ public class PlayerListener implements Listener {
             minion = new Minion("Miner", 1, 50);
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlock(3).getType() == Material.STONE) {
-            minion.showGuI(1, event.getPlayer());
+            int PlayerPage = minion.getMinionInventory().getPlayerPage(event.getPlayer(),0);
+            minion.showGuI(PlayerPage, event.getPlayer());
         }
         if (item.getType() == Material.SAND) {
             minion.upgradeSize(2);
@@ -44,6 +45,13 @@ public class PlayerListener implements Listener {
         if (item.getType() == Material.NETHER_STAR){
             minion.addRandomItem();
         }
+        if(item.getType() == Material.COBBLESTONE){
+        }
+
+    }
+    @EventHandler
+    public void onEntityInteractEvent(EntityInteractEvent event){
+
     }
 
 }

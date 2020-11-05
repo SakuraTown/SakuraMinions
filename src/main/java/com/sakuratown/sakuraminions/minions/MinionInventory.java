@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,12 +20,12 @@ public class MinionInventory implements InventoryHolder {
     private Inventory currentInventory;
     private int row;
     private int maxPage;
-    private int nowPage = 1;
+    private HashMap<String ,Integer> playerLookingPage;
 
     public MinionInventory(String type, int row) {
         this.row = row;
         this.type = type;
-
+        playerLookingPage = new HashMap<>();
         maxPage = countMaxPage();
         initInventory();
     }
@@ -131,18 +132,19 @@ public class MinionInventory implements InventoryHolder {
         return false;
     }
 
-    public int getNowPage() {
-        return nowPage;
+    public int getPlayerPage(Player player,int num) { //获取玩家页数  num ：0为当前页，正数+ 负数-
+        String playerName = player.getName();
+        if(!playerLookingPage.containsKey(playerName)){//没看过的话设置第一页
+            playerLookingPage.put(playerName,1);
+        }
+        playerLookingPage.merge(playerName,num,Integer::sum);
+        return playerLookingPage.get(playerName);
     }
 
-    public void setNowPage(int page) {
-        nowPage = page;
-    }
 
     public void showInventoryGUI(int page, Player player) {
         Inventory inventory = inventoryList.get(page - 1);
         currentInventory = inventory;
-        setNowPage(page);
         player.openInventory(inventory);
     }
 

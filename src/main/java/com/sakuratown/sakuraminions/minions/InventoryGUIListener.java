@@ -23,25 +23,17 @@ public class InventoryGUIListener implements Listener {
         if (player == null || clickedInventory == null || gui == null) return;
 
         denyPutItem(event, clickedInventory);
-
-        int nowPage = gui.getNowPage();
-
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
-
         String displayName = currentItem.getItemMeta().getDisplayName();
-
         if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
-            gui.showInventoryGUI(--nowPage, player);
-            gui.setNowPage(nowPage);
+            gui.showInventoryGUI(gui.getPlayerPage(player,-1), player);
             event.setCancelled(true);
         }
-
         if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
-            gui.showInventoryGUI(++nowPage, player);
+            gui.showInventoryGUI(gui.getPlayerPage(player,1), player);
             event.setCancelled(true);
         }
-
         if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
             event.setCancelled(true);
         }

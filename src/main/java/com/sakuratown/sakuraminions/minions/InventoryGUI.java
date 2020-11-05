@@ -15,7 +15,6 @@ public class InventoryGUI {
 
     public void showInventoryGUI(int page, Player player) {
         Inventory inventory = inventories.getInventoryList().get(page - 1);
-        inventories.setNowPage(page);
         player.openInventory(inventory);
     }
 
