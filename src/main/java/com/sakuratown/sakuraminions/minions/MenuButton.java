@@ -1,33 +1,81 @@
 package com.sakuratown.sakuraminions.minions;
 
-import com.sakuratown.sakuralibrary.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Consumer;
 
-import java.util.ArrayList;
+import org.bukkit.inventory.ItemStack;
 
 public class MenuButton {
-    private final String type; //type 为LastPage、NextPage和PlaceHolder之一。
-    private final ItemStack itemStack;
-    private final int slot;
-    public Consumer<InventoryClickEvent> clickEvent;
+    public static String type; //type Top或者Menu。
+    public static ItemStack[] fistMenu;
+    public static ItemStack[] midMenu;
+    public static ItemStack[] lastMenu;
+    public static ItemStack lockArea;
+    private static ItemStack lastPage;
+    private static ItemStack nextPage;
+    private static ItemStack placeHolder;
+    private static int[] lastPageSlots;
+    private static int[] nextPageSlots;
+    private static int[] placeHolderSlots;
+    private static ConfigurationSection config;
+    private static int totalSlot;
 
-    public MenuButton(String type, int slot) {
-        this.type = type;
-        itemStack = setMenuButton(type);
-        this.slot = slot;
+    public static void loadMenuButton() {
+        type = Config.getMenuStyle();
+        config = Config.getMenuSection();
+        String lockAreaName = config.getString("LockArea.Name");
+        String lastPageName = config.getString("LastPage.Name");
+        String nextPageName = config.getString("NextPage.Name");
+        String placeHolderName = config.getString("PlaceHolder.Name");
+
+        String lastPageSlot = config.getString("LastPage.Slots");
+        String nextPageSlot = config.getString("NextPage.Slots");
+        String placeHolderSlot = config.getString("PlaceHolder.Slots");
+
+        lastPageSlots = initSlot(lastPageSlot);
+        nextPageSlots = initSlot(nextPageSlot);
+        placeHolderSlots = initSlot(placeHolderSlot);
+
+        lockArea = new ItemStack(Material.getMaterial(lockAreaName),1);
+        lastPage = new ItemStack(Material.getMaterial(lastPageName),1);
+        nextPage = new ItemStack(Material.getMaterial(nextPageName),1);
+        placeHolder = new ItemStack(Material.getMaterial(placeHolderName),1);
+        totalSlot = lastPageSlots.length+nextPageSlots.length+placeHolderSlots.length;
+        initFistMenu();
+        initMidMenu();
+        initEndMenu();
     }
-
-    public static ArrayList<MenuButton> initMenuButton() {
-        ArrayList<MenuButton> menuButtons = new ArrayList<>();
-        createButton(menuButtons, "LastPage");
-        createButton(menuButtons, "PlaceHolder");
-        createButton(menuButtons, "NextPage");
-
-        return menuButtons;
+    public static void initFistMenu(){
+        int[] fistPlaceHolderSlots = merge(lastPageSlots,placeHolderSlots);
+        fistMenu = new ItemStack[totalSlot];
+        for(int n :fistPlaceHolderSlots){
+            fistMenu[n] = placeHolder;
+        }
+        for(int n :nextPageSlots){
+            fistMenu[n] = nextPage;
+        }
+    }
+    public static void initMidMenu(){
+        midMenu = new ItemStack[totalSlot];
+        for(int n :lastPageSlots){
+            midMenu[n] = lastPage;
+        }
+        for(int n :nextPageSlots){
+            midMenu[n] = nextPage;
+        }
+        for(int n :placeHolderSlots){
+            midMenu[n] = placeHolder;
+        }
+    }
+    public static void initEndMenu(){
+        lastMenu = new ItemStack[totalSlot];
+        int[] endPlaceHolderSlots= merge(nextPageSlots,placeHolderSlots);
+        for(int n :lastPageSlots){
+            lastMenu[n] = lastPage;
+        }
+        for(int n :endPlaceHolderSlots){
+            lastMenu[n] = placeHolder;
+        }
     }
 
     private static int[] initSlot(String slotConfig) {
@@ -48,48 +96,14 @@ public class MenuButton {
         return slots;
     }
 
-    public ItemStack setMenuButton(String type) { //type 为LastPage、NextPage和PlaceHolder之一。
-
-        ConfigurationSection menuSection = Config.getMenuSection();
-        String materialName = menuSection.getString(type + ".Material");
-
-        if (materialName == null || Material.getMaterial(materialName) == null) {
-            return new ItemStack(Material.STONE);
-        }
-
-        Material material = Material.getMaterial(materialName);
-
-        if (material == null) {
-            return new ItemStack(Material.STONE);
-        }
-
-        String displayName = menuSection.getString(type + ".Name");
-        return new ItemBuilder(material).name(displayName).build();
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public int getSlot() {
-        return slot;
-    }
-
-    private static void createButton(ArrayList<MenuButton> menuButton, String types) {
-        String slots = Config.getMenuSection().getString(types.concat(".Slots"));
-        if (slots != null) {
-            int[] slot = initSlot(slots);
-            for (int i : slot) {
-                MenuButton button = new MenuButton(types, i);
-                if (!menuButton.contains(button)) {
-                    menuButton.add(button);
-                }
-            }
-        }
+    public static int[]merge(int[]a, int[]b){
+        int[]c = new int[a.length+b.length];
+        int i;
+        for(i=0; i<a.length; i++)
+            c[i] = a[i];
+        System.out.println(i);
+        for (int value : b) c[i++] = value;
+        return c;
     }
 }
 
