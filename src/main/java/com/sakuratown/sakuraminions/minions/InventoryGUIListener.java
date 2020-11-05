@@ -70,7 +70,14 @@ public class InventoryGUIListener implements Listener {
 
     private void denyPutItem(InventoryClickEvent event, Inventory clickedInventory) {
 
-        if ((event.getClick().isShiftClick() && clickedInventory.getType() == InventoryType.PLAYER)) {
+        ClickType click = event.getClick();
+
+        if (click.isShiftClick() && clickedInventory.getType() == InventoryType.PLAYER) {
+            event.setCancelled(true);
+            return;
+        }
+
+        if (click == ClickType.NUMBER_KEY && clickedInventory.getType() == InventoryType.CHEST) {
             event.setCancelled(true);
             return;
         }
@@ -78,7 +85,7 @@ public class InventoryGUIListener implements Listener {
         ItemStack cursor = event.getCursor();
         if (cursor == null) return;
 
-        if (cursor.getType() != Material.AIR && clickedInventory == event.getInventory()) {
+        if (cursor.getType() != Material.AIR && clickedInventory.getType() == InventoryType.CHEST) {
             event.setCancelled(true);
         }
     }
