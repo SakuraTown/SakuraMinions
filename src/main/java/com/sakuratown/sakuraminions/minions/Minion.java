@@ -26,9 +26,10 @@ public class Minion {
         inventoryGUI = new InventoryGUI(inventories);
     }
 
-    public void showGuI(int page, Player player) {
+    public void showGuI(Player player) {
         inventoryGUI.setInventories(inventories);
-        inventoryGUI.showInventoryGUI(page, player);
+        int PlayerPage = inventories.getPlayerPage(player,0);
+        inventoryGUI.showInventoryGUI(PlayerPage, player);
     }
     public void sortItem(){
         inventories.sortItems();

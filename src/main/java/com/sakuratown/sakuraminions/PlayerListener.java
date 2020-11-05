@@ -24,8 +24,7 @@ public class PlayerListener implements Listener {
             minion = new Minion("Miner", 1, 50);
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlock(3).getType() == Material.STONE) {
-            int PlayerPage = minion.getMinionInventory().getPlayerPage(event.getPlayer(),0);
-            minion.showGuI(PlayerPage, event.getPlayer());
+            minion.showGuI(event.getPlayer());
         }
         if (item.getType() == Material.SAND) {
             minion.upgradeSize(2);

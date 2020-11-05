@@ -68,7 +68,6 @@ public class MinionInventory implements InventoryHolder {
         // 如果新增行数后, 只初始化后面的界面, 不会重新初始化前面的界面
         for (int i = inventoryList.size(); i < maxPage; i++) {
 
-            System.out.println(i);
             int page = inventoryList.size() + 1;
 
             Inventory inventory;
