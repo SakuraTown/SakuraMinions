@@ -24,17 +24,15 @@ public class InventoryGUIListener implements Listener {
         denyPutItem(event, clickedInventory);
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
-        String displayName = currentItem.getItemMeta().getDisplayName();
-        if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
-            gui.showInventoryGUI(gui.getPlayerPage(player,-1), player);
+        if(MinionInventory.isButton(currentItem) && clickedInventory.getType() != InventoryType.PLAYER){
+            String displayName = currentItem.getItemMeta().getDisplayName();
             event.setCancelled(true);
-        }
-        if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
-            gui.showInventoryGUI(gui.getPlayerPage(player,1), player);
-            event.setCancelled(true);
-        }
-        if (displayName.equals(Config.getMenuSection().getString("PlaceHolder.Name"))) {
-            event.setCancelled(true);
+            if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
+                gui.showInventoryGUI(gui.getPlayerPage(player,-1), player);
+            }
+            if (displayName.equals(Config.getMenuSection().getString("NextPage.Name"))) {
+                gui.showInventoryGUI(gui.getPlayerPage(player,1), player);
+            }
         }
     }
 
