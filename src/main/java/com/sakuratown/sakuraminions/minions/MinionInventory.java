@@ -46,10 +46,7 @@ public class MinionInventory implements InventoryHolder {
         inventoryList.remove(index);
 
         initInventory();
-
-        for (ItemStack content : contents) {
-            inventoryList.get(index).addItem(content);
-        }
+        addItem(contents);
     }
 
     private void initInventory() {
@@ -62,7 +59,7 @@ public class MinionInventory implements InventoryHolder {
             Inventory inventory;
             inventory = Bukkit.createInventory(this, 54, type + ":" + page);
             inventoryList.add(inventory);
-            addMenuButton(i);
+            addMenuButton(i + 1);
         }
 
     }
@@ -117,8 +114,7 @@ public class MinionInventory implements InventoryHolder {
 
     public void addMenuButton(int page) {//todo: 修复bug
         ItemStack lockArea = Config.getMenuConfig().getLockArea();
-        if (page <= 1 && maxPage == 1) {
-
+        if (page == 1 && maxPage == 1) {
             Inventory fistInv = inventoryList.get(0);
             for (int n = row * 9; n < 54; n++) {
                 fistInv.setItem(n, lockArea);
@@ -131,8 +127,8 @@ public class MinionInventory implements InventoryHolder {
             Inventory fistInv = inventoryList.get(0);
             menuButton.getFistMenu().forEach((slot, item) -> {
                 fistInv.setItem(slot + styleControl, item);
-                System.out.println(item);
             });
+            return;
         }
         if (page == maxPage) {
             Inventory endInv = inventoryList.get(maxPage - 1);
@@ -152,6 +148,7 @@ public class MinionInventory implements InventoryHolder {
                     endInv.setItem(n, lockArea);
                 }
             }
+            return;
         }
         Inventory inv = inventoryList.get(page - 1);
         menuButton.getMidMenu().forEach((slot, item) -> {

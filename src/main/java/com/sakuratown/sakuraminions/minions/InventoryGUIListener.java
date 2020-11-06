@@ -45,7 +45,7 @@ public class InventoryGUIListener implements Listener {
     public void inventoryOpenEvent(InventoryOpenEvent event) {
         MinionInventory gui = getGui(event.getInventory());
         if (gui == null) return;
-        gui.sortItems();
+//        gui.sortItems();
     }
 
     private MinionInventory getGui(Inventory inventory) {

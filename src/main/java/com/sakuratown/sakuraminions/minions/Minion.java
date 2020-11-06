@@ -90,11 +90,11 @@ public class Minion {
     public void addItem(ItemStack item) {
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         itemStacks.add(item);
-//        inventories.addItem(itemStacks);
+        inventories.addItem(itemStacks);
     }
 
     public void addItem(ArrayList<ItemStack> itemStacks) {
-//        inventories.addItem(itemStacks);
+        inventories.addItem(itemStacks);
     }
 
     private int getTotalWeight(ConfigurationSection configurationSection) {

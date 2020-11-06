@@ -21,7 +21,7 @@ public class PlayerListener implements Listener {
         if (item == null) return;
 
         if (item.getType() == Material.EGG) {
-            minion = new Minion("Miner", 14, 50);
+            minion = new Minion("Miner", 6, 50);
         }
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getPlayer().getTargetBlock(3).getType() == Material.STONE) {
             minion.showGuI(event.getPlayer());
