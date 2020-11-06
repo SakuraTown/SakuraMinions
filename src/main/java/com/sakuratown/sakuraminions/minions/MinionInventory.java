@@ -95,7 +95,7 @@ public class MinionInventory implements InventoryHolder {
         return contents;
     }
 
-    private boolean isButton(ItemStack itemStack) {
+    public static boolean isButton(ItemStack itemStack) {
         if (itemStack == null) return false;
         ItemMeta itemMeta = itemStack.getItemMeta();
         ArrayList<String> buttonNames = Config.getMenuConfig().getButtonNames();
@@ -128,7 +128,7 @@ public class MinionInventory implements InventoryHolder {
     }
 
 
-    public void addMenuButton() {// todo:没解决，有bug，功能未完善
+    public void addMenuButton() {
         ItemStack lockArea = Config.getMenuConfig().getLockArea();
         if (maxPage == 1) {
             Inventory fistInv = inventoryList.get(0);
@@ -139,17 +139,17 @@ public class MinionInventory implements InventoryHolder {
         MenuButton menuButton = Config.getMenuConfig();
         int styleControl = Config.getMenuStyle().equals("Bottom") ? 45 : 0;
         Inventory fistInv = inventoryList.get(0);
-        menuButton.getFistMenu().forEach((slot,item ) -> {
+        menuButton.getFistMenu().forEach((slot, item) -> {
             fistInv.setItem(slot + styleControl, item);
         });
         for (int n = 1; n < maxPage; n++) {
             Inventory inv = inventoryList.get(n);
-            menuButton.getMidMenu().forEach((slot,item) -> {
+            menuButton.getMidMenu().forEach((slot, item) -> {
                 inv.setItem(slot + styleControl, item);
             });
         }
         Inventory endInv = inventoryList.get(maxPage - 1);
-        menuButton.getEndMenu().forEach((slot,item) -> {
+        menuButton.getEndMenu().forEach((slot, item) -> {
             endInv.setItem(slot + styleControl, item);
         });
         int endRow = row % 5;
@@ -165,8 +165,6 @@ public class MinionInventory implements InventoryHolder {
                 endInv.setItem(n, lockArea);
             }
         }
-
-
     }
 
     public void addItem(List<ItemStack> itemList) { //往背包塞物品
