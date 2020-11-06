@@ -63,26 +63,9 @@ public class MinionInventory implements InventoryHolder {
 
         // 如果新增行数后, 只初始化后面的界面, 不会重新初始化前面的界面
         for (int i = inventoryList.size(); i < maxPage; i++) {
-
             int page = inventoryList.size() + 1;
             Inventory inventory;
-
-            if (maxPage == 1) {
-
-                inventory = Bukkit.createInventory(this, row * 9, type + ":" + 1);
-
-            } else if (page == maxPage) {
-
-                int lastPageBlankRow = row % 5 == 0 ? 5 : row % 5;
-                int lastPageRow = lastPageBlankRow + 1;
-                inventory = Bukkit.createInventory(this, lastPageRow * 9, type + ":" + page);
-
-            } else {
-
-                inventory = Bukkit.createInventory(this, 54, type + ":" + page);
-
-            }
-
+            inventory = Bukkit.createInventory(this, 54, type + ":" + page);
             inventoryList.add(inventory);
         }
 
@@ -113,18 +96,10 @@ public class MinionInventory implements InventoryHolder {
     }
 
     private boolean isButton(ItemStack itemStack) {
-
         if (itemStack == null) return false;
-
         ItemMeta itemMeta = itemStack.getItemMeta();
-        String[] buttons = {"LastPage", "NextPage", "PlaceHolder"};
-
-        for (String button : buttons) {
-            String name = Config.getMenuSection().getString(button + ".Name");
-            if (itemMeta.getDisplayName().equals(name)) return true;
-
-        }
-        return false;
+        ArrayList<String> buttonNames = Config.getMenuConfig().getButtonNames();
+        return buttonNames.contains(itemMeta.getDisplayName());
     }
 
     public int getPlayerPage(Player player, int num) { //获取玩家页数  num ：0为当前/上一次的页，正数+ 负数-
@@ -154,21 +129,44 @@ public class MinionInventory implements InventoryHolder {
 
 
     public void addMenuButton() {// todo:没解决，有bug，功能未完善
+        ItemStack lockArea = Config.getMenuConfig().getLockArea();
         if (maxPage == 1) {
+            Inventory fistInv = inventoryList.get(0);
+            for (int n = row * 9; n < 54; n++)
+                fistInv.setItem(n, lockArea);
             return;
         }
-        int styleControl = MenuButton.type.equals("Top") ? -1 :44;
-        for(int i =0; i< MenuButton.fistMenu.length;i++){ //第一页
-            inventoryList.get(0).setItem(styleControl+i+1,MenuButton.fistMenu[i]);
+        MenuButton menuButton = Config.getMenuConfig();
+        int styleControl = Config.getMenuStyle().equals("Bottom") ? 45 : 0;
+        Inventory fistInv = inventoryList.get(0);
+        menuButton.getFistMenu().forEach((slot,item ) -> {
+            fistInv.setItem(slot + styleControl, item);
+        });
+        for (int n = 1; n < maxPage; n++) {
+            Inventory inv = inventoryList.get(n);
+            menuButton.getMidMenu().forEach((slot,item) -> {
+                inv.setItem(slot + styleControl, item);
+            });
         }
-        for(int n = 1 ;n < maxPage;n++){//中间页
-            for(int i =0; i< MenuButton.midMenu.length;i++){
-                inventoryList.get(n).setItem(styleControl+i+1,MenuButton.midMenu[i]);
+        Inventory endInv = inventoryList.get(maxPage - 1);
+        menuButton.getEndMenu().forEach((slot,item) -> {
+            endInv.setItem(slot + styleControl, item);
+        });
+        int endRow = row % 5;
+        if (endRow == 0) {
+            return;
+        }//最后一页没有多余空间
+        if (styleControl == 45) {//44表示是底部菜单
+            for (int n = endRow * 9; n < 45; n++) {
+                endInv.setItem(n, lockArea);
+            }
+        } else {//顶部菜单
+            for (int n = (endRow + 1) * 9; n < 54; n++) {
+                endInv.setItem(n, lockArea);
             }
         }
-        for(int i = 0; i< MenuButton.lastMenu.length;i++){//最后一页
-            inventoryList.get(inventoryList.size()-1).setItem(inventoryList.get(inventoryList.size()-1).getSize()-10+i,MenuButton.midMenu[i]);
-        }
+
+
     }
 
     public void addItem(List<ItemStack> itemList) { //往背包塞物品
@@ -184,7 +182,9 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void addItem(ItemStack item) {
-        Map<Integer, ItemStack> tempItemMap = new HashMap<>() {{ put(0, item); }};
+        Map<Integer, ItemStack> tempItemMap = new HashMap<>() {{
+            put(0, item);
+        }};
         for (Inventory inv : inventoryList) {
             tempItemMap = inv.addItem(tempItemMap.get(0));
             if (tempItemMap.isEmpty()) {

@@ -1,101 +1,128 @@
 package com.sakuratown.sakuraminions.minions;
 
+import com.sakuratown.sakuraminions.Main;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import com.sakuratown.sakuralibrary.utils.ItemBuilder;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class MenuButton {
-    public static String type; //type Top或者Menu。
-    public static ItemStack[] fistMenu;
-    public static ItemStack[] midMenu;
-    public static ItemStack[] lastMenu;
-    public static ItemStack lockArea;
-    private static ItemStack lastPage;
-    private static ItemStack nextPage;
-    private static ItemStack placeHolder;
-    private static int[] lastPageSlots;
-    private static int[] nextPageSlots;
-    private static int[] placeHolderSlots;
-    private static ConfigurationSection config;
-    private static int totalSlot;
+    private final int MaxMenuLength = 9;
+    private final ConfigurationSection menuSection;
+    private final HashMap<String, Button> buttonList;
+    private final ItemStack[] menuList;
+    private ItemStack lockArea;
+    private ArrayList<String> buttonNames;
+    private HashMap<Integer,ItemStack> fistMenu;
+    private HashMap<Integer,ItemStack> midMenu;
+    private HashMap<Integer,ItemStack> endMenu;
 
-    public static void loadMenuButton() {
-        type = Config.getMenuStyle();
-        config = Config.getMenuSection();
-        String lockAreaMaterial = config.getString("LockArea.Material");
-        String lastPageMaterial = config.getString("LastPage.Material");
-        String nextPageMaterial = config.getString("NextPage.Material");
-        String placeHolderMaterial = config.getString("PlaceHolder.Material");
+    class Button {
+        protected ItemStack itemStack;
+        protected int[] slots;
 
-        String lastPageSlot = config.getString("LastPage.Slots");
-        String nextPageSlot = config.getString("NextPage.Slots");
-        String placeHolderSlot = config.getString("PlaceHolder.Slots");
-
-        lastPageSlots = initSlot(lastPageSlot);
-        nextPageSlots = initSlot(nextPageSlot);
-        placeHolderSlots = initSlot(placeHolderSlot);
-
-        lockArea = new ItemStack(Material.getMaterial(lockAreaMaterial),1);
-
-        lastPage = new ItemStack(Material.getMaterial(lastPageMaterial),1);
-        nextPage = new ItemStack(Material.getMaterial(nextPageMaterial),1);
-        placeHolder = new ItemStack(Material.getMaterial(placeHolderMaterial),1);
-
-        ItemMeta lockAreaMeta =  lockArea.getItemMeta();
-        ItemMeta lastPageMeta =  lastPage.getItemMeta();
-        ItemMeta nextPageMeta =  nextPage.getItemMeta();
-        ItemMeta placeHolderMeta =  placeHolder.getItemMeta();
-
-        lockAreaMeta.setDisplayName(config.getString("LockArea.Name"));
-        lockArea.setItemMeta(lockAreaMeta);
-        lastPageMeta.setDisplayName(config.getString("LastPage.Name"));
-        lastPage.setItemMeta(lastPageMeta);
-        nextPageMeta.setDisplayName(config.getString("NextPage.Name"));
-        nextPage.setItemMeta(nextPageMeta);
-        placeHolderMeta.setDisplayName(config.getString("PlaceHolder.Name"));
-        placeHolder.setItemMeta(placeHolderMeta);
-
-        totalSlot = lastPageSlots.length+nextPageSlots.length+placeHolderSlots.length;
+        public Button(ItemStack itemStack, String slots) {
+            this.itemStack = itemStack;
+            this.slots = initSlot(slots);
+        }
+    }
+    public MenuButton() {
+        buttonList = new HashMap<>();
+        menuList = new ItemStack[MaxMenuLength];
+        menuSection = Config.getMenuSection();
+        initMenuButton();
+        initMenu();
         initFistMenu();
         initMidMenu();
         initEndMenu();
     }
-    public static void initFistMenu(){
-        int[] fistPlaceHolderSlots = merge(lastPageSlots,placeHolderSlots);
-        fistMenu = new ItemStack[totalSlot];
-        for(int n :fistPlaceHolderSlots){
-            fistMenu[n-1] = placeHolder;
+
+    private void initMenuButton() {
+        for (String buttonType : menuSection.getKeys(false)) {
+            if (buttonType.equals("Style")) {
+                continue;
+            }
+            String materialName = menuSection.getString(buttonType.concat(".Material"));
+            String buttonName = menuSection.getString(buttonType.concat(".Name"));
+            String buttonSlots = menuSection.getString(buttonType.concat(".Slots"));//可能null
+            Material buttonMaterial = Material.getMaterial(materialName);
+            if (buttonMaterial == null) {
+                Main.getInstance().getLogger().info(buttonType + "材质名错误，现已替换成石头，请检查配置文件！");
+                buttonMaterial = Material.STONE;
+            }
+            ItemBuilder tempButton = new ItemBuilder(buttonMaterial, 1);
+            tempButton.name(buttonName);
+            Button button = new Button(tempButton.build(), buttonSlots);
+            buttonList.put(buttonType, button);
         }
-        for(int n :nextPageSlots){
-            fistMenu[n-1] = nextPage;
-        }
-    }
-    public static void initMidMenu(){
-        midMenu = new ItemStack[totalSlot];
-        for(int n :lastPageSlots){
-            midMenu[n-1] = lastPage;
-        }
-        for(int n :nextPageSlots){
-            midMenu[n-1] = nextPage;
-        }
-        for(int n :placeHolderSlots){
-            midMenu[n-1] = placeHolder;
-        }
-    }
-    public static void initEndMenu(){
-        lastMenu = new ItemStack[totalSlot];
-        int[] endPlaceHolderSlots= merge(nextPageSlots,placeHolderSlots);
-        for(int n :lastPageSlots){
-            lastMenu[n-1] = lastPage;
-        }
-        for(int n :endPlaceHolderSlots){
-            lastMenu[n-1] = placeHolder;
-        }
+        lockArea = buttonList.get("LockArea").itemStack;
+        buttonNames = new ArrayList<>();
+        buttonList.forEach((k,v)->{
+            buttonNames.add(v.itemStack.getItemMeta().getDisplayName());
+        });
     }
 
+    private void initMenu() {
+        buttonList.forEach((key, value) -> {
+            if (value.slots == null) {
+                return;
+            }
+            int length = value.slots.length;
+            for (int n = 0; n < length; n++) {
+                menuList[value.slots[n] - 1] = value.itemStack;
+            }
+        });
+    }
+    private void initFistMenu(){
+        fistMenu = new HashMap<>();
+        for(int n = 0;n<MaxMenuLength;n++){
+            if(menuList[n].isSimilar(buttonList.get("LastPage").itemStack)){
+                fistMenu.put(n,buttonList.get("PlaceHolder").itemStack);
+                continue;
+            }
+            fistMenu.put(n,menuList[n]);
+        }
+    }
+    private void initMidMenu(){
+        midMenu = new HashMap<>();
+        for(int n = 0;n<MaxMenuLength;n++){
+            midMenu.put(n,menuList[n]);
+        }
+    }
+    private void initEndMenu(){
+        endMenu = new HashMap<>();
+        for(int n = 0;n<MaxMenuLength;n++){
+            if(menuList[n].isSimilar(buttonList.get("NextPage").itemStack)){
+                endMenu.put(n,buttonList.get("PlaceHolder").itemStack);
+                continue;
+            }
+            endMenu.put(n,menuList[n]);
+        }
+    }
+    public HashMap<Integer,ItemStack> getFistMenu(){
+        return fistMenu;
+    }
+    public HashMap<Integer,ItemStack> getMidMenu(){
+        return midMenu;
+    }
+    public HashMap<Integer,ItemStack> getEndMenu(){
+        return endMenu;
+    }
+    public ItemStack getLockArea(){return lockArea;}
+    public HashMap<String, Button> getButtonlist(){
+        return buttonList;
+    }
+    public ArrayList<String> getButtonNames(){return buttonNames;}
+
     private static int[] initSlot(String slotConfig) {
+        if (slotConfig == null) {
+            return null;
+        }
         int[] slots;
         if (slotConfig.contains(",")) {
 
@@ -105,21 +132,11 @@ public class MenuButton {
             for (int i = 0; i < split.length; i++) {
                 slots[i] = Integer.parseInt(split[i]);
             }
-
         } else {
             slots = new int[1];
             slots[0] = Integer.parseInt(slotConfig);
         }
         return slots;
-    }
-
-    public static int[]merge(int[]a, int[]b){
-        int[]c = new int[a.length+b.length];
-        int i;
-        for(i=0; i<a.length; i++)
-            c[i] = a[i];
-        for (int value : b) c[i++] = value;
-        return c;
     }
 }
 

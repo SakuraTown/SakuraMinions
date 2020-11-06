@@ -12,7 +12,7 @@ import java.io.File;
 public class Config {
 
     private static FileConfiguration config;
-
+    private static MenuButton menuConfig;
     //工人背包配置
     private static String menuStyle;
     private static ConfigurationSection menuSection;
@@ -28,11 +28,11 @@ public class Config {
     public static ConfigurationSection getMenuSection() {
         return menuSection;
     }
-
+    public static MenuButton getMenuConfig(){return menuConfig;}
     public static void reloadConfig() {
         config = YamlConfiguration.loadConfiguration(new File(Main.getInstance().getDataFolder(), "config.yml"));
         menuLoad();
-        MenuButton.loadMenuButton();
+        menuConfig = new MenuButton();
     }
 
     private static void menuLoad() {
