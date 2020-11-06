@@ -25,19 +25,11 @@ public class MinionInventory implements InventoryHolder {
         initInventory();
     }
 
-    public static int getFreeSpace(Inventory inventory, ItemStack itemStack) {
-
-        int amount = 0;
-
-        for (ItemStack invStack : inventory.getStorageContents()) {
-            if (invStack == null) {
-                amount += 64;
-            } else if (invStack.isSimilar(itemStack)) {
-                amount += 64 - invStack.getAmount();
-            }
-        }
-
-        return amount;
+    public static boolean isButton(ItemStack itemStack) {
+        if (itemStack == null) return false;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        ArrayList<String> buttonNames = Config.getMenuConfig().getButtonNames();
+        return buttonNames.contains(itemMeta.getDisplayName());
     }
 
     public void addRow(int row) {
@@ -49,12 +41,15 @@ public class MinionInventory implements InventoryHolder {
 
         int lastPage = inventoryList.size();
 
-        ItemStack[] contents = getPageContents(lastPage);
-        inventoryList.remove(lastPage - 1);
+        List<ItemStack> contents = getPageContents(lastPage);
+        int index = lastPage - 1;
+        inventoryList.remove(index);
 
         initInventory();
 
-        inventoryList.get(lastPage - 1).setContents(contents);
+        for (ItemStack content : contents) {
+            inventoryList.get(index).addItem(content);
+        }
     }
 
     private void initInventory() {
@@ -80,26 +75,18 @@ public class MinionInventory implements InventoryHolder {
         }
     }
 
-    private ItemStack[] getPageContents(int page) {
+    private List<ItemStack> getPageContents(int page) {
+        List<ItemStack> itemStacks = new ArrayList<>();
+
         Inventory inventory = inventoryList.get(page - 1);
         ItemStack[] contents = inventory.getContents();
-        for (int i = 0; i < contents.length; i++) {
-
-            ItemStack itemStack = contents[i];
-
-            if (isButton(itemStack)) {
-                contents[i] = null;
+        for (ItemStack itemStack : contents) {
+            if (isButton(itemStack) || itemStack == null) {
+                continue;
             }
-
+            itemStacks.add(itemStack);
         }
-        return contents;
-    }
-
-    public static boolean isButton(ItemStack itemStack) {
-        if (itemStack == null) return false;
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        ArrayList<String> buttonNames = Config.getMenuConfig().getButtonNames();
-        return buttonNames.contains(itemMeta.getDisplayName());
+        return itemStacks;
     }
 
     public int getPlayerPage(Player player, int num) { //获取玩家页数  num ：0为当前/上一次的页，正数+ 负数-
@@ -117,31 +104,34 @@ public class MinionInventory implements InventoryHolder {
         player.openInventory(inventory);
     }
 
-    public void clearMenuButton(Inventory inv) {
-        ItemStack[] itemStacks = inv.getContents();
-        for (int i = 0; i < itemStacks.length; i++) {
-            if (isButton(itemStacks[i])) {
-                itemStacks[i] = null;
-            }
-        }
-        inv.setContents(itemStacks);
-    }
+//    public void clearMenuButton(Inventory inv) {
+//        ItemStack[] itemStacks = inv.getContents();
+//        for (int i = 0; i < itemStacks.length; i++) {
+//            if (isButton(itemStacks[i])) {
+//                itemStacks[i] = null;
+//            }
+//        }
+//        inv.setContents(itemStacks);
+//    }
 
 
     public void addMenuButton(int page) {//todo: 修复bug
         ItemStack lockArea = Config.getMenuConfig().getLockArea();
-        if (page <=1 && maxPage ==1) {
+        if (page <= 1 && maxPage == 1) {
+
             Inventory fistInv = inventoryList.get(0);
-            for (int n = row * 9; n < 54; n++){
-                fistInv.setItem(n, lockArea);}
+            for (int n = row * 9; n < 54; n++) {
+                fistInv.setItem(n, lockArea);
+            }
             return;
         }
         MenuButton menuButton = Config.getMenuConfig();
         int styleControl = Config.getMenuStyle().equals("Bottom") ? 45 : 0;
-        if (page == 1 && maxPage >1) {
+        if (page == 1 && maxPage > 1) {
             Inventory fistInv = inventoryList.get(0);
             menuButton.getFistMenu().forEach((slot, item) -> {
                 fistInv.setItem(slot + styleControl, item);
+                System.out.println(item);
             });
         }
         if (page == maxPage) {
@@ -195,29 +185,29 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void sortItems() {
-        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
-        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
-        if (itemStackList.isEmpty()) {
-
-            return;
-        }
-        ArrayList<ItemStack> tempItemStackList = new ArrayList<>();
-        Iterator<ItemStack> iter = itemStackList.iterator();
-        while (iter.hasNext()) {
-            ItemStack tempItem1 = iter.next();
-            tempItemStackList.add(tempItem1);
-            iter.remove();
-            while (iter.hasNext()) {
-                ItemStack tempItem2 = iter.next();
-                if (tempItem2.isSimilar(tempItem1)) {
-                    tempItemStackList.add(tempItem2);
-                    iter.remove();
-                }
-            }
-            iter = itemStackList.iterator();
-        }
-        clearItems();
-        addItem(tempItemStackList);
+//        ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
+//        ArrayList<ItemStack> itemStackList = getAllItems(inventories);
+//        if (itemStackList.isEmpty()) {
+//
+//            return;
+//        }
+//        ArrayList<ItemStack> tempItemStackList = new ArrayList<>();
+//        Iterator<ItemStack> iter = itemStackList.iterator();
+//        while (iter.hasNext()) {
+//            ItemStack tempItem1 = iter.next();
+//            tempItemStackList.add(tempItem1);
+//            iter.remove();
+//            while (iter.hasNext()) {
+//                ItemStack tempItem2 = iter.next();
+//                if (tempItem2.isSimilar(tempItem1)) {
+//                    tempItemStackList.add(tempItem2);
+//                    iter.remove();
+//                }
+//            }
+//            iter = itemStackList.iterator();
+//        }
+//        clearItems();
+//        addItem(tempItemStackList);
 
         //TODO 等待优化中
 //        List<ItemStack> itemStackList = new ArrayList<>();
@@ -234,8 +224,8 @@ public class MinionInventory implements InventoryHolder {
         HashMap<String, Integer> itemCount = new HashMap<>();
 
         for (int i = 0; i < inventoryList.size(); i++) {
-            ItemStack[] pageContents = getPageContents(i);
-            ItemStack itemStack = pageContents[i];
+            List<ItemStack> pageContents = getPageContents(i);
+            ItemStack itemStack = pageContents.get(i);
 
             if (itemStack == null) continue;
 
@@ -249,31 +239,31 @@ public class MinionInventory implements InventoryHolder {
     }
 
 
-    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories) {
-        ArrayList<ItemStack> itemStackList = new ArrayList<>();
-        for (Inventory inventory : inventories) {
-            clearMenuButton(inventory);
-        }
-        for (Inventory inventory : inventories) { //获取全部物品储存到itemStackList
-            ItemStack[] items = inventory.getContents();
-            for (ItemStack item : items) {
-                if (item != null) { //过滤null
-                    itemStackList.add(item);
-                }
-            }
-        }
-        return itemStackList;
-    }
-
-    public void clearItems() {
-        for (Inventory inv : inventoryList) {
-            inv.clear();
-        }
-        for (int i = 1; i < maxPage; i++) {
-            addMenuButton(i);
-        }
-
-    }
+//    public ArrayList<ItemStack> getAllItems(ArrayList<Inventory> inventories) {
+//        ArrayList<ItemStack> itemStackList = new ArrayList<>();
+//        for (Inventory inventory : inventories) {
+//            clearMenuButton(inventory);
+//        }
+//        for (Inventory inventory : inventories) { //获取全部物品储存到itemStackList
+//            ItemStack[] items = inventory.getContents();
+//            for (ItemStack item : items) {
+//                if (item != null) { //过滤null
+//                    itemStackList.add(item);
+//                }
+//            }
+//        }
+//        return itemStackList;
+//    }
+//
+//    public void clearItems() {
+//        for (Inventory inv : inventoryList) {
+//            inv.clear();
+//        }
+//        for (int i = 1; i < maxPage; i++) {
+//            addMenuButton(i);
+//        }
+//
+//    }
 
     public ArrayList<Inventory> getInventoryList() {
         return inventoryList;
