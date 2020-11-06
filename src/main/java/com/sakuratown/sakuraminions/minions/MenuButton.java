@@ -77,9 +77,7 @@ public class MenuButton {
         }
         lockArea = buttonList.get("LockArea").itemStack;
         buttonNames = new ArrayList<>();
-        buttonList.forEach((k, v) -> {
-            buttonNames.add(v.itemStack.getItemMeta().getDisplayName());
-        });
+        buttonList.forEach((k, v) -> buttonNames.add(v.itemStack.getItemMeta().getDisplayName()));
     }
 
     private void initMenu() {
@@ -139,7 +137,7 @@ public class MenuButton {
         return lockArea;
     }
 
-    public HashMap<String, Button> getButtonlist() {
+    public HashMap<String, Button> getButtonList() {
         return buttonList;
     }
 
@@ -147,7 +145,7 @@ public class MenuButton {
         return buttonNames;
     }
 
-    class Button {
+    private static class Button {
         protected ItemStack itemStack;
         protected int[] slots;
 
