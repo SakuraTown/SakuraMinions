@@ -2,11 +2,11 @@ package com.sakuratown.sakuraminions.minions;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Set;
 
 public class Minion {
@@ -31,17 +31,14 @@ public class Minion {
         int PlayerPage = inventories.getPlayerPage(player,0);
         inventoryGUI.showInventoryGUI(PlayerPage, player);
     }
-    public void sortItem(){
+
+    public void sortItem() {
         inventories.sortItems();
     }
 
-    public void addRandomItem(){
+    public void addRandomItem() {
         Material randomMaterial = Material.getMaterial(getRandomMaterial());
-        ItemStack item;
-        if(randomMaterial == null){
-            item =  new ItemStack(Material.STONE,1);
-        }else {
-            item =  new ItemStack(randomMaterial,1);}
+        ItemStack item = new ItemStack(Objects.requireNonNullElse(randomMaterial, Material.STONE), 1);
         addItem(item);
     }
 
@@ -93,11 +90,11 @@ public class Minion {
     public void addItem(ItemStack item) {
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         itemStacks.add(item);
-        inventories.addItem(itemStacks);
+//        inventories.addItem(itemStacks);
     }
 
     public void addItem(ArrayList<ItemStack> itemStacks) {
-        inventories.addItem(itemStacks);
+//        inventories.addItem(itemStacks);
     }
 
     private int getTotalWeight(ConfigurationSection configurationSection) {
