@@ -79,7 +79,7 @@ public class MinionInventory implements InventoryHolder {
         Inventory inventory = inventoryList.get(page - 1);
         ItemStack[] contents = inventory.getContents();
         for (ItemStack itemStack : contents) {
-            if (itemStack == null | isButton(itemStack)) {
+            if (itemStack == null || isButton(itemStack)) {
                 continue;
             }
             itemStacks.add(itemStack);
