@@ -94,7 +94,6 @@ public class MinionInventory implements InventoryHolder {
         }
         return contents;
     }
-
     public static boolean isButton(ItemStack itemStack) {
         if (itemStack == null) return false;
         ItemMeta itemMeta = itemStack.getItemMeta();

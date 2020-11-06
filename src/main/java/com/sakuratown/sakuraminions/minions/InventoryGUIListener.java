@@ -24,7 +24,7 @@ public class InventoryGUIListener implements Listener {
         denyPutItem(event, clickedInventory);
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) return;
-        if(MinionInventory.isButton(currentItem)){
+        if(MinionInventory.isButton(currentItem) && clickedInventory.getType() == InventoryType.PLAYER){
             String displayName = currentItem.getItemMeta().getDisplayName();
             event.setCancelled(true);
             if (displayName.equals(Config.getMenuSection().getString("LastPage.Name"))) {
