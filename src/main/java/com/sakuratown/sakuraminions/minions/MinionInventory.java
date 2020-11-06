@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -78,7 +79,7 @@ public class MinionInventory implements InventoryHolder {
         Inventory inventory = inventoryList.get(page - 1);
         ItemStack[] contents = inventory.getContents();
         for (ItemStack itemStack : contents) {
-            if (isButton(itemStack) || itemStack == null) {
+            if (itemStack == null | isButton(itemStack)) {
                 continue;
             }
             itemStacks.add(itemStack);
@@ -207,30 +208,30 @@ public class MinionInventory implements InventoryHolder {
 //        addItem(tempItemStackList);
 
         //TODO 等待优化中
-//        List<ItemStack> itemStackList = new ArrayList<>();
-//        getItemCount().forEach((string, amount) -> {
-//            Material type = Material.valueOf(string);
-//            ItemStack itemStack = new ItemStack(type, amount);
-//            itemStackList.add(itemStack);
-//        });
-//        System.out.println(itemStackList);
-//        addItem(itemStackList);
+        List<ItemStack> itemStackList = new ArrayList<>();
+        getItemCount().forEach((string, amount) -> {
+            Material type = Material.valueOf(string);
+            ItemStack itemStack = new ItemStack(type, amount);
+            itemStackList.add(itemStack);
+        });
+        clearItems();
+        addItem(itemStackList);
     }
 
     public HashMap<String, Integer> getItemCount() {
         HashMap<String, Integer> itemCount = new HashMap<>();
 
         for (int i = 0; i < inventoryList.size(); i++) {
-            List<ItemStack> pageContents = getPageContents(i);
-            ItemStack itemStack = pageContents.get(i);
+            List<ItemStack> pageContents = getPageContents(i+1);
+            if(pageContents.isEmpty()){continue;}
+            for(ItemStack itemStack :pageContents){
+                if (itemStack == null) continue;
 
-            if (itemStack == null) continue;
+                String name = itemStack.getType().name();
+                int amount = itemStack.getAmount();
 
-            String name = itemStack.getType().name();
-            int amount = itemStack.getAmount();
-
-            itemCount.merge(name, amount, Integer::sum);
-
+                itemCount.merge(name, amount, Integer::sum);
+            }
         }
         return itemCount;
     }
@@ -252,15 +253,17 @@ public class MinionInventory implements InventoryHolder {
 //        return itemStackList;
 //    }
 //
-//    public void clearItems() {
-//        for (Inventory inv : inventoryList) {
-//            inv.clear();
-//        }
-//        for (int i = 1; i < maxPage; i++) {
-//            addMenuButton(i);
-//        }
-//
-//    }
+    public void clearItems() {
+        for (Inventory inv : inventoryList) {
+            ItemStack[] itemStacks = inv.getContents();
+            for(int n = 0 ; n< itemStacks.length;n++){
+                if(!isButton(itemStacks[n])){
+                    itemStacks[n] = null;
+                }
+            }
+            inv.setContents(itemStacks);
+        }
+    }
 
     public ArrayList<Inventory> getInventoryList() {
         return inventoryList;
