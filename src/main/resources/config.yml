@@ -39,6 +39,11 @@ Menu:
   ## 样式，Top 为顶部 Bottom 为底部 菜单一共占9个格子只有翻页按钮和占位符
   Style: Bottom
   ## Slot是9个按钮的配置 从左往右由1开始 LastPage(上一页)、NextPage(下一页)、PlaceHolder(无实际功能，仅占位)
+  ## 支持自定义菜单按钮格式如LastPage 类型随意。Slot总数必须小于9
+  # mybutton:
+  #    Material: GLISTERING_MELON_SLICE
+  #    Name: "§d我的按钮"
+  #    Slots: 6,7
   LastPage:
     Material: GLISTERING_MELON_SLICE
     Name: "§d上一页"
@@ -54,4 +59,6 @@ Menu:
   LockArea:
     Material: RED_STAINED_GLASS_PANE
     Name: "§d待解锁"
+
+
 

@@ -67,9 +67,9 @@ public class MinionInventory implements InventoryHolder {
             Inventory inventory;
             inventory = Bukkit.createInventory(this, 54, type + ":" + page);
             inventoryList.add(inventory);
+            addMenuButton(i);
         }
 
-        addMenuButton();
     }
 
     private int countMaxPage() {
@@ -94,6 +94,7 @@ public class MinionInventory implements InventoryHolder {
         }
         return contents;
     }
+
     public static boolean isButton(ItemStack itemStack) {
         if (itemStack == null) return false;
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -127,43 +128,46 @@ public class MinionInventory implements InventoryHolder {
     }
 
 
-    public void addMenuButton() {
+    public void addMenuButton(int page) {//todo: 修复bug
         ItemStack lockArea = Config.getMenuConfig().getLockArea();
-        if (maxPage == 1) {
+        if (page <=1 && maxPage ==1) {
             Inventory fistInv = inventoryList.get(0);
-            for (int n = row * 9; n < 54; n++)
-                fistInv.setItem(n, lockArea);
+            for (int n = row * 9; n < 54; n++){
+                fistInv.setItem(n, lockArea);}
             return;
         }
         MenuButton menuButton = Config.getMenuConfig();
         int styleControl = Config.getMenuStyle().equals("Bottom") ? 45 : 0;
-        Inventory fistInv = inventoryList.get(0);
-        menuButton.getFistMenu().forEach((slot, item) -> {
-            fistInv.setItem(slot + styleControl, item);
-        });
-        for (int n = 1; n < maxPage; n++) {
-            Inventory inv = inventoryList.get(n);
-            menuButton.getMidMenu().forEach((slot, item) -> {
-                inv.setItem(slot + styleControl, item);
+        if (page == 1 && maxPage >1) {
+            Inventory fistInv = inventoryList.get(0);
+            menuButton.getFistMenu().forEach((slot, item) -> {
+                fistInv.setItem(slot + styleControl, item);
             });
         }
-        Inventory endInv = inventoryList.get(maxPage - 1);
-        menuButton.getEndMenu().forEach((slot, item) -> {
-            endInv.setItem(slot + styleControl, item);
-        });
-        int endRow = row % 5;
-        if (endRow == 0) {
-            return;
-        }//最后一页没有多余空间
-        if (styleControl == 45) {//44表示是底部菜单
-            for (int n = endRow * 9; n < 45; n++) {
-                endInv.setItem(n, lockArea);
-            }
-        } else {//顶部菜单
-            for (int n = (endRow + 1) * 9; n < 54; n++) {
-                endInv.setItem(n, lockArea);
+        if (page == maxPage) {
+            Inventory endInv = inventoryList.get(maxPage - 1);
+            menuButton.getEndMenu().forEach((slot, item) -> {
+                endInv.setItem(slot + styleControl, item);
+            });
+            int endRow = row % 5;
+            if (endRow == 0) {
+                return;
+            }//最后一页没有多余空间
+            if (styleControl == 45) {//44表示是底部菜单
+                for (int n = endRow * 9; n < 45; n++) {
+                    endInv.setItem(n, lockArea);
+                }
+            } else {//顶部菜单
+                for (int n = (endRow + 1) * 9; n < 54; n++) {
+                    endInv.setItem(n, lockArea);
+                }
             }
         }
+        Inventory inv = inventoryList.get(page - 1);
+        menuButton.getMidMenu().forEach((slot, item) -> {
+            inv.setItem(slot + styleControl, item);
+        });
+
     }
 
     public void addItem(List<ItemStack> itemList) { //往背包塞物品
@@ -194,7 +198,7 @@ public class MinionInventory implements InventoryHolder {
         ArrayList<Inventory> inventories = new ArrayList<>(inventoryList);
         ArrayList<ItemStack> itemStackList = getAllItems(inventories);
         if (itemStackList.isEmpty()) {
-            addMenuButton();
+
             return;
         }
         ArrayList<ItemStack> tempItemStackList = new ArrayList<>();
@@ -265,7 +269,10 @@ public class MinionInventory implements InventoryHolder {
         for (Inventory inv : inventoryList) {
             inv.clear();
         }
-        addMenuButton();
+        for (int i = 1; i < maxPage; i++) {
+            addMenuButton(i);
+        }
+
     }
 
     public ArrayList<Inventory> getInventoryList() {
