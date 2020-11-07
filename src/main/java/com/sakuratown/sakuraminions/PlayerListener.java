@@ -6,9 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.ArrayList;
 
 public class PlayerListener implements Listener {
@@ -19,7 +22,6 @@ public class PlayerListener implements Listener {
 
         ItemStack item = event.getItem();
         if (item == null) return;
-
         if (item.getType() == Material.EGG) {
             minion = new Minion("Miner", 6, 50);
         }
@@ -41,18 +43,20 @@ public class PlayerListener implements Listener {
             itemStacks.add(itemStack4);
             minion.addItem(itemStacks);
         }
-        if (item.getType() == Material.NETHER_STAR){
+        if (item.getType() == Material.NETHER_STAR) {
             minion.addRandomItem();
         }
-        if(item.getType() == Material.COBBLESTONE){
+        if (item.getType() == Material.COBBLESTONE) {
             ItemStack itemStack4 = new ItemStack(Material.DIAMOND_AXE, 1);
             Bukkit.broadcastMessage(String.valueOf(itemStack4.getMaxStackSize()));
         }
 
     }
     @EventHandler
-    public void onEntityInteractEvent(EntityInteractEvent event){
-
+    public void onPlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent e){
+            if(e.getArmorStandItem().getType() == Material.PLAYER_HEAD){
+                minion.showGuI(e.getPlayer());
+                e.setCancelled(true);
+            }
     }
-
 }

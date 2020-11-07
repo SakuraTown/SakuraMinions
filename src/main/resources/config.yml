@@ -30,7 +30,19 @@ Minions:
 
         # 每次升级增加 3 行箱子
         Upgrade: 3
+    # 工人的描述（出现在物品形式工人的lore里）
+    Describe: "一个"
+    # 物品形式的工人的皮肤
+    SkullTexture:
 
+
+  # 物品形式的工人配置
+  ItemDescribe:
+    Name: "%Type%"
+    Lore:
+        - '%Describe%'
+        - '容量:%Size%'
+        - '效率:%Amount%'
 Message:
   NoMinions: 你还没有工人
 

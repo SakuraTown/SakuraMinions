@@ -87,6 +87,7 @@ public class Minion {
         this.amount += amount;
     }
 
+
     public void addItem(ItemStack item) {
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         itemStacks.add(item);
