@@ -3,6 +3,8 @@ package com.sakuratown.sakuraminions;
 import com.sakuratown.sakuraminions.command.MainCommand;
 import com.sakuratown.sakuraminions.minions.Config;
 import com.sakuratown.sakuraminions.minions.InventoryGUIListener;
+import com.sakuratown.sakuraminions.minions.Minion;
+import com.sakuratown.sakuraminions.minions.MinionListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,9 +28,10 @@ public class Main extends JavaPlugin {
 
         saveDefaultConfig();
         Config.reloadConfig();
-
+        MinionListener minionList = new MinionListener();
         getServer().getConsoleSender().sendMessage(message);
         Bukkit.getPluginManager().registerEvents(new InventoryGUIListener(), this);
+        Bukkit.getPluginManager().registerEvents(minionList, this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
 
         PluginCommand command = Bukkit.getPluginCommand("SakuraMinions");

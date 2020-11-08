@@ -6,8 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,12 +49,5 @@ public class PlayerListener implements Listener {
             Bukkit.broadcastMessage(String.valueOf(itemStack4.getMaxStackSize()));
         }
 
-    }
-    @EventHandler
-    public void onPlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent e){
-            if(e.getArmorStandItem().getType() == Material.PLAYER_HEAD){
-                minion.showGuI(e.getPlayer());
-                e.setCancelled(true);
-            }
     }
 }

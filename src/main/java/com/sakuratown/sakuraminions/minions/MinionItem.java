@@ -2,6 +2,7 @@ package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuralibrary.utils.ItemBuilder;
 import com.sakuratown.sakuralibrary.utils.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import org.bukkit.inventory.ItemStack;
@@ -23,11 +24,14 @@ public class MinionItem {
         return Config.getMinionSection().getString(type.concat(".Describe"));
     }
     public static String getItemName(String type) {
-        return Message.toColor(Message.replace(Config.getMinionItemSection().getString("Name"), "%Type%", type));
+        String name = Config.getMinionItemSection().getString("Name");
+        if(name == null){return null;}
+        return Message.toColor(Message.replace(name, "%Type%", type));
     }
     public static List<String> getItemLore(String type,int size,int amount) {
         String describe = getDescribe(type);
         List<String> loreList = Config.getMinionItemSection().getStringList("Lore");
+        loreList.add("&8&n&oSakuraMinions");
         Message.replace(loreList, "%Describe%", describe, "%Size%", String.valueOf(size), "%Amount%", String.valueOf(amount));
         return Message.toColor(loreList);
     }
