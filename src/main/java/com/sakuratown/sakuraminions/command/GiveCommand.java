@@ -18,7 +18,8 @@ public class GiveCommand extends SimpleSubCommand {
     public void onCommand(CommandSender sender, String[] args) {
         if(!(sender instanceof Player)){return;}
         Player player = (Player)sender;
-        player.getInventory().addItem(MinionItem.getMinionItem("工人",6,5));
+
+        player.getInventory().addItem(MinionItem.getMinionItem(args[1],Integer.parseInt(args[2]),Integer.parseInt(args[3])));
 
     }
 }

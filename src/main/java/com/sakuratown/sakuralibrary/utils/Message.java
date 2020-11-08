@@ -94,11 +94,12 @@ public class Message {
             throw new IllegalArgumentException("replace 参数应为2的倍数！");
         }
 
+
         for (int count = 0; count < replace.length; count += 2) {
 
             String oldChar = replace[count];
+            if(!message.contains(oldChar)){continue;}
             String newChar = replace[count + 1];
-
             message = message.replace(oldChar, newChar);
         }
 

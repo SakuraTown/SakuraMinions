@@ -112,7 +112,7 @@ public class ItemBuilder {
     public ItemStack BuildSkull(String url) {
         ItemStack head = itemStack;
         if(head.getType() != Material.PLAYER_HEAD){return head;}
-        if (url.isEmpty()) return head;
+        if (url == null) return head;
 
         SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);

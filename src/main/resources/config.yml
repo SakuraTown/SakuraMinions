@@ -1,5 +1,5 @@
 Minions:
-  # 矿工
+  # 矿工(Type)
   Miner:
 
     # 允许获取物品的设置
@@ -31,18 +31,17 @@ Minions:
         # 每次升级增加 3 行箱子
         Upgrade: 3
     # 工人的描述（出现在物品形式工人的lore里）
-    Describe: "一个"
+    Describe: "一个苦逼工人"
     # 物品形式的工人的皮肤
-    SkullTexture:
-
+    SkullTexture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTg3Y2ZjY2U2NzI0Y2Y3MzgyZDZjNjUyMzJjZDY2Njk2ZDQyNjQ2MWM4MjE2MWE3OGYyMjI0Y2EyM2MzMWMifX19"
 
   # 物品形式的工人配置
-  ItemDescribe:
-    Name: "%Type%"
+MinionItem:
+    Name: "&a樱花镇の&6%Type%"
     Lore:
-        - '%Describe%'
-        - '容量:%Size%'
-        - '效率:%Amount%'
+        - '&d%Describe%'
+        - '&e容量:&c%Size%'
+        - '&e效率:&c%Amount%'
 Message:
   NoMinions: 你还没有工人
 
