@@ -72,7 +72,7 @@ public class MinionListener implements Listener {
         }
     }
 
-    // 打开工人背包（盔甲架实体）
+    // 打开工人背包（盔甲架实体）todo : 穿戴物品时也会打开背包，待解决
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
         if (event.isCancelled()) {
