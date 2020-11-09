@@ -2,24 +2,24 @@ package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuralibrary.utils.Message;
 
+import net.minecraft.server.v1_16_R3.Items;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -52,7 +52,9 @@ public class MinionListener implements Listener {
         Block upBlock = block.getRelative(BlockFace.UP);
         if (upBlock.isEmpty()) {
             Location loc = upBlock.getLocation().add(0.5, 0, 0.5);
+            int amount = minionItem.getAmount();
             summonMinion(event.getPlayer(), loc, minionItem);
+            minionItem.setAmount(amount - 1);
         } else {
             event.getPlayer().sendMessage(Message.toColor("&c没有足够的空间！"));
         }
@@ -83,6 +85,29 @@ public class MinionListener implements Listener {
         if (minionList.containsKey(UUID)) {
             minionList.get(UUID).showGuI(event.getPlayer());
         }
+    }
+
+    @EventHandler
+    public void onEntityDeathEvent(EntityDeathEvent event) { //删除工人实体并从列表删除
+        LivingEntity entity = event.getEntity();
+        if (entity.getType() != EntityType.ARMOR_STAND) {
+            return;
+        }
+        if (!minionList.containsKey(entity.getUniqueId().toString())) {
+            return;
+        }
+        ArmorStand armorStand = (ArmorStand) entity;
+        List<ItemStack> drops = event.getDrops();
+        if (drops.isEmpty()) {
+            ItemStack head = new ItemStack(armorStand.getItem(EquipmentSlot.HEAD));
+            Location location = armorStand.getLocation();
+            armorStand.getWorld().dropItem(location, head);
+        } else {
+            event.getDrops().remove(0);
+        }
+        String uuid = entity.getUniqueId().toString();
+        minionList.get(uuid).dropItems(entity.getLocation());
+        minionList.remove(uuid);
     }
 
     // 检测是否是工人（物品形式）
@@ -116,6 +141,7 @@ public class MinionListener implements Listener {
         armorStand.setBasePlate(false);
         armorStand.setCustomName(ChatColor.GOLD + player.getName() + "§a的" + ChatColor.RED + minionType);
         armorStand.setCustomNameVisible(true);
+        minionItem.setAmount(1);
         armorStand.setItem(EquipmentSlot.HEAD, minionItem);
         changeDirectionTo(armorStand, player);
         buildMinion(armorStand.getUniqueId().toString(), minionItem, minionType);
@@ -155,6 +181,7 @@ public class MinionListener implements Listener {
 //        Bukkit.broadcastMessage(String.valueOf(size));
 //        Bukkit.broadcastMessage(String.valueOf(amount));
         Minion minion = new Minion(type, size / 9, amount);
+        minion.addItem(new ItemStack(Material.DIAMOND,64));
         minionList.put(UUID, minion);
     }
 

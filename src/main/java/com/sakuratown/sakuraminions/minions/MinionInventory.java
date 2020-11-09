@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -147,6 +148,22 @@ public class MinionInventory implements InventoryHolder {
 
     }
 
+    public void dropItems(Location loc) {
+        for (ItemStack item : getAllItems()) {
+            loc.getWorld().dropItem(loc, item);
+        }
+    }
+
+    public List<ItemStack> getAllItems() {
+        List<ItemStack> itemStackList = new ArrayList<>();
+        getItemCount().forEach((string, amount) -> {
+            Material type = Material.valueOf(string);
+            ItemStack itemStack = new ItemStack(type, amount);
+            itemStackList.add(itemStack);
+        });
+        return itemStackList;
+    }
+
     public void addItem(List<ItemStack> itemList) { //往背包塞物品
         if (itemList.isEmpty()) {
             return;
@@ -172,15 +189,9 @@ public class MinionInventory implements InventoryHolder {
     }
 
     public void sortItems() {
-
-        List<ItemStack> itemStackList = new ArrayList<>();
-        getItemCount().forEach((string, amount) -> {
-            Material type = Material.valueOf(string);
-            ItemStack itemStack = new ItemStack(type, amount);
-            itemStackList.add(itemStack);
-        });
+        List<ItemStack> allItems = getAllItems();
         clearItems();
-        addItem(itemStackList);
+        addItem(allItems);
     }
 
     public HashMap<String, Integer> getItemCount() {

@@ -38,7 +38,7 @@ Minions:
   # 物品形式的工人配置
 MinionItem:
     Name: "&a樱花镇の&6%Type%"
-    Lore: ##请确保不会出现其他数字
+    Lore: ##请确保不会出现其他数字/每行只能有一个参数
         - '&d%Describe%'
         - '&e容量:&c%Size%'
         - '&e效率:&c%Amount%'

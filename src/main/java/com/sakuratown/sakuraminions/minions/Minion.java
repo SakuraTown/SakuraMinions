@@ -1,5 +1,6 @@
 package com.sakuratown.sakuraminions.minions;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -81,6 +82,9 @@ public class Minion {
 
     public MinionInventory getMinionInventory() {
         return inventories;
+    }
+    public void dropItems(Location loc){
+        inventories.dropItems(loc);
     }
 
     void upgradeAmount(int amount) {
