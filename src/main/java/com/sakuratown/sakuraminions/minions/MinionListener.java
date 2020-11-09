@@ -13,12 +13,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +31,9 @@ import java.util.regex.Pattern;
 
 public class MinionListener implements Listener {
     HashMap<String, Minion> minionList = new HashMap<>();
-    @EventHandler
+
+    // 工人放置监听
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
@@ -50,14 +52,15 @@ public class MinionListener implements Listener {
         Block upBlock = block.getRelative(BlockFace.UP);
         if (upBlock.isEmpty()) {
             Location loc = upBlock.getLocation().add(0.5, 0, 0.5);
-            summonMinion(event.getPlayer(),loc,minionItem);
+            summonMinion(event.getPlayer(), loc, minionItem);
         } else {
-            event.getPlayer().sendMessage(Message.toColor("&c没有足够的空间放置！"));
+            event.getPlayer().sendMessage(Message.toColor("&c没有足够的空间！"));
         }
         event.setCancelled(true);
     }
 
-    @EventHandler
+    //禁止拿头放头
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
         if (isMinionItem(event.getArmorStandItem())) {
             event.setCancelled(true);
@@ -66,18 +69,23 @@ public class MinionListener implements Listener {
             event.setCancelled(true);
         }
     }
-    @EventHandler
-    public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event){
-        if(event.isCancelled()){return;}
-        if(event.getRightClicked().getType() != EntityType.ARMOR_STAND){
+
+    // 打开工人背包（盔甲架实体）
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.getRightClicked().getType() != EntityType.ARMOR_STAND) {
             return;
         }
         String UUID = event.getRightClicked().getUniqueId().toString();
-        if(minionList.containsKey(UUID)){
+        if (minionList.containsKey(UUID)) {
             minionList.get(UUID).showGuI(event.getPlayer());
         }
     }
 
+    // 检测是否是工人（物品形式）
     private static boolean isMinionItem(ItemStack item) {
         if (item.getType() != Material.PLAYER_HEAD) {
             return false;
@@ -89,7 +97,8 @@ public class MinionListener implements Listener {
         return lore.get(lore.size() - 1).contains("SakuraMinions");
     }
 
-    private void summonMinion(Player player,Location loc,ItemStack minionItem) {
+    // 生成工人盔甲架
+    private void summonMinion(Player player, Location loc, ItemStack minionItem) {
         String name = minionItem.getItemMeta().getDisplayName();
         String minionType = null;
         for (String type : Config.getMinionSection().getKeys(false)) {
@@ -98,14 +107,22 @@ public class MinionListener implements Listener {
                 break;
             }
         }
-        if(minionType == null){return;}
+        if (minionType == null) {
+            return;
+        }
         ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
         armorStand.setSmall(true);
         armorStand.setArms(true);
         armorStand.setBasePlate(false);
-        armorStand.setCustomName(ChatColor.GOLD + player.getName() + "§a的" + ChatColor.RED +minionType);
+        armorStand.setCustomName(ChatColor.GOLD + player.getName() + "§a的" + ChatColor.RED + minionType);
         armorStand.setCustomNameVisible(true);
         armorStand.setItem(EquipmentSlot.HEAD, minionItem);
+        changeDirectionTo(armorStand, player);
+        buildMinion(armorStand.getUniqueId().toString(), minionItem, minionType);
+    }
+
+    // 将盔甲架方向改为面向玩家
+    private void changeDirectionTo(ArmorStand armorStand, Player player) {
         Vector direction = getVector(armorStand).subtract(getVector(player)).normalize();
         double x = direction.getX();
         double y = direction.getY();
@@ -114,35 +131,39 @@ public class MinionListener implements Listener {
         changed.setYaw(180 - toDegree(Math.atan2(x, z)));
         changed.setPitch(90 - toDegree(Math.acos(y)));
         armorStand.teleport(changed);
-        summonMinion(armorStand.getUniqueId().toString(),minionItem,minionType);
     }
-    private void summonMinion(String UUID,ItemStack minionItem,String type){
+
+    // 创建工人类并加入列表
+    private void buildMinion(String UUID, ItemStack minionItem, String type) {
         List<String> loreConfig = Config.getMinionItemSection().getStringList("Lore");
         List<String> minionItemLore = minionItem.getLore();
-        int size = 9,amount = 5;
-        Pattern getNum =Pattern.compile("[^0-9]");
-        for(String line : loreConfig){
-            int n = loreConfig.indexOf(line);
-            if(line.contains("%Size%")){
-                String sizeLine = minionItemLore.get(n);
-                Matcher matcher = getNum.matcher(sizeLine);
+        int size = 9, amount = 5;
+        Pattern getNum = Pattern.compile("[^0-9]");
+        for (int n = 0; n < loreConfig.size(); n++) {
+            String line = loreConfig.get(n);
+            if (line.contains("%Size%")) {
+                Matcher matcher = getNum.matcher(minionItemLore.get(n));
                 size = Integer.parseInt(matcher.replaceAll(""));
-            }
-            if(line.contains("%Amount%")){
-                String amountLine = minionItemLore.get(n);
-                Matcher matcher = getNum.matcher(amountLine);
+                break;
+            } else if (line.contains("%Amount%")) {
+                Matcher matcher = getNum.matcher(minionItemLore.get(n));
                 amount = Integer.parseInt(matcher.replaceAll(""));
+                break;
             }
         }
-        Bukkit.broadcastMessage(UUID);
-        Bukkit.broadcastMessage(String.valueOf(size));
-        Bukkit.broadcastMessage(String.valueOf(amount));
-        Minion minion = new Minion(type,size/9,amount);
-        minionList.put(UUID,minion);
+//        Bukkit.broadcastMessage(UUID);
+//        Bukkit.broadcastMessage(String.valueOf(size));
+//        Bukkit.broadcastMessage(String.valueOf(amount));
+        Minion minion = new Minion(type, size / 9, amount);
+        minionList.put(UUID, minion);
     }
+
+    // 改变工人方向依赖
     private static float toDegree(double angle) {
         return (float) Math.toDegrees(angle);
     }
+
+    // 改变工人方向依赖
     private static Vector getVector(Entity entity) {
         if (entity instanceof Player)
             return ((Player) entity).getEyeLocation().toVector();

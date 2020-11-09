@@ -11,11 +11,12 @@ import java.util.List;
 
 public class MinionItem {
     public static ItemStack getMinionItem(String type, int size, int amount) {
-        ItemBuilder itemBuilder = new ItemBuilder(Material.PLAYER_HEAD);
-        itemBuilder.name(getItemName(type));
-        itemBuilder.lore(getItemLore(type,size,amount));
+        ItemBuilder itemBuilder = new ItemBuilder(Material.PLAYER_HEAD)
+                .name(getItemName(type))
+                .lore(getItemLore(type, size, amount));
         return itemBuilder.BuildSkull(getBase64Texture(type));
     }
+
     public static String getBase64Texture(String type) {
         return Config.getMinionSection().getString(type.concat(".SkullTexture"));
     }
@@ -23,12 +24,16 @@ public class MinionItem {
     public static String getDescribe(String type) {
         return Config.getMinionSection().getString(type.concat(".Describe"));
     }
+
     public static String getItemName(String type) {
         String name = Config.getMinionItemSection().getString("Name");
-        if(name == null){return null;}
+        if (name == null) {
+            return null;
+        }
         return Message.toColor(Message.replace(name, "%Type%", type));
     }
-    public static List<String> getItemLore(String type,int size,int amount) {
+
+    public static List<String> getItemLore(String type, int size, int amount) {
         String describe = getDescribe(type);
         List<String> loreList = Config.getMinionItemSection().getStringList("Lore");
         loreList.add("&8&n&oSakuraMinions");
