@@ -138,8 +138,8 @@ public class MinionListener implements Listener {
         List<String> loreConfig = Config.getMinionItemSection().getStringList("Lore");
         List<String> minionItemLore = minionItem.getLore();
         int size = 9, amount = 5;
-        Pattern getNum = Pattern.compile("[^0-9]");
-        for (int n = 0; n < loreConfig.size(); n++) {
+        Pattern getNum = Pattern.compile("[^0-9]");//正则表达式匹配数字
+        for (int n = 0; n < loreConfig.size(); n++) {//获取参数
             String line = loreConfig.get(n);
             if (line.contains("%Size%")) {
                 Matcher matcher = getNum.matcher(minionItemLore.get(n));
