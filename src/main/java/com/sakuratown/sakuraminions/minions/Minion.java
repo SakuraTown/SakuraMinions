@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -16,7 +17,6 @@ public class Minion {
     int row;
     int amount;
     MinionInventory inventories;
-    InventoryGUI inventoryGUI;
 
     public Minion(String type, int row, int amount) {
 
@@ -24,13 +24,12 @@ public class Minion {
         this.row = row;
         this.amount = amount;
         inventories = new MinionInventory(type, row);
-        inventoryGUI = new InventoryGUI(inventories);
     }
 
     public void showGuI(Player player) {
-        inventoryGUI.setInventories(inventories);
         int PlayerPage = inventories.getPlayerPage(player,0);
-        inventoryGUI.showInventoryGUI(PlayerPage, player);
+        Inventory inventory = inventories.getInventoryList().get(PlayerPage - 1);
+        player.openInventory(inventory);
     }
 
     public void sortItem() {
