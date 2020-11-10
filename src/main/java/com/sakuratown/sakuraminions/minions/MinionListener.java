@@ -129,7 +129,7 @@ public class MinionListener implements Listener {
     }
 
     // 生成工人盔甲架
-    private void summonMinion(Player player, Location loc, ItemStack minionItem) {
+    private static void summonMinion(Player player, Location loc, ItemStack minionItem) {
         String name = minionItem.getItemMeta().getDisplayName();
         String minionType = null;
         for (String type : Config.getMinionSection().getKeys(false)) {
@@ -154,7 +154,7 @@ public class MinionListener implements Listener {
     }
 
     // 将盔甲架方向改为面向玩家
-    private void changeDirectionTo(ArmorStand armorStand, Player player) {
+    private static void changeDirectionTo(ArmorStand armorStand, Player player) {
         Vector direction = getVector(armorStand).subtract(getVector(player)).normalize();
         double x = direction.getX();
         double y = direction.getY();
@@ -166,10 +166,10 @@ public class MinionListener implements Listener {
     }
 
     // 创建工人类并加入列表
-    private void buildMinion(String uuid, ItemStack minionItem, String type) {
+    private static void buildMinion(String uuid, ItemStack minionItem, String type) {
         List<String> loreConfig = Config.getMinionItemSection().getStringList("Lore");
         List<String> minionItemLore = minionItem.getLore();
-        int size = 9, amount = 5;
+        int size = 9, amount = 5;//随便初始化一个值，IDEA老提醒没有初始化，很烦
         Pattern getNum = Pattern.compile("[^0-9]");//正则表达式匹配数字
         for (int n = 0; n < loreConfig.size(); n++) {//获取参数
             String line = loreConfig.get(n);
@@ -182,9 +182,6 @@ public class MinionListener implements Listener {
             }
         }
         Minion minion = new Minion(type, size / 9, amount);
-        for (int n = 0; n < 64; n++) {
-            minion.addRandomItem();
-        }
         MinionManager.getInstance().addMinion(uuid, minion);
     }
 
