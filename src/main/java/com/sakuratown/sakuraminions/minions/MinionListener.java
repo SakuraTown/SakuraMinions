@@ -1,9 +1,6 @@
 package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuralibrary.utils.Message;
-
-import net.minecraft.server.v1_16_R3.Items;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,12 +11,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -66,13 +61,14 @@ public class MinionListener implements Listener {
     public void onPlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
         if (isMinionItem(event.getArmorStandItem())) {
             event.setCancelled(true);
+            return;
         }
         if (isMinionItem(event.getPlayerItem())) {
             event.setCancelled(true);
         }
     }
 
-    // 打开工人背包（盔甲架实体）todo : 穿戴物品时也会打开背包，待解决
+    // 打开工人背包（盔甲架实体）需要潜行+右键
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerInteractAtEntityEvent(PlayerInteractAtEntityEvent event) {
         if (event.isCancelled()) {
@@ -81,14 +77,20 @@ public class MinionListener implements Listener {
         if (event.getRightClicked().getType() != EntityType.ARMOR_STAND) {
             return;
         }
+        Player player = event.getPlayer();
+        if (!player.isSneaking()) {
+            return;
+        }
         String UUID = event.getRightClicked().getUniqueId().toString();
+        event.setCancelled(true);
         if (minionList.containsKey(UUID)) {
-            minionList.get(UUID).showGuI(event.getPlayer());
+            minionList.get(UUID).showGuI(player);
         }
     }
 
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) { //删除工人实体并从列表删除
+        if(event.isCancelled()){return;}
         LivingEntity entity = event.getEntity();
         if (entity.getType() != EntityType.ARMOR_STAND) {
             return;
@@ -170,20 +172,18 @@ public class MinionListener implements Listener {
             if (line.contains("%Size%")) {
                 Matcher matcher = getNum.matcher(minionItemLore.get(n));
                 size = Integer.parseInt(matcher.replaceAll(""));
-                break;
             } else if (line.contains("%Amount%")) {
                 Matcher matcher = getNum.matcher(minionItemLore.get(n));
                 amount = Integer.parseInt(matcher.replaceAll(""));
-                break;
             }
         }
-//        Bukkit.broadcastMessage(UUID);
-//        Bukkit.broadcastMessage(String.valueOf(size));
-//        Bukkit.broadcastMessage(String.valueOf(amount));
         Minion minion = new Minion(type, size / 9, amount);
-        minion.addItem(new ItemStack(Material.DIAMOND,64));
+        for(int n =0 ;n<64;n++){
+            minion.addRandomItem();
+        }
         minionList.put(UUID, minion);
     }
+
 
     // 改变工人方向依赖
     private static float toDegree(double angle) {
