@@ -184,7 +184,6 @@ public class MinionListener implements Listener {
         minionList.put(UUID, minion);
     }
 
-
     // 改变工人方向依赖
     private static float toDegree(double angle) {
         return (float) Math.toDegrees(angle);
