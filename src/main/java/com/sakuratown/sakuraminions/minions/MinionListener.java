@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.sakuraminions.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,7 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MinionListener implements Listener {
-    HashMap<String, Minion> minionList = new HashMap<>();
 
     // 工人放置监听
     @EventHandler(priority = EventPriority.LOWEST)
@@ -81,21 +81,25 @@ public class MinionListener implements Listener {
         if (!player.isSneaking()) {
             return;
         }
-        String UUID = event.getRightClicked().getUniqueId().toString();
+        String uuid = event.getRightClicked().getUniqueId().toString();
         event.setCancelled(true);
-        if (minionList.containsKey(UUID)) {
-            minionList.get(UUID).showGuI(player);
+        MinionManager minionManager = MinionManager.getInstance();
+        if (minionManager.isMinion(uuid)) {
+            minionManager.getMinion(uuid).showGuI(player);
         }
     }
 
     @EventHandler
     public void onEntityDeathEvent(EntityDeathEvent event) { //删除工人实体并从列表删除
-        if(event.isCancelled()){return;}
+        if (event.isCancelled()) {
+            return;
+        }
         LivingEntity entity = event.getEntity();
         if (entity.getType() != EntityType.ARMOR_STAND) {
             return;
         }
-        if (!minionList.containsKey(entity.getUniqueId().toString())) {
+        MinionManager minionManager = MinionManager.getInstance();
+        if (!minionManager.isMinion(entity.getUniqueId().toString())) {
             return;
         }
         ArmorStand armorStand = (ArmorStand) entity;
@@ -108,8 +112,8 @@ public class MinionListener implements Listener {
             event.getDrops().remove(0);
         }
         String uuid = entity.getUniqueId().toString();
-        minionList.get(uuid).dropItems(entity.getLocation());
-        minionList.remove(uuid);
+        minionManager.getMinion(uuid).dropItems(entity.getLocation());
+        minionManager.removeMinion(uuid);
     }
 
     // 检测是否是工人（物品形式）
@@ -162,7 +166,7 @@ public class MinionListener implements Listener {
     }
 
     // 创建工人类并加入列表
-    private void buildMinion(String UUID, ItemStack minionItem, String type) {
+    private void buildMinion(String uuid, ItemStack minionItem, String type) {
         List<String> loreConfig = Config.getMinionItemSection().getStringList("Lore");
         List<String> minionItemLore = minionItem.getLore();
         int size = 9, amount = 5;
@@ -178,10 +182,10 @@ public class MinionListener implements Listener {
             }
         }
         Minion minion = new Minion(type, size / 9, amount);
-        for(int n =0 ;n<64;n++){
+        for (int n = 0; n < 64; n++) {
             minion.addRandomItem();
         }
-        minionList.put(UUID, minion);
+        MinionManager.getInstance().addMinion(uuid, minion);
     }
 
     // 改变工人方向依赖

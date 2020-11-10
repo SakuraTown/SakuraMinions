@@ -1,10 +1,7 @@
 package com.sakuratown.sakuraminions;
 
 import com.sakuratown.sakuraminions.command.MainCommand;
-import com.sakuratown.sakuraminions.minions.Config;
-import com.sakuratown.sakuraminions.minions.InventoryGUIListener;
-import com.sakuratown.sakuraminions.minions.Minion;
-import com.sakuratown.sakuraminions.minions.MinionListener;
+import com.sakuratown.sakuraminions.minions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
     private static Main plugin;
-
     public static Main getInstance() {
         return plugin;
     }
@@ -25,7 +21,7 @@ public class Main extends JavaPlugin {
                 "§a樱花工人插件§e v" + getDescription().getVersion() + " §a已启用",
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
-
+        MinionManager.getInstance();
         saveDefaultConfig();
         Config.reloadConfig();
         MinionListener minionList = new MinionListener();
