@@ -1,6 +1,7 @@
-package com.sakuratown.sakuraminions.minions;
+package com.sakuratown.sakuraminions.menu;
 
 
+import com.sakuratown.sakuraminions.minions.Config;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ public class InventoryGUIListener implements Listener {
         Player player = event.getWhoClicked() instanceof Player ? (Player) event.getWhoClicked() : null;
         Inventory clickedInventory = event.getClickedInventory();
         MinionInventory gui = getGui(event.getInventory());
+
         if (player == null || clickedInventory == null || gui == null) return;
 
         denyPutItem(event, clickedInventory);

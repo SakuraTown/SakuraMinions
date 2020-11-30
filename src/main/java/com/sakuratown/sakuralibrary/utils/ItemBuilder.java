@@ -109,8 +109,10 @@ public class ItemBuilder {
     public ItemStack build() {
         return itemStack;
     }
+
     public ItemStack BuildSkull(String url) {
         ItemStack head = itemStack;
+
         if(head.getType() != Material.PLAYER_HEAD){return head;}
         if (url == null) return head;
 

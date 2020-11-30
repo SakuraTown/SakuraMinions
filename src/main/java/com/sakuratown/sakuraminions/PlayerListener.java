@@ -32,10 +32,10 @@ public class PlayerListener implements Listener {
             ItemStack itemStack1 = new ItemStack(Material.OAK_LOG, 64);
             ItemStack itemStack2 = new ItemStack(Material.SAND, 64);
             ItemStack itemStack3 = new ItemStack(Material.STONE, 100);
-            ItemStack itemStack4 = new ItemStack(Material.EGG, 16);
+            ItemStack itemStack4 = new ItemStack(Material.EGG, 28);
             ArrayList<ItemStack> itemStacks = new ArrayList<>();
-            itemStacks.add(itemStack1);
-            itemStacks.add(itemStack2);
+//            itemStacks.add(itemStack1);
+//            itemStacks.add(itemStack2);
             itemStacks.add(itemStack3);
             itemStacks.add(itemStack4);
             minion.addItem(itemStacks);

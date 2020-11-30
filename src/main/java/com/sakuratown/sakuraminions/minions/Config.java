@@ -1,6 +1,7 @@
 package com.sakuratown.sakuraminions.minions;
 
 import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.sakuraminions.menu.MenuButton;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -1,7 +1,10 @@
-package com.sakuratown.sakuraminions.minions;
+package com.sakuratown.sakuraminions.armorstand;
 
 import com.sakuratown.sakuralibrary.utils.Message;
 import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.sakuraminions.minions.Config;
+import com.sakuratown.sakuraminions.minions.Minion;
+import com.sakuratown.sakuraminions.minions.MinionManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -30,21 +33,20 @@ public class MinionListener implements Listener {
     // 工人放置监听
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
-            return;
-        }
         ItemStack minionItem = event.getItem();
-        if (minionItem == null) {
+
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || !isMinionItem(minionItem)) {
             return;
         }
-        if (!isMinionItem(minionItem)) {
-            return;
-        }
+
         Block block = event.getClickedBlock();
+
         if (block == null || block.isEmpty() || block.isLiquid()) {
             return;
         }
+
         Block upBlock = block.getRelative(BlockFace.UP);
+
         if (upBlock.isEmpty()) {
             Location loc = upBlock.getLocation().add(0.5, 0, 0.5);
             int amount = minionItem.getAmount();
@@ -117,8 +119,8 @@ public class MinionListener implements Listener {
     }
 
     // 检测是否是工人（物品形式）
-    private static boolean isMinionItem(ItemStack item) {
-        if (item.getType() != Material.PLAYER_HEAD) {
+    private boolean isMinionItem(ItemStack item) {
+        if (item == null || item.getType() != Material.PLAYER_HEAD) {
             return false;
         }
         List<String> lore = item.getLore();
@@ -129,7 +131,7 @@ public class MinionListener implements Listener {
     }
 
     // 生成工人盔甲架
-    private static void summonMinion(Player player, Location loc, ItemStack minionItem) {
+    private void summonMinion(Player player, Location loc, ItemStack minionItem) {
         String name = minionItem.getItemMeta().getDisplayName();
         String minionType = null;
         for (String type : Config.getMinionSection().getKeys(false)) {
@@ -154,7 +156,7 @@ public class MinionListener implements Listener {
     }
 
     // 将盔甲架方向改为面向玩家
-    private static void changeDirectionTo(ArmorStand armorStand, Player player) {
+    private void changeDirectionTo(ArmorStand armorStand, Player player) {
         Vector direction = getVector(armorStand).subtract(getVector(player)).normalize();
         double x = direction.getX();
         double y = direction.getY();
@@ -166,7 +168,7 @@ public class MinionListener implements Listener {
     }
 
     // 创建工人类并加入列表
-    private static void buildMinion(String uuid, ItemStack minionItem, String type) {
+    private void buildMinion(String uuid, ItemStack minionItem, String type) {
         List<String> loreConfig = Config.getMinionItemSection().getStringList("Lore");
         List<String> minionItemLore = minionItem.getLore();
         int size = 9, amount = 5;//随便初始化一个值，IDEA老提醒没有初始化，很烦
@@ -186,12 +188,12 @@ public class MinionListener implements Listener {
     }
 
     // 改变工人方向依赖
-    private static float toDegree(double angle) {
+    private float toDegree(double angle) {
         return (float) Math.toDegrees(angle);
     }
 
     // 改变工人方向依赖
-    private static Vector getVector(Entity entity) {
+    private Vector getVector(Entity entity) {
         if (entity instanceof Player)
             return ((Player) entity).getEyeLocation().toVector();
         else

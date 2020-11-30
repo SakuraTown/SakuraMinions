@@ -1,6 +1,8 @@
 package com.sakuratown.sakuraminions;
 
+import com.sakuratown.sakuraminions.armorstand.MinionListener;
 import com.sakuratown.sakuraminions.command.MainCommand;
+import com.sakuratown.sakuraminions.menu.InventoryGUIListener;
 import com.sakuratown.sakuraminions.minions.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;

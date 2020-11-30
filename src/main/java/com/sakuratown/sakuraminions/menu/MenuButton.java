@@ -1,7 +1,8 @@
-package com.sakuratown.sakuraminions.minions;
+package com.sakuratown.sakuraminions.menu;
 
 import com.sakuratown.sakuralibrary.utils.ItemBuilder;
 import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.sakuraminions.minions.Config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

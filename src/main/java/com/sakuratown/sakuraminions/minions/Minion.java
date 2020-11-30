@@ -1,5 +1,6 @@
 package com.sakuratown.sakuraminions.minions;
 
+import com.sakuratown.sakuraminions.menu.MinionInventory;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

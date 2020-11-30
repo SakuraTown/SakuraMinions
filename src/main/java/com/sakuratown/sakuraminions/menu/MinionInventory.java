@@ -1,5 +1,6 @@
-package com.sakuratown.sakuraminions.minions;
+package com.sakuratown.sakuraminions.menu;
 
+import com.sakuratown.sakuraminions.minions.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
