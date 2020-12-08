@@ -1,7 +1,6 @@
 package com.sakuratown.sakuraminions.command;
 
 import com.sakuratown.sakuralibrary.command.SimpleSubCommand;
-import com.sakuratown.sakuraminions.minions.MinionItem;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,10 +15,10 @@ public class GiveCommand extends SimpleSubCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-        if(!(sender instanceof Player)){return;}
-        Player player = (Player)sender;
-        player.getInventory().addItem(MinionItem.getMinionItem(args[1],Integer.parseInt(args[2]),Integer.parseInt(args[3])));
-
+        if (!(sender instanceof Player)) {
+            return;
+        }
+        Player player = (Player) sender;
     }
 }
 

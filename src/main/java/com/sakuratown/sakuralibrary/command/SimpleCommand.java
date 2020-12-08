@@ -29,20 +29,17 @@ public abstract class SimpleCommand implements TabCompleter {
 
         } else {
 
-            boolean match = false;
-
             for (SimpleSubCommand subCommand : subCommands) {
 
                 if (subCommand.command.equalsIgnoreCase(args[0])) {
 
-                    match = true;
                     subCommand.onCommand(sender, args);
 
-                    break;
+                    return;
                 }
             }
 
-            if (!match) Message.send(sender, getHelpMessage(sender));
+             Message.send(sender, getHelpMessage(sender));
         }
     }
 

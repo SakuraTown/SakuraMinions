@@ -15,8 +15,7 @@ public class MainCommand extends SimpleCommand implements CommandExecutor {
     public void registerSubCommands() {
         registerSubCommand(new SelectCommand("select"));
         registerSubCommand(new InventoryCommand("inventory"));
-        registerSubCommand(new UpgradeAmountCommand("upgrade amount"));
-        registerSubCommand(new UpgradeAmountCommand("upgrade inventory"));
+        registerSubCommand(new UpgradeCommand("upgrade"));
         registerSubCommand(new GiveCommand("give"));
         registerSubCommand(new ReloadCommand("reload"));
     }

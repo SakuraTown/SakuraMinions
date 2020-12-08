@@ -1,0 +1,31 @@
+# 矿工
+Miner:
+
+  # 工人收集物品列表
+  CollectItemList:
+    # 物品名称标准在这里查：https://bukkit.windit.net/javadoc/org/bukkit/Material.html
+    # 获取原石的权重是 0.3
+    COBBLESTONE: 30
+    DIAMOND: 30
+    COAL: 30
+
+  # 工人效率设置
+  Efficiency:
+    # 默认每次获取 50 个方块
+    Default: 50
+    # 升级效率需要花费 500 金币
+    UpgradeCost: 500
+    # 每升级一次多获取 100 个方块
+    UpgradeAmount: 100
+
+  # 工人仓库设置
+  Storage:
+    # 默认工人有几行仓库大小
+    Default: 3
+    # 升级工人仓库大小需要花费 500 金币
+    UpgradeCost: 500
+    # 每升级一次提升 3 行仓库
+    UpgradeAmount: 3
+
+  # 工人皮肤设置
+  Skin: Miner
