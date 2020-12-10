@@ -1,4 +1,4 @@
-package com.sakuratown.sakuralibrary.menu;
+package com.sakuratown.library.menu;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;

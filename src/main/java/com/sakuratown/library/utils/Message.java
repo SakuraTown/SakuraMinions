@@ -1,4 +1,4 @@
-package com.sakuratown.sakuralibrary.utils;
+package com.sakuratown.library.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

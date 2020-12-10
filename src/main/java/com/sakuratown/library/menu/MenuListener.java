@@ -1,4 +1,4 @@
-package com.sakuratown.sakuralibrary.menu;
+package com.sakuratown.library.menu;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-public class GuiListener implements Listener {
+public class MenuListener implements Listener {
 
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
@@ -18,10 +18,10 @@ public class GuiListener implements Listener {
         Inventory inventory = event.getInventory();
         ItemStack currentItem = event.getCurrentItem();
 
-        Gui gui = getGui(event);
-        if (gui == null) return;
+        Menu menu = getMenu(event);
+        if (menu == null) return;
 
-        if (gui.isLock) {
+        if (menu.isLock) {
             InventoryUtil.denyClick(event, inventory);
         }
 
@@ -31,9 +31,9 @@ public class GuiListener implements Listener {
 
         if (event.isShiftClick()) {
             int shiftClickSlot = InventoryUtil.getShiftClickSlot(inventory, currentItem);
-            button = gui.getButton(shiftClickSlot);
+            button = menu.getButton(shiftClickSlot);
         } else {
-            button = gui.getButton(rawSlot);
+            button = menu.getButton(rawSlot);
         }
 
         if (button == null) return;
@@ -54,17 +54,17 @@ public class GuiListener implements Listener {
 
         Inventory inventory = event.getInventory();
 
-        Gui gui = getGui(event);
-        if (gui == null) return;
+        Menu menu = getMenu(event);
+        if (menu == null) return;
 
-        if (gui.isLock) {
+        if (menu.isLock) {
             for (int i : event.getRawSlots()) {
 
-                if (gui.isLock && i < inventory.getSize()) {
+                if (menu.isLock && i < inventory.getSize()) {
                     event.setCancelled(true);
                 }
 
-                Button button = gui.getButton(i);
+                Button button = menu.getButton(i);
 
                 if (button == null) return;
 
@@ -80,27 +80,27 @@ public class GuiListener implements Listener {
     @EventHandler
     public void inventoryCloseEvent(InventoryCloseEvent event) {
 
-        Gui gui = getGui(event);
-        if (gui == null || gui.closeEvent == null) return;
+        Menu menu = getMenu(event);
+        if (menu == null || menu.closeEvent == null) return;
 
-        gui.closeEvent.accept(event);
+        menu.closeEvent.accept(event);
     }
 
     @EventHandler
     public void inventoryOpenEvent(InventoryOpenEvent event) {
 
-        Gui gui = getGui(event);
-        if (gui == null || gui.openEvent == null) return;
+        Menu menu = getMenu(event);
+        if (menu == null || menu.openEvent == null) return;
 
-        gui.openEvent.accept(event);
+        menu.openEvent.accept(event);
     }
 
-    private Gui getGui(InventoryEvent event) {
+    private Menu getMenu(InventoryEvent event) {
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
 
-        if (!(holder instanceof Gui)) return null;
+        if (!(holder instanceof Menu)) return null;
 
-        return (Gui) holder;
+        return (Menu) holder;
     }
 }

@@ -1,6 +1,6 @@
-package com.sakuratown.sakuralibrary.menu;
+package com.sakuratown.library.menu;
 
-import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.library.utils.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

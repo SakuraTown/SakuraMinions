@@ -1,7 +1,7 @@
 package com.sakuratown.sakuraminions.command;
 
-import com.sakuratown.sakuralibrary.command.SimpleSubCommand;
-import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.library.command.SimpleSubCommand;
+import com.sakuratown.library.utils.Message;
 import org.bukkit.command.CommandSender;
 
 public class ReloadCommand extends SimpleSubCommand {

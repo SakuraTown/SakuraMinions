@@ -1,7 +1,7 @@
 package com.sakuratown.sakuraminions.minion;
 
-import com.sakuratown.sakuralibrary.menu.Gui;
-import com.sakuratown.sakuralibrary.utils.Config;
+import com.sakuratown.library.menu.Menu;
+import com.sakuratown.library.utils.Config;
 import com.sakuratown.sakuraminions.menu.ManagerMenu;
 import com.sakuratown.sakuraminions.menu.StorageMenu;
 import org.bukkit.Material;
@@ -74,7 +74,7 @@ public class Minion {
     private void setupMenu() {
         Config config = Config.getYamlConfiguration("menu");
 
-        Gui managerMenu = config.getMenu("管理菜单");
+        Menu managerMenu = config.getMenu("管理菜单");
     }
 
     private Material getRandomMaterial() {

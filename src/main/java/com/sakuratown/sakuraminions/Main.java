@@ -1,6 +1,6 @@
 package com.sakuratown.sakuraminions;
 
-import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.library.utils.Message;
 import com.sakuratown.sakuraminions.command.MainCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;

@@ -1,7 +1,7 @@
-package com.sakuratown.sakuralibrary.menu;
+package com.sakuratown.library.menu;
 
 
-import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.library.utils.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Gui implements InventoryHolder {
+public class Menu implements InventoryHolder {
 
     public boolean isLock = true;
 
@@ -23,7 +23,7 @@ public class Gui implements InventoryHolder {
     private final Inventory inventory;
     private final Map<Integer, Button> buttonMap = new HashMap<>();
 
-    public Gui(String name, int row) {
+    public Menu(String name, int row) {
         int size = row * 9;
         String title = Message.toColor(name);
 
@@ -51,9 +51,9 @@ public class Gui implements InventoryHolder {
 
     public boolean isOpen(Player player) {
         Inventory topInventory = player.getOpenInventory().getTopInventory();
-        Inventory guiInventory = getInventory();
+        Inventory menInventory = getInventory();
 
-        return topInventory.equals(guiInventory);
+        return topInventory.equals(menInventory);
     }
 
     public void open(Player player) {

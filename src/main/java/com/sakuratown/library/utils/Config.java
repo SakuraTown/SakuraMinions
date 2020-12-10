@@ -1,7 +1,7 @@
-package com.sakuratown.sakuralibrary.utils;
+package com.sakuratown.library.utils;
 
-import com.sakuratown.sakuralibrary.menu.Button;
-import com.sakuratown.sakuralibrary.menu.Gui;
+import com.sakuratown.library.menu.Button;
+import com.sakuratown.library.menu.Menu;
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+//TODO 不应该用继承, 应该用装饰器设计模式, 或者用组合?
 public class Config extends YamlConfiguration {
 
     private static final HashMap<String, Config> configs = new HashMap<>();
@@ -45,14 +46,14 @@ public class Config extends YamlConfiguration {
 
     }
 
-    public Gui getMenu(String path) {
+    public Menu getMenu(String path) {
 
         ConfigurationSection config = getConfigurationSection(path);
 
         String title = config.getString("Title");
         int row = config.getInt("Row");
 
-        return new Gui(title, row);
+        return new Menu(title, row);
     }
 
     public Button getButton(String path) {
@@ -128,7 +129,7 @@ public class Config extends YamlConfiguration {
 
     @Override
     @Nonnull
-    public ConfigurationSection getConfigurationSection(String path) {
+    public Config getConfigurationSection(String path) {
 
         ConfigurationSection configurationSection = super.getConfigurationSection(path);
 
@@ -136,7 +137,7 @@ public class Config extends YamlConfiguration {
             throw new NullPointerException("配置文件有误, 请仔细检查配置文件");
         }
 
-        return configurationSection;
+        return (Config) configurationSection;
 
     }
 

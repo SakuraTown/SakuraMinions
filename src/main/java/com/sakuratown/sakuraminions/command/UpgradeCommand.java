@@ -1,6 +1,6 @@
 package com.sakuratown.sakuraminions.command;
 
-import com.sakuratown.sakuralibrary.command.SimpleSubCommand;
+import com.sakuratown.library.command.SimpleSubCommand;
 import org.bukkit.command.CommandSender;
 
 public class UpgradeCommand extends SimpleSubCommand {

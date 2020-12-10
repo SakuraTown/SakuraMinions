@@ -1,6 +1,6 @@
 package com.sakuratown.sakuraminions.command;
 
-import com.sakuratown.sakuralibrary.command.SimpleCommand;
+import com.sakuratown.library.command.SimpleCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

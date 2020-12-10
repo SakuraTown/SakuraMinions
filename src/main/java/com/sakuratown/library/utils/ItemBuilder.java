@@ -1,4 +1,4 @@
-package com.sakuratown.sakuralibrary.utils;
+package com.sakuratown.library.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;

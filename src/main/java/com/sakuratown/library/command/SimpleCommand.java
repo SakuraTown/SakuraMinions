@@ -1,6 +1,6 @@
-package com.sakuratown.sakuralibrary.command;
+package com.sakuratown.library.command;
 
-import com.sakuratown.sakuralibrary.utils.Message;
+import com.sakuratown.library.utils.Message;
 import com.sakuratown.sakuraminions.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
