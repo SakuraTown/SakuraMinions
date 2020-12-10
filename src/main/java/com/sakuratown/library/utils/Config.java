@@ -11,38 +11,44 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-//TODO 不应该用继承, 应该用装饰器设计模式, 或者用组合?
-public class Config extends YamlConfiguration {
+public class Config {
 
     private static final HashMap<String, Config> configs = new HashMap<>();
+    private final YamlConfiguration configuration;
 
-    public static Config getYamlConfiguration(String name) {
+    public Config(String fileName) {
+        File file = new File(Main.getInstance().getDataFolder().getParent(), fileName + ".yml");
+        configuration = YamlConfiguration.loadConfiguration(file);
+    }
 
-        if (name.equals("config")) return (Config) Main.getInstance().getConfig();
-        if (configs.get(name) == null) {
-
-            File file = new File(Main.getInstance().getDataFolder().getParent(), name + ".yml");
-            Config configuration = (Config) YamlConfiguration.loadConfiguration(file);
-            configs.put(name, configuration);
-
-        }
-
+    public static Config getConfig(String name) {
+        configs.putIfAbsent(name, new Config(name));
         return configs.get(name);
     }
 
-    public static void reload() {
+    public void reload() {
 
         for (String fileName : configs.keySet()) {
-            File file = new File(Main.getInstance().getDataFolder().getParent(), fileName + ".yml");
-            Config configuration = (Config) YamlConfiguration.loadConfiguration(file);
-            configs.put(fileName, configuration);
+            Config config = new Config(fileName);
+            configs.put(fileName, config);
         }
+
+    }
+
+    public ConfigurationSection getConfigurationSection(String path) {
+
+        ConfigurationSection configurationSection = configuration.getConfigurationSection(path);
+
+        if (configurationSection == null) {
+            throw new NullPointerException("配置文件有误, 请仔细检查配置文件");
+        }
+
+        return configurationSection;
 
     }
 
@@ -125,20 +131,6 @@ public class Config extends YamlConfiguration {
         if (isUnbreakable) itemBuilder.setUnbreakable();
 
         return new ItemBuilder(material, amount).name(name).lore(lore).build();
-    }
-
-    @Override
-    @Nonnull
-    public Config getConfigurationSection(String path) {
-
-        ConfigurationSection configurationSection = super.getConfigurationSection(path);
-
-        if (configurationSection == null) {
-            throw new NullPointerException("配置文件有误, 请仔细检查配置文件");
-        }
-
-        return (Config) configurationSection;
-
     }
 
 }

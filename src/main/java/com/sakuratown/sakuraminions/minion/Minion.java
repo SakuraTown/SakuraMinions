@@ -31,7 +31,7 @@ public class Minion {
         this.efficiency = efficiency;
 
         storageMenu = new StorageMenu(type, storage, efficiency);
-        section = Config.getYamlConfiguration("minions").getConfigurationSection(type);
+        section = Config.getConfig("minions").getConfigurationSection(type);
         collectItemSet = section.getKeys(false);
 
         totalWeight = getTotalWeight();
@@ -72,7 +72,7 @@ public class Minion {
     }
 
     private void setupMenu() {
-        Config config = Config.getYamlConfiguration("menu");
+        Config config = Config.getConfig("menu");
 
         Menu managerMenu = config.getMenu("管理菜单");
     }
