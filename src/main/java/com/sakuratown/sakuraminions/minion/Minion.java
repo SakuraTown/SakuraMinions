@@ -1,8 +1,7 @@
 package com.sakuratown.sakuraminions.minion;
 
+import com.sakuratown.sakuralibrary.menu.Gui;
 import com.sakuratown.sakuralibrary.utils.Config;
-import com.sakuratown.sakuralibrary.utils.Message;
-import com.sakuratown.sakuraminions.Main;
 import com.sakuratown.sakuraminions.menu.ManagerMenu;
 import com.sakuratown.sakuraminions.menu.StorageMenu;
 import org.bukkit.Material;
@@ -12,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class Minion {
@@ -33,11 +31,12 @@ public class Minion {
         this.efficiency = efficiency;
 
         storageMenu = new StorageMenu(type, storage, efficiency);
-
-        section = Config.getConfigurationSection(type);
+        section = Config.getYamlConfiguration("minions").getConfigurationSection(type);
         collectItemSet = section.getKeys(false);
 
-        setTotalWeight(section, collectItemSet);
+        totalWeight = getTotalWeight();
+
+        setupMenu();
     }
 
     public void openStorageMenu(Player player) {
@@ -60,14 +59,22 @@ public class Minion {
 
         List<ItemStack> collectItems = new ArrayList<>();
 
+        //TODO 如果效率 1000 要循环 1000 次, 降低循环次数
         for (int i = 0; i < efficiency; i++) {
             Material randomMaterial = getRandomMaterial();
+
             ItemStack itemStack = new ItemStack(randomMaterial, 1);
 
             collectItems.add(itemStack);
         }
 
-        storageMenu.add(collectItems);
+        storageMenu.addItem(collectItems);
+    }
+
+    private void setupMenu() {
+        Config config = Config.getYamlConfiguration("menu");
+
+        Gui managerMenu = config.getMenu("管理菜单");
     }
 
     private Material getRandomMaterial() {
@@ -96,7 +103,7 @@ public class Minion {
 
     }
 
-    private void setTotalWeight(ConfigurationSection section, Set<String> collectItemSet) {
+    private int getTotalWeight() {
 
         int totalWeight = 0;
 
@@ -105,6 +112,6 @@ public class Minion {
             totalWeight += weight;
         }
 
-        this.totalWeight = totalWeight;
+        return totalWeight;
     }
 }

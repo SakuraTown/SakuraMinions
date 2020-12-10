@@ -11,7 +11,7 @@ public class StorageMenu {
 
     }
 
-    public void add(List<ItemStack> collectItems) {
+    public void addItem(List<ItemStack> collectItems) {
 
     }
 
