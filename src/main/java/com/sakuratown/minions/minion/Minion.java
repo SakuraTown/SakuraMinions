@@ -1,5 +1,6 @@
 package com.sakuratown.minions.minion;
 
+import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.menu.ManagerMenu;
 import com.sakuratown.minions.menu.StorageMenu;
@@ -73,7 +74,7 @@ public class Minion {
 
     private void setupMenu() {
         Config config = Config.getConfig("menu");
-
+        managerMenu = new ManagerMenu();
     }
 
     private Material getRandomMaterial() {

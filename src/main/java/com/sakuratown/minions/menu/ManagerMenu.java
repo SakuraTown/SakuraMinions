@@ -13,7 +13,6 @@ public class ManagerMenu {
 
     public ManagerMenu() {
 
-
         Config config = Config.getConfig("menu");
         menu = config.getMenu("管理菜单");
 
@@ -40,6 +39,6 @@ public class ManagerMenu {
     }
 
     public void open(Player player) {
-
+        player.openInventory(menu.getInventory());
     }
 }
