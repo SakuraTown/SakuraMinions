@@ -21,7 +21,7 @@ public class Menu implements InventoryHolder {
     public Consumer<InventoryCloseEvent> closeEvent;
 
     private final Inventory inventory;
-    private final Map<Integer, Button> buttonMap = new HashMap<>();
+    public final Map<Integer, Button> buttonMap = new HashMap<>();
 
     public Menu(String name, int row) {
         int size = row * 9;

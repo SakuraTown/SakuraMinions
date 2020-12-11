@@ -19,7 +19,7 @@ public class Minion {
     private final Set<String> collectItemSet;
 
     StorageMenu storageMenu;
-    Menu managerMenu;
+    ManagerMenu managerMenu;
 
     private int storage;
     private int efficiency;
@@ -30,11 +30,10 @@ public class Minion {
         this.storage = storage;
         this.efficiency = efficiency;
 
-        storageMenu = new StorageMenu(type, storage, efficiency);
-
         section = Config.getConfig("minions").getConfigurationSection(type);
         collectItemSet = section.getKeys(false);
 
+        System.out.println(collectItemSet);
         totalWeight = getTotalWeight();
 
         setupMenu();
@@ -74,7 +73,7 @@ public class Minion {
 
     private void setupMenu() {
         Config config = Config.getConfig("menu");
-        managerMenu = config.getMenu("管理菜单");
+
     }
 
     private Material getRandomMaterial() {
@@ -113,5 +112,9 @@ public class Minion {
         }
 
         return totalWeight;
+    }
+
+    public void changeName() {
+
     }
 }

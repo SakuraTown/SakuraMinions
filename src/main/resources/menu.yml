@@ -10,4 +10,4 @@
       type: BLUE_STAINED_GLASS_PANE
       name: "&d&l点击修改工人名字"
       slots: 46,47,48,50,51,52
-      action:
+      action: ChangeName

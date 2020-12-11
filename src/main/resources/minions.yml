@@ -33,7 +33,7 @@ Miner:
 Other:
 
   # 工人收集物品列表
-  CollectItemSet:
+  CollectItemList:
     # 物品名称标准在这里查：https://bukkit.windit.net/javadoc/org/bukkit/Material.html
     # 获取原石的权重是 0.3
     COBBLESTONE: 30
