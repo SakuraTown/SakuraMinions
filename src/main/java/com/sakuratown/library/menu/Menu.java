@@ -21,13 +21,9 @@ public abstract class Menu implements InventoryHolder {
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
 
-    private Inventory inventory;
     private String title = "Menu";
     private Integer size = 3 * 9;
-
-    public Menu() {
-        inventory = Bukkit.createInventory(this, size, title);
-    }
+    private Inventory inventory = Bukkit.createInventory(this, size, title);
 
     public Button getButton(int slot) {
         return buttonMap.get(slot);
@@ -46,6 +42,10 @@ public abstract class Menu implements InventoryHolder {
     public void setButton(Button button) {
 
         if (button == null) return;
+
+        if (button.action != null) {
+            setButtonAction(button);
+        }
 
         for (int slot : button.slots) {
             buttonMap.put(slot, button);
@@ -73,5 +73,7 @@ public abstract class Menu implements InventoryHolder {
     public Inventory getInventory() {
         return inventory;
     }
+
+    public abstract void setButtonAction(Button button);
 }
 
