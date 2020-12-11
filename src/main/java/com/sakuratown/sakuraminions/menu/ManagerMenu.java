@@ -1,6 +1,8 @@
 package com.sakuratown.sakuraminions.menu;
 
+import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.Menu;
+import com.sakuratown.library.utils.Config;
 
 public class ManagerMenu extends Menu {
 
@@ -8,4 +10,6 @@ public class ManagerMenu extends Menu {
         super(name, row);
     }
 
+    private void setChangeNameButton() {
+    }
 }

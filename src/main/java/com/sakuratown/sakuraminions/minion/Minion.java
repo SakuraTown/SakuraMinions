@@ -73,8 +73,7 @@ public class Minion {
 
     private void setupMenu() {
         Config config = Config.getConfig("menu");
-
-        Menu managerMenu = config.getMenu("管理菜单");
+        managerMenu = (ManagerMenu) config.getMenu("管理菜单");
     }
 
     private Material getRandomMaterial() {

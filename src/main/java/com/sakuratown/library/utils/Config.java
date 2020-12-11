@@ -59,7 +59,13 @@ public class Config {
         String title = config.getString("Title");
         int row = config.getInt("Row");
 
-        return new Menu(title, row);
+        Menu menu = new Menu(title, row);
+
+        for (String button : getConfigurationSection(path.concat(".Buttons")).getKeys(false)) {
+            menu.setButton(getButton(button));
+        }
+
+        return menu;
     }
 
     public Button getButton(String path) {
