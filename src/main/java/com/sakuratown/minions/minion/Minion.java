@@ -1,6 +1,5 @@
 package com.sakuratown.minions.minion;
 
-import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.menu.ManagerMenu;
 import com.sakuratown.minions.menu.StorageMenu;
@@ -15,15 +14,17 @@ import java.util.Set;
 
 public class Minion {
 
-    private final ConfigurationSection section;
     private final Set<String> collectItemSet;
+    private final int totalWeight;
 
     StorageMenu storageMenu;
     ManagerMenu managerMenu;
 
+    ConfigurationSection section;
+
+    private String type;
     private int storage;
     private int efficiency;
-    private final int totalWeight;
 
     public Minion(String type, int storage, int efficiency) {
 
@@ -31,9 +32,8 @@ public class Minion {
         this.efficiency = efficiency;
 
         section = Config.getConfig("minions").getConfigurationSection(type);
-        collectItemSet = section.getKeys(false);
 
-        System.out.println(collectItemSet);
+        collectItemSet = section.getKeys(false);
         totalWeight = getTotalWeight();
 
         setupMenu();
@@ -114,7 +114,4 @@ public class Minion {
         return totalWeight;
     }
 
-    public void changeName() {
-
-    }
 }

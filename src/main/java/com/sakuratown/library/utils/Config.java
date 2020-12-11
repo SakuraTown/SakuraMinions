@@ -112,7 +112,6 @@ public class Config {
 
     public ItemStack getItemStack(String path) {
 
-        System.out.println(path);
         ConfigurationSection config = getConfigurationSection(path);
         Material material = Material.matchMaterial(Objects.requireNonNullElse(config.getString("type"), "STONE"));
 
