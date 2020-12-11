@@ -35,12 +35,15 @@ public class Config {
     public static void saveDefaultConfig(String fileName) {
         File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
 
+        //TODO 测试代码, 方便修改配置文件, 开服记得删了
+        Main.getInstance().saveResource(fileName + ".yml", true);
+
         if (!file.exists()) {
             Main.getInstance().saveResource(fileName + ".yml", false);
         }
     }
 
-    public void reload() {
+    public static void reload() {
 
         for (String fileName : configs.keySet()) {
             Config config = new Config(fileName);

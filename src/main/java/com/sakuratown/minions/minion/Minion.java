@@ -1,6 +1,5 @@
 package com.sakuratown.minions.minion;
 
-import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.menu.ManagerMenu;
 import com.sakuratown.minions.menu.StorageMenu;
@@ -15,26 +14,27 @@ import java.util.Set;
 
 public class Minion {
 
-    private final Set<String> collectItemSet;
+    private final String type;
     private final int totalWeight;
+    private final Set<String> collectItemSet;
+    public final ConfigurationSection config;
 
-    StorageMenu storageMenu;
-    ManagerMenu managerMenu;
+    private StorageMenu storageMenu;
+    private ManagerMenu managerMenu;
 
-    ConfigurationSection section;
-
-    private String type;
     private int storage;
     private int efficiency;
+    private String name = "EnTIv 的工人";
 
     public Minion(String type, int storage, int efficiency) {
 
+        this.type = type;
         this.storage = storage;
         this.efficiency = efficiency;
 
-        section = Config.getConfig("minions").getConfigurationSection(type);
+        config = Config.getConfig("minions").getConfigurationSection(type);
 
-        collectItemSet = section.getKeys(false);
+        collectItemSet = config.getKeys(false);
         totalWeight = getTotalWeight();
 
         setupMenu();
@@ -73,8 +73,8 @@ public class Minion {
     }
 
     private void setupMenu() {
-        Config config = Config.getConfig("menu");
-        managerMenu = new ManagerMenu();
+        managerMenu = new ManagerMenu(this);
+        storageMenu = new StorageMenu(type, storage);
     }
 
     private Material getRandomMaterial() {
@@ -86,7 +86,7 @@ public class Minion {
 
         for (String material : collectItemSet) {
 
-            int weight = section.getInt(material);
+            int weight = config.getInt(material);
             chance += weight;
 
             if (randomNum <= chance) {
@@ -108,11 +108,18 @@ public class Minion {
         int totalWeight = 0;
 
         for (String material : collectItemSet) {
-            int weight = section.getInt(material);
+            int weight = config.getInt(material);
             totalWeight += weight;
         }
 
         return totalWeight;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void remove() {
+
+    }
 }

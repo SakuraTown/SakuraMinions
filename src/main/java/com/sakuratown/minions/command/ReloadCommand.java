@@ -1,6 +1,7 @@
 package com.sakuratown.minions.command;
 
 import com.sakuratown.library.command.SimpleSubCommand;
+import com.sakuratown.library.utils.Config;
 import com.sakuratown.library.utils.Message;
 import org.bukkit.command.CommandSender;
 
@@ -15,6 +16,7 @@ public class ReloadCommand extends SimpleSubCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
+        Config.reload();
         Message.send(sender, "&9&l樱花娘 &6&l>> &a配置文件重载成功");
     }
 }

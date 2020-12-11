@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StorageMenu {
 
-    public StorageMenu(String type, int storage, int efficiency) {
+    public StorageMenu(String type, int storage) {
 
     }
 
