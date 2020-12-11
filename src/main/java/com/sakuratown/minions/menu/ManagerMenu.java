@@ -22,6 +22,7 @@ public class ManagerMenu{
 
     private void setButtonAction() {
         for (Button button : menu.buttonMap.values()) {
+
             if (button.action == null) continue;
 
             if (button.action.equals("ChangeName")) {

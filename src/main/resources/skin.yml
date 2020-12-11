@@ -3,7 +3,9 @@
 Skins:
   Miner:
     DisplayName: "%player% 的矿工"
+    # base64 的头颅设置
     SkullTexture: "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTg3Y2ZjY2U2NzI0Y2Y3MzgyZDZjNjUyMzJjZDY2Njk2ZDQyNjQ2MWM4MjE2MWE3OGYyMjI0Y2EyM2MzMWMifX19"
-    Body: "0,0,0" #Requires an RGB colour - https://www.rapidtables.com/web/color/RGB_Color.html
-    Legs: "40,159,219" #rgb colour
-    Boots: "40,159,219" #rgb
+    # RGB 值设置 https://www.rapidtables.com/web/color/RGB_Color.html
+    Body: "0,0,0"
+    Legs: "40,159,219"
+    Boots: "40,159,219"
