@@ -6,7 +6,8 @@ import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.minion.Minion;
 import org.bukkit.entity.Player;
 
-public class ManagerMenu{
+//TODO 为啥不是继承 Menu 类?
+public class ManagerMenu {
 
     Minion minion;
     Menu menu;
@@ -20,6 +21,7 @@ public class ManagerMenu{
         setButtonAction();
     }
 
+    //TODO 为什么是循环获取有行为的按钮, 而不是设置按钮的时候设置行为?
     private void setButtonAction() {
         for (Button button : menu.buttonMap.values()) {
 

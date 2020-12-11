@@ -69,7 +69,6 @@ public class Config {
 
         Menu menu = new Menu(title, row);
 
-        //TODO 没法写按钮的 event 了, 作为抽象方法啥的丢到子类去实现?
         for (String button : getConfigurationSection(path.concat(".Buttons")).getKeys(false)) {
             menu.setButton(getButton(path.concat(".Buttons." + button)));
         }

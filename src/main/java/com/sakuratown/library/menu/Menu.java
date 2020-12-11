@@ -15,13 +15,11 @@ import java.util.function.Consumer;
 
 public class Menu implements InventoryHolder {
 
+    public final Map<Integer, Button> buttonMap = new HashMap<>();
+    private final Inventory inventory;
     public boolean isLock = true;
-
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
-
-    private final Inventory inventory;
-    public final Map<Integer, Button> buttonMap = new HashMap<>();
 
     public Menu(String name, int row) {
         int size = row * 9;
