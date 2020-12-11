@@ -7,16 +7,10 @@ import com.sakuratown.minions.minion.Minion;
 import org.bukkit.entity.Player;
 
 //TODO 为啥不是继承 Menu 类?
-public class ManagerMenu {
-
-    Menu menu;
+public class ManagerMenu extends Menu {
 
     public ManagerMenu() {
-
-        Config config = Config.getConfig("menu");
-        menu = config.getMenu("管理菜单");
-
-        setButtonAction();
+        Config.getConfig("menu").setMenu("管理菜单", this);
     }
 
     public void changeName(Minion minion) {
@@ -24,7 +18,7 @@ public class ManagerMenu {
     }
 
     private void setButtonAction() {
-        for (Button button : menu.buttonMap.values()) {
+        for (Button button : buttonMap.values()) {
 
             if (button.action == null) continue;
 
@@ -36,9 +30,5 @@ public class ManagerMenu {
 
             }
         }
-    }
-
-    public void open(Player player) {
-        player.openInventory(menu.getInventory());
     }
 }

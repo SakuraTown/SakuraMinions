@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class Config {
 
@@ -60,20 +61,22 @@ public class Config {
 
     }
 
-    public Menu getMenu(String path) {
+    public void setMenu(String path, Menu menu) {
 
         ConfigurationSection config = getConfigurationSection(path);
 
         String title = config.getString("Title");
         int row = config.getInt("Row");
 
-        Menu menu = new Menu(title, row);
+        menu.setTitle(title);
+        menu.setRow(row);
 
-        for (String button : getConfigurationSection(path.concat(".Buttons")).getKeys(false)) {
-            menu.setButton(getButton(path.concat(".Buttons." + button)));
+        Set<String> buttons = getConfigurationSection(path.concat(".Buttons")).getKeys(false);
+
+        for (String button : buttons) {
+            menu.setButton(getButton(path.concat(".Buttons.").concat(button)));
         }
 
-        return menu;
     }
 
     public Button getButton(String path) {

@@ -13,23 +13,34 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Menu implements InventoryHolder {
+public abstract class Menu implements InventoryHolder {
 
     public final Map<Integer, Button> buttonMap = new HashMap<>();
-    private final Inventory inventory;
     public boolean isLock = true;
+
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
 
-    public Menu(String name, int row) {
-        int size = row * 9;
-        String title = Message.toColor(name);
+    private Inventory inventory;
+    private String title = "Menu";
+    private Integer size = 3 * 9;
 
+    public Menu() {
         inventory = Bukkit.createInventory(this, size, title);
     }
 
     public Button getButton(int slot) {
         return buttonMap.get(slot);
+    }
+
+    public void setTitle(String title) {
+        this.title = Message.toColor(title);
+        inventory = Bukkit.createInventory(this, size, this.title);
+    }
+
+    public void setRow(int row) {
+        this.size = row * 9;
+        inventory = Bukkit.createInventory(this, size, title);
     }
 
     public void setButton(Button button) {
