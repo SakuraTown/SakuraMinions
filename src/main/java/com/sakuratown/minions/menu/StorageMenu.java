@@ -1,4 +1,4 @@
-package com.sakuratown.sakuraminions.menu;
+package com.sakuratown.minions.menu;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -1,6 +1,6 @@
 package com.sakuratown.library.command;
 
-import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.minions.Main;
 import org.bukkit.command.CommandSender;
 
 public abstract class SimpleSubCommand {

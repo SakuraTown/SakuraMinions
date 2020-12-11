@@ -1,5 +1,5 @@
 name: SakuraMinions
-main: com.sakuratown.sakuraminions.Main
+main: com.sakuratown.minions.Main
 version: 1.0-SNAPSHOT
 api-version: "1.16"
 

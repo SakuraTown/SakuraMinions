@@ -1,9 +1,9 @@
-package com.sakuratown.sakuraminions.minion;
+package com.sakuratown.minions.minion;
 
 import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
-import com.sakuratown.sakuraminions.menu.ManagerMenu;
-import com.sakuratown.sakuraminions.menu.StorageMenu;
+import com.sakuratown.minions.menu.ManagerMenu;
+import com.sakuratown.minions.menu.StorageMenu;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -19,11 +19,11 @@ public class Minion {
     private final Set<String> collectItemSet;
 
     StorageMenu storageMenu;
-    ManagerMenu managerMenu;
+    Menu managerMenu;
 
     private int storage;
     private int efficiency;
-    private int totalWeight;
+    private final int totalWeight;
 
     public Minion(String type, int storage, int efficiency) {
 
@@ -31,6 +31,7 @@ public class Minion {
         this.efficiency = efficiency;
 
         storageMenu = new StorageMenu(type, storage, efficiency);
+
         section = Config.getConfig("minions").getConfigurationSection(type);
         collectItemSet = section.getKeys(false);
 
@@ -44,7 +45,7 @@ public class Minion {
     }
 
     public void openManagerMenu(Player player) {
-
+        managerMenu.open(player);
     }
 
     public void upgradeStorage(int row) {
@@ -73,7 +74,7 @@ public class Minion {
 
     private void setupMenu() {
         Config config = Config.getConfig("menu");
-        managerMenu = (ManagerMenu) config.getMenu("管理菜单");
+        managerMenu = config.getMenu("管理菜单");
     }
 
     private Material getRandomMaterial() {

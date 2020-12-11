@@ -1,9 +1,12 @@
-package com.sakuratown.sakuraminions;
+package com.sakuratown.minions;
 
+import com.sakuratown.library.menu.MenuListener;
+import com.sakuratown.library.utils.Config;
 import com.sakuratown.library.utils.Message;
-import com.sakuratown.sakuraminions.command.MainCommand;
+import com.sakuratown.minions.command.MainCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -31,6 +34,9 @@ public class Main extends JavaPlugin {
             command.setExecutor(new MainCommand());
             command.setTabCompleter(new MainCommand());
         }
+
+        setupConfig();
+        getServer().getPluginManager().registerEvents(new MenuListener(), this);
     }
 
     @Override
@@ -40,6 +46,14 @@ public class Main extends JavaPlugin {
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
+    }
+
+    private void setupConfig() {
+        saveDefaultConfig();
+
+        Config.saveDefaultConfig("skin");
+        Config.saveDefaultConfig("minions");
+        Config.saveDefaultConfig("menu");
     }
 
 }

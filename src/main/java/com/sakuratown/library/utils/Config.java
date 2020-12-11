@@ -2,7 +2,7 @@ package com.sakuratown.library.utils;
 
 import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.Menu;
-import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.minions.Main;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,13 +22,21 @@ public class Config {
     private final YamlConfiguration configuration;
 
     public Config(String fileName) {
-        File file = new File(Main.getInstance().getDataFolder().getParent(), fileName + ".yml");
+        File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
         configuration = YamlConfiguration.loadConfiguration(file);
     }
 
     public static Config getConfig(String name) {
         configs.putIfAbsent(name, new Config(name));
         return configs.get(name);
+    }
+
+    public static void saveDefaultConfig(String fileName) {
+        File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
+
+        if (!file.exists()) {
+            Main.getInstance().saveResource(fileName + ".yml", false);
+        }
     }
 
     public void reload() {
@@ -61,8 +69,9 @@ public class Config {
 
         Menu menu = new Menu(title, row);
 
+        //TODO 没法写按钮的 event 了, 作为抽象方法啥的丢到子类去实现?
         for (String button : getConfigurationSection(path.concat(".Buttons")).getKeys(false)) {
-            menu.setButton(getButton(button));
+            menu.setButton(getButton(path.concat(".Buttons." + button)));
         }
 
         return menu;
@@ -104,8 +113,9 @@ public class Config {
 
     public ItemStack getItemStack(String path) {
 
+        System.out.println(path);
         ConfigurationSection config = getConfigurationSection(path);
-        Material material = Material.matchMaterial(Objects.requireNonNullElse(config.getString("mats"), "STONE"));
+        Material material = Material.matchMaterial(Objects.requireNonNullElse(config.getString("type"), "STONE"));
 
         String name = config.getString("name");
         int amount = config.getInt("amount", 1);

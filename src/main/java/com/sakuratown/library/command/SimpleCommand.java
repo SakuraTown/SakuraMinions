@@ -1,7 +1,7 @@
 package com.sakuratown.library.command;
 
 import com.sakuratown.library.utils.Message;
-import com.sakuratown.sakuraminions.Main;
+import com.sakuratown.minions.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;

@@ -1,4 +1,4 @@
-package com.sakuratown.sakuraminions.command;
+package com.sakuratown.minions.command;
 
 import com.sakuratown.library.command.SimpleSubCommand;
 import org.bukkit.command.CommandSender;
