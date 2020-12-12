@@ -2,6 +2,7 @@ package com.sakuratown.library.utils;
 
 import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.Menu;
+import com.sakuratown.library.menu.PageableMenu;
 import com.sakuratown.minions.Main;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -80,6 +81,39 @@ public class Config {
             menu.setButton(getButton(path.concat(".Buttons.").concat(button)));
         }
 
+    }
+
+    public void setPageableMenu(String path, PageableMenu pageableMenu, int maxPage) {
+
+        for (int i = 0; i < maxPage; i++) {
+
+            Menu menu = new Menu() {
+                @Override
+                public void setButtonAction(Button button) {
+                    switch (button.action) {
+
+                        case "NextPage":
+
+                            button.clickEvent = event -> pageableMenu.nextPage(event.getWhoClicked().getKiller());
+                            break;
+
+                        case "PreviousPage":
+
+                            button.clickEvent = event -> pageableMenu.previousPage(event.getWhoClicked().getKiller());
+                            break;
+
+                        case "Close":
+
+                            button.clickEvent = event -> event.getWhoClicked().closeInventory();
+                            break;
+                    }
+                }
+            };
+
+            setMenu(path, menu);
+            pageableMenu.menus.add(menu);
+
+        }
     }
 
     public Button getButton(String path) {

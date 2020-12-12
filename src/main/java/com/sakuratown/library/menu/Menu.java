@@ -43,8 +43,13 @@ public abstract class Menu implements InventoryHolder {
 
         if (button == null) return;
 
+        // 设置按钮行为
         if (button.action != null) {
-            setButtonAction(button);
+            if (button.action.equals("Close")) {
+                button.clickEvent = event -> event.getWhoClicked().closeInventory();
+            } else {
+                setButtonAction(button);
+            }
         }
 
         for (int slot : button.slots) {

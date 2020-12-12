@@ -27,9 +27,7 @@ public class ManagerMenu extends Menu {
 
         ConfigurationSection config = minion.getConfig();
 
-        String action = button.action;
-
-        switch (action) {
+        switch (button.action) {
             case "ChangeName":
 
                 button.clickEvent = event -> {
@@ -63,25 +61,6 @@ public class ManagerMenu extends Menu {
                 button.clickEvent = event -> {
                     minion.openStorageMenu(event.getWhoClicked().getKiller());
                 };
-                break;
-
-            case "Close":
-
-                //TODO 这里的头颅只有放在地上才显示皮肤, 不知道为什么
-                NBTItem nbtItem = new NBTItem(button.itemStack);
-
-                NBTCompound skull = nbtItem.addCompound("SkullOwner");
-                skull.setString("Id", String.valueOf(UUID.randomUUID()));
-
-                NBTListCompound texture = skull.addCompound("Properties").getCompoundList("textures").addCompound();
-                texture.setString("Value", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk5YWFmMjQ1NmE2MTIyZGU4ZjZiNjI2ODNmMmJjMmVlZDlhYmI4MWZkNWJlYTFiNGMyM2E1ODE1NmI2NjkifX19");
-                button.itemStack = nbtItem.getItem();
-
-                button.clickEvent = event -> {
-                    event.getWhoClicked().getInventory().addItem(button.itemStack);
-                    event.getWhoClicked().closeInventory();
-                };
-
                 break;
         }
     }

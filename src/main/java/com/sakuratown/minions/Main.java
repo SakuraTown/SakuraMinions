@@ -46,7 +46,7 @@ public class Main extends JavaPlugin {
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
-        //TODO 插件卸载时关闭所有菜单
+        //TODO 插件卸载时关闭所有菜单, 否则监听器挂掉玩家可以拿出菜单的物品
     }
 
     private void setupConfig() {

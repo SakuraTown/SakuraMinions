@@ -22,8 +22,9 @@ public class MainCommand extends SimpleCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         sendHelpMessage(sender, args);
-        Minion minion = new Minion("Miner", 9, 10);
-        minion.openManagerMenu((Player) sender);
+        Minion minion = new Minion("Miner", 100, 10);
+//        minion.openManagerMenu((Player) sender);
+        minion.openStorageMenu((Player) sender);
         return true;
     }
 }

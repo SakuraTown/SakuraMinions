@@ -3,7 +3,7 @@
 # 工人仓库(右键打开工人仓库)
 
 管理菜单:
-  Title: '&9&l工人管理菜单'
+  Title: '&9&l工人管理'
   Row: 5
   Buttons:
     蓝色玻璃板:
@@ -20,3 +20,21 @@
       name: "&d&l关闭菜单"
       slots: 40
       action: Close
+
+工人仓库:
+  Title: '&9&l工人仓库'
+  Row: 6
+  Buttons:
+    关闭菜单:
+      type: OAK_DOOR
+      name: "&d&l关闭菜单"
+      slots: 49
+      action: Close
+    下一页:
+      type: OAK_DOOR
+      name: "&d&l下一页"
+      slots: 53
+      action: NextPage
+    蓝色玻璃板:
+      type: BLUE_STAINED_GLASS_PANE
+      slots: 46,47,48,50,51,52
