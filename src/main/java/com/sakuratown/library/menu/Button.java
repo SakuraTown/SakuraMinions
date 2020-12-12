@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public class Button {
 
-    private final ItemStack itemStack;
+    public ItemStack itemStack;
     public boolean isLock = true;
     public Consumer<InventoryClickEvent> clickEvent;
     public String action;
@@ -22,10 +22,6 @@ public class Button {
     public Button(ItemStack itemStack, int... slots) {
         this.itemStack = itemStack;
         this.slots = slots;
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
     }
 
     public void setCommands(List<String> commands) {

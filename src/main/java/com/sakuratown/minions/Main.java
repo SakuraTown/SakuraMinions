@@ -42,10 +42,11 @@ public class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         String[] message = {
-                "§a樱花工人插件§e v" + getDescription().getVersion() + "§a已卸载",
+                "§a樱花工人插件§e v" + getDescription().getVersion() + " §a已卸载",
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
+        //TODO 插件卸载时关闭所有菜单
     }
 
     private void setupConfig() {

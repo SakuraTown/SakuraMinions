@@ -49,7 +49,7 @@ public abstract class Menu implements InventoryHolder {
 
         for (int slot : button.slots) {
             buttonMap.put(slot, button);
-            inventory.setItem(slot, button.getItemStack());
+            inventory.setItem(slot, button.itemStack);
         }
 
     }

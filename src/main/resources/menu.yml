@@ -14,4 +14,9 @@
       slots: 0,8,36,44
     淡蓝色玻璃板:
       type: LIGHT_BLUE_STAINED_GLASS_PANE
-      slots: 11,12,13,14,15
+      slots: 11,12,13,14,15,19,25,29,30,31,32,33
+    关闭菜单:
+      type: PLAYER_HEAD
+      name: "&d&l关闭菜单"
+      slots: 40
+      action: Close

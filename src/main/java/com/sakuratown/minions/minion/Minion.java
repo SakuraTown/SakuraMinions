@@ -17,7 +17,7 @@ public class Minion {
     private final String type;
     private final int totalWeight;
     private final Set<String> collectItemSet;
-    public final ConfigurationSection config;
+    private final ConfigurationSection config;
 
     private StorageMenu storageMenu;
     private ManagerMenu managerMenu;
@@ -38,6 +38,10 @@ public class Minion {
         totalWeight = getTotalWeight();
 
         setupMenu();
+    }
+
+    public ConfigurationSection getConfig() {
+        return config;
     }
 
     public void openStorageMenu(Player player) {
@@ -70,6 +74,14 @@ public class Minion {
         }
 
         storageMenu.addItem(collectItems);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void remove() {
+
     }
 
     private void setupMenu() {
@@ -113,13 +125,5 @@ public class Minion {
         }
 
         return totalWeight;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void remove() {
-
     }
 }
