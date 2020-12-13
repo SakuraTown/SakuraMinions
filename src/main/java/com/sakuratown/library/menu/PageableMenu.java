@@ -1,8 +1,10 @@
 package com.sakuratown.library.menu;
 
 
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,11 +12,11 @@ import java.util.List;
 
 public abstract class PageableMenu implements Iterable<Menu> {
 
-
     private final int maxPage;
     public List<Menu> menus = new ArrayList<>();
     private int currentPage = 1;
 
+    // 根据按钮数量设置最大页数
     PageableMenu(List<Button> buttons) {
         int pageSize = buttons.get(0).slots.length;
         int buttonSize = buttons.size();
@@ -28,6 +30,7 @@ public abstract class PageableMenu implements Iterable<Menu> {
         this.maxPage = maxPage;
     }
 
+    // 根据行数来判断最大页数
     protected PageableMenu(int row) {
         if (row <= 6) {
             maxPage = 1;
@@ -63,7 +66,8 @@ public abstract class PageableMenu implements Iterable<Menu> {
     }
 
     // 设置按钮的默认行为
-    public void setDefaultAction(Button button) {
+    public void setDefaultAction(Button button, int page) {
+
         switch (button.action) {
 
             case "NextPage":
@@ -75,6 +79,9 @@ public abstract class PageableMenu implements Iterable<Menu> {
                     }
                 };
 
+                if (page == maxPage) {
+                    button.itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
+                }
                 break;
 
             case "PreviousPage":
@@ -86,8 +93,8 @@ public abstract class PageableMenu implements Iterable<Menu> {
                     }
                 };
 
-                if (currentPage == 1) {
-                    button.itemStack = null;
+                if (page == 1) {
+                    button.itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
                 }
 
                 break;

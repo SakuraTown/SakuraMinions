@@ -90,14 +90,14 @@ public class Config {
 
         for (int i = 0; i < maxPage; i++) {
 
+            int page = i + 1;
+
             Menu menu = new Menu() {
                 @Override
                 public void setButtonAction(Button button) {
-                    pageableMenu.setDefaultAction(button);
+                    pageableMenu.setDefaultAction(button, page);
                 }
             };
-
-            int page = i + 1;
 
             setMenu(path, menu);
             menu.setTitle(menu.title.concat(" " + page + "/" + maxPage));

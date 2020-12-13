@@ -29,7 +29,7 @@ public abstract class Menu implements InventoryHolder {
     public Button getButton(int slot) {
         return buttonMap.get(slot);
     }
-    
+
     public void setTitle(String title) {
         this.title = Message.toColor(title);
         inventory = Bukkit.createInventory(this, size, this.title);
@@ -47,7 +47,6 @@ public abstract class Menu implements InventoryHolder {
             setButton(button);
         }
     }
-
 
     public void setButton(Button button) {
 
