@@ -1,5 +1,6 @@
 package com.sakuratown.minions;
 
+import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.menu.MenuListener;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.library.utils.Message;
@@ -7,6 +8,7 @@ import com.sakuratown.minions.command.MainCommand;
 import com.sakuratown.minions.listener.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,7 +50,9 @@ public class Main extends JavaPlugin {
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
-        //TODO 插件卸载时关闭所有菜单, 否则监听器挂掉玩家可以拿出菜单的物品
+
+        // 防止插件卸载时玩家可以拿下菜单物品,
+
     }
 
     private void setupConfig() {

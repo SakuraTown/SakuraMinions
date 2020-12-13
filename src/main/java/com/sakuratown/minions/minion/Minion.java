@@ -86,7 +86,7 @@ public class Minion {
 
     private void setupMenu() {
         managerMenu = new ManagerMenu(this);
-        storageMenu = new StorageMenu(type, storage);
+        storageMenu = new StorageMenu(storage);
     }
 
     private Material getRandomMaterial() {

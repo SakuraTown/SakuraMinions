@@ -1,15 +1,18 @@
 package com.sakuratown.library.menu;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 public class MenuListener implements Listener {
 
+    //TODO SHIFT 点击可以拿下菜单
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
 
@@ -102,5 +105,14 @@ public class MenuListener implements Listener {
         if (!(holder instanceof Menu)) return null;
 
         return (Menu) holder;
+    }
+
+    @EventHandler
+    public void onPluginDisable(PluginDisableEvent event) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getInventory().getHolder() instanceof Menu) {
+                player.closeInventory();
+            }
+        }
     }
 }

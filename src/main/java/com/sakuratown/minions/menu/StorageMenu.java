@@ -9,24 +9,13 @@ import java.util.List;
 
 public class StorageMenu extends PageableMenu {
 
-    public StorageMenu(String type, int storage) {
-
-        // 初始化所有界面(需要最大页数)
-        // 设置所有界面的按钮(需要在这里设置特殊按钮行为)
-        // 添加其他东西
-
-        setMaxPage(storage);
-        Config.getConfig("menu").setPageableMenu("工人仓库", this, getMaxPage());
+    public StorageMenu(int storage) {
+        super(storage);
+        Config.getConfig("menu").setPageableMenu("工人仓库", this);
         setLock(false);
     }
 
     public void addItem(List<ItemStack> collectItems) {
 
     }
-
-    public void setButtonAction(Button button) {
-
-    }
-
-
 }

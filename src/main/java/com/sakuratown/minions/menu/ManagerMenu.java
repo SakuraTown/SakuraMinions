@@ -4,14 +4,7 @@ import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.minion.Minion;
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTListCompound;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 public class ManagerMenu extends Menu {
 
