@@ -4,6 +4,7 @@ import com.sakuratown.library.menu.MenuListener;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.library.utils.Message;
 import com.sakuratown.minions.command.MainCommand;
+import com.sakuratown.minions.listener.PlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
@@ -37,6 +38,7 @@ public class Main extends JavaPlugin {
 
         setupConfig();
         getServer().getPluginManager().registerEvents(new MenuListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override

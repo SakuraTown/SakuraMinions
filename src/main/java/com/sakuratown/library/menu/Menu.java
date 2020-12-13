@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -21,29 +22,35 @@ public abstract class Menu implements InventoryHolder {
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
 
-    private String title = "Menu";
+    public String title = "Menu";
     private Integer size = 3 * 9;
     private Inventory inventory = Bukkit.createInventory(this, size, title);
 
     public Button getButton(int slot) {
         return buttonMap.get(slot);
     }
-
+    
     public void setTitle(String title) {
         this.title = Message.toColor(title);
         inventory = Bukkit.createInventory(this, size, this.title);
+        setButton(buttonMap.values());
     }
 
     public void setRow(int row) {
         this.size = row * 9;
         inventory = Bukkit.createInventory(this, size, title);
+        setButton(buttonMap.values());
     }
+
+    public void setButton(Collection<Button> buttons) {
+        for (Button button : buttons) {
+            setButton(button);
+        }
+    }
+
 
     public void setButton(Button button) {
 
-        if (button == null) return;
-
-        // 设置按钮行为
         if (button.action != null) {
             if (button.action.equals("Close")) {
                 button.clickEvent = event -> event.getWhoClicked().closeInventory();

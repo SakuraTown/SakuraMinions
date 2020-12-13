@@ -9,6 +9,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -77,8 +79,9 @@ public class Config {
 
         Set<String> buttons = getConfigurationSection(path.concat(".Buttons")).getKeys(false);
 
-        for (String button : buttons) {
-            menu.setButton(getButton(path.concat(".Buttons.").concat(button)));
+        for (String name : buttons) {
+            Button button = getButton(path.concat(".Buttons.").concat(name));
+            menu.setButton(button);
         }
 
     }
@@ -94,12 +97,22 @@ public class Config {
 
                         case "NextPage":
 
-                            button.clickEvent = event -> pageableMenu.nextPage(event.getWhoClicked().getKiller());
+                            button.clickEvent = event -> {
+                                HumanEntity whoClicked = event.getWhoClicked();
+                                if (whoClicked instanceof Player) {
+                                    pageableMenu.nextPage((Player) whoClicked);
+                                }
+                            };
                             break;
 
                         case "PreviousPage":
 
-                            button.clickEvent = event -> pageableMenu.previousPage(event.getWhoClicked().getKiller());
+                            button.clickEvent = event -> {
+                                HumanEntity whoClicked = event.getWhoClicked();
+                                if (whoClicked instanceof Player) {
+                                    pageableMenu.previousPage((Player) event.getWhoClicked());
+                                }
+                            };
                             break;
 
                         case "Close":
@@ -111,8 +124,11 @@ public class Config {
             };
 
             setMenu(path, menu);
-            pageableMenu.menus.add(menu);
 
+            int page = i + 1;
+            //TODO 这里相当于重新设置了所有的 menu, 上面 setMenu 方法已经初始化完菜单了, 这里又初始化一次
+            menu.setTitle(menu.title.concat(" " + page + "/" + maxPage));
+            pageableMenu.menus.add(menu);
         }
     }
 

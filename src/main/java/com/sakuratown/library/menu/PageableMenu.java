@@ -9,11 +9,38 @@ import java.util.List;
 
 public abstract class PageableMenu implements Iterable<Menu> {
 
-    //TODO 这里要设置默认的按钮行为, 下一页, 上一页
+
     public List<Menu> menus = new ArrayList<>();
     private int currentPage = 1;
+    private int maxPage;
 
-    public PageableMenu() {
+    public int getMaxPage() {
+        return maxPage;
+    }
+
+    private void setMaxPage(List<Button> buttons) {
+
+        int pageSize = buttons.get(0).slots.length;
+        int buttonSize = buttons.size();
+
+        int maxPage = buttonSize / pageSize;
+
+        if (buttonSize % pageSize != 0) {
+            maxPage += 1;
+        }
+
+        this.maxPage = maxPage;
+    }
+
+    protected void setMaxPage(int row) {
+        if (row <= 6) {
+            maxPage = 1;
+        } else {
+            maxPage = row % 5 == 0 ? (row / 5) : (row / 5 + 1);
+        }
+    }
+
+    public void initMenu() {
 
     }
 
@@ -28,33 +55,15 @@ public abstract class PageableMenu implements Iterable<Menu> {
     }
 
     public void previousPage(Player player) {
-        menus.get(currentPage -= 1).open(player);
+        if (currentPage == 1) return;
+
+        int index = --currentPage;
+        menus.get(index - 1).open(player);
     }
 
     public void nextPage(Player player) {
-        menus.get(currentPage += 1).open(player);
-    }
-
-    private int getMaxPage(List<Button> buttons) {
-
-        int pageSize = buttons.get(0).slots.length;
-        int buttonSize = buttons.size();
-
-        int maxPage = buttonSize / pageSize;
-
-        if (buttonSize % pageSize != 0) {
-            maxPage += 1;
-        }
-
-        return maxPage;
-    }
-
-    protected int getMaxPage(int row) {
-        if (row <= 6) {
-            return 1;
-        } else {
-            return row % 5 == 0 ? (row / 5) : (row / 5 + 1);
-        }
+        if (currentPage == maxPage) return;
+        menus.get(currentPage++).open(player);
     }
 
     @Override

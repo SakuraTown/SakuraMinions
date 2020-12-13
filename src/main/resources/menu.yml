@@ -30,8 +30,13 @@
       name: "&d&l关闭菜单"
       slots: 49
       action: Close
+    上一页:
+      type: glistering_melon_slice
+      name: "&d&l上一页"
+      slots: 45
+      action: PreviousPage
     下一页:
-      type: OAK_DOOR
+      type: melon_slice
       name: "&d&l下一页"
       slots: 53
       action: NextPage
