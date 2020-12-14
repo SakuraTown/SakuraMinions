@@ -1,20 +1,25 @@
 package com.sakuratown.library.menu;
 
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public abstract class PageableMenu implements Iterable<Menu> {
+public abstract class PageableMenu extends Menu implements Iterable<Menu>, InventoryHolder {
 
     private final int maxPage;
-    public List<Menu> menus = new ArrayList<>();
+    //TODO 翻页菜单也是一种菜单, 你不能打开一个 list 里的菜单, 而是你通过计算获取下一页的物品
+    public List<Inventory> menus = new ArrayList<>();
     private int currentPage = 1;
+//    public Inventory inventory;
 
     // 根据按钮数量设置最大页数
     PageableMenu(List<Button> buttons) {
@@ -43,12 +48,6 @@ public abstract class PageableMenu implements Iterable<Menu> {
         return maxPage;
     }
 
-    public void setLock(boolean lock) {
-        for (Menu menu : menus) {
-            menu.isLock = lock;
-        }
-    }
-
     public void open(Player player) {
         menus.get(0).open(player);
     }
@@ -57,6 +56,7 @@ public abstract class PageableMenu implements Iterable<Menu> {
         if (currentPage == 1) return;
 
         int index = --currentPage;
+        player.openInventory(inventory);
         menus.get(index - 1).open(player);
     }
 
@@ -104,10 +104,19 @@ public abstract class PageableMenu implements Iterable<Menu> {
                 button.clickEvent = event -> event.getWhoClicked().closeInventory();
                 break;
         }
+
+        setButtonAction(button);
     }
+
+    public abstract void setButtonAction(Button button);
 
     @Override
     public Iterator<Menu> iterator() {
         return menus.iterator();
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return super.getInventory();
     }
 }

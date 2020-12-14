@@ -1,22 +1,22 @@
 package com.sakuratown.minions.minion;
 
 import com.sakuratown.library.utils.Config;
+import com.sakuratown.minions.Main;
 import com.sakuratown.minions.menu.ManagerMenu;
 import com.sakuratown.minions.menu.StorageMenu;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Set;
 
 public class Minion {
 
     private final String type;
     private final int totalWeight;
-    private final Set<String> collectItemSet;
+    private final Set<String> collectItemList;
     private final ConfigurationSection config;
 
     private StorageMenu storageMenu;
@@ -34,10 +34,11 @@ public class Minion {
 
         config = Config.getConfig("minions").getConfigurationSection(type);
 
-        collectItemSet = config.getKeys(false);
+        collectItemList = config.getConfigurationSection("CollectItemList").getKeys(false);
         totalWeight = getTotalWeight();
 
         setupMenu();
+        collectItem();
     }
 
     public ConfigurationSection getConfig() {
@@ -53,35 +54,43 @@ public class Minion {
     }
 
     public void upgradeStorage(int row) {
+        //TODO 扣钱
         this.storage += row;
     }
 
     public void upgradeEfficiency(int amount) {
+        //TODO 扣钱
         this.efficiency += amount;
     }
 
     public void collectItem() {
 
-        List<ItemStack> collectItems = new ArrayList<>();
+        //TODO 背包满了停止收集物品
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                HashMap<Material, Integer> collectItems = new HashMap<>();
 
-        //TODO 如果效率 1000 要循环 1000 次, 降低循环次数
-        for (int i = 0; i < efficiency; i++) {
-            Material randomMaterial = getRandomMaterial();
+                //TODO 如果效率 1000 要循环 1000 次, 降低循环次数
+                for (int i = 0; i < efficiency; i++) {
+                    Material randomMaterial = getRandomMaterial();
+                    collectItems.merge(randomMaterial, 1, Integer::sum);
+                }
 
-            ItemStack itemStack = new ItemStack(randomMaterial, 1);
+                storageMenu.addItem(collectItems);
 
-            collectItems.add(itemStack);
-        }
+            }
+        }.runTaskTimerAsynchronously(Main.getInstance(), 0, Main.getInstance().getConfig().getInt("CollectTime"));
 
-        storageMenu.addItem(collectItems);
     }
 
     public void setName(String name) {
+        //TODO 设置悬浮字
         this.name = name;
     }
 
     public void remove() {
-
+        //TODO 移除工人
     }
 
     private void setupMenu() {
@@ -96,9 +105,9 @@ public class Minion {
 
         String randomMaterial = null;
 
-        for (String material : collectItemSet) {
+        for (String material : collectItemList) {
 
-            int weight = config.getInt(material);
+            int weight = config.getInt("CollectItemList.".concat(material));
             chance += weight;
 
             if (randomNum <= chance) {
@@ -119,8 +128,8 @@ public class Minion {
 
         int totalWeight = 0;
 
-        for (String material : collectItemSet) {
-            int weight = config.getInt(material);
+        for (String material : collectItemList) {
+            int weight = config.getInt("CollectItemList.".concat(material));
             totalWeight += weight;
         }
 

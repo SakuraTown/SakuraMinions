@@ -42,4 +42,14 @@
       action: NextPage
     蓝色玻璃板:
       type: BLUE_STAINED_GLASS_PANE
-      slots: 46,47,48,50,51,52
+      slots: 46,48,50,52
+    整理物品:
+      type: LODESTONE
+      name: "&d&l整理仓库物品"
+      slots: 47
+      action: SortItem
+    取出物品:
+      type: COMPOSTER
+      name: "&d&l取出仓库物品"
+      slots: 51
+      action: TakeOutItem

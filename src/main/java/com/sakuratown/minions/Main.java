@@ -50,9 +50,6 @@ public class Main extends JavaPlugin {
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
         };
         getServer().getConsoleSender().sendMessage(message);
-
-        // 防止插件卸载时玩家可以拿下菜单物品,
-
     }
 
     private void setupConfig() {

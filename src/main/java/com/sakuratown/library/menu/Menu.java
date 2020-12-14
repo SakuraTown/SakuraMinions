@@ -24,7 +24,7 @@ public abstract class Menu implements InventoryHolder {
 
     public String title = "Menu";
     private Integer size = 3 * 9;
-    private Inventory inventory = Bukkit.createInventory(this, size, title);
+    public Inventory inventory = Bukkit.createInventory(this, size, title);
 
     public Button getButton(int slot) {
         return buttonMap.get(slot);
@@ -74,6 +74,10 @@ public abstract class Menu implements InventoryHolder {
         Inventory menInventory = getInventory();
 
         return topInventory.equals(menInventory);
+    }
+
+    public boolean isButton(int slot) {
+        return buttonMap.get(slot) != null;
     }
 
     public void open(Player player) {
