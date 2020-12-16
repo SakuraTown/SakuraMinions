@@ -8,7 +8,6 @@ Miner:
     COBBLESTONE: 30
     STONE: 40
 
-
   # 工人效率设置
   Efficiency:
     # 默认每次获取 50 个方块
@@ -27,6 +26,8 @@ Miner:
     # 每升级一次提升 3 行仓库
     UpgradeAmount: 3
 
+  # 工人每次收集物品所用的时间, 单位为秒
+  CollectTime: 20
   # 工人皮肤设置
   Skin: Miner
 
