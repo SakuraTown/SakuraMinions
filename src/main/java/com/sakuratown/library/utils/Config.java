@@ -133,7 +133,7 @@ public class Config {
     }
 
     public boolean getBoolean(String path) {
-        return return configurationSection.getBoolean(path);
+        return configurationSection.getBoolean(path);
     }
 
     public int getInt(String path, int def) {
