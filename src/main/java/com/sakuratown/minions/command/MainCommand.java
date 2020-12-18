@@ -25,6 +25,7 @@ public class MainCommand extends SimpleCommand implements CommandExecutor {
 //        minion.openManagerMenu((Player) sender);
         Config config = Config.getConfig("menu");
 
+        //TODO 如果删掉那行代码的话应为 管理菜单.Buttons 实际为 Buttons
         Config buttons = config.getConfigurationSection("管理菜单").getConfigurationSection("Buttons");
 
         //TODO 循环调用问题处理, 结果为 管理菜单.buttons.蓝色玻璃板.品红色玻璃板.淡蓝色玻璃板... 应为管理菜单.buttons.蓝色玻璃板
@@ -33,6 +34,8 @@ public class MainCommand extends SimpleCommand implements CommandExecutor {
             config.getConfigurationSection(key);
         }
 
+        //TODO 路径应为 管理菜单, 实际路径为管理菜单.Buttons.管理菜单, 不把 config 存在 hashmap 里使用 new config 能解决这个问题
+        Config.getConfig("menu").getConfigurationSection("管理菜单");
         return true;
     }
 }
