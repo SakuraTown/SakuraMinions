@@ -15,8 +15,33 @@
     淡蓝色玻璃板:
       type: LIGHT_BLUE_STAINED_GLASS_PANE
       slots: 11,12,13,14,15,19,25,29,30,31,32,33
+    修改名字:
+      type: name_tag
+      name: "&d&l修改工人名字"
+      slots: 20
+      action: ChangeName
+    升级仓库:
+      type: OAK_sign
+      name: "&d&l升级仓库容量"
+      slots: 21
+      action: UpgradeStorage
+    打开仓库:
+      type: composter
+      name: "&d&l打开工人仓库"
+      slots: 22
+      action: OpenStorageMenu
+    升级效率:
+      type: netherite_pickaxe
+      name: "&d&l升级工人效率"
+      slots: 23
+      action: UpgradeEfficiency
+    移除工人:
+      type: barrier
+      name: "&d&l移除工人"
+      slots: 24
+      action: RemoveMinion
     关闭菜单:
-      type: PLAYER_HEAD
+      type: OAK_DOOR
       name: "&d&l关闭菜单"
       slots: 40
       action: Close

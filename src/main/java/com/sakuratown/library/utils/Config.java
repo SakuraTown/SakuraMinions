@@ -2,6 +2,7 @@ package com.sakuratown.library.utils;
 
 import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.Menu;
+import com.sakuratown.library.menu.PageableMenu;
 import com.sakuratown.minions.Main;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,16 +15,15 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Config {
 
     private static final HashMap<String, Config> configs = new HashMap<>();
-    private ConfigurationSection configurationSection;
+    private final YamlConfiguration yamlConfiguration;
 
     private Config(String fileName) {
         File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
-        configurationSection = YamlConfiguration.loadConfiguration(file);
+        yamlConfiguration = YamlConfiguration.loadConfiguration(file);
     }
 
     public static Config getConfig(String name) {
@@ -51,43 +51,11 @@ public class Config {
 
     }
 
-    public Config getConfigurationSection(String path) {
-
-        ConfigurationSection configurationSection = this.configurationSection.getConfigurationSection(path);
-
-        if (configurationSection == null) {
-            throw new NullPointerException("配置文件有误, 请仔细检查配置文件");
-        }
-
-        //TODO 这行代码导致 for 循环无限深入
-        this.configurationSection = configurationSection;
-
-        return this;
-    }
-
-    public boolean getBoolean(String path) {
-        return configurationSection.getBoolean(path);
-    }
-
-    public int getInt(String path, int def) {
-        return configurationSection.getInt(path, def);
-    }
-
-    public int getInt(String path) {
-        return configurationSection.getInt(path);
-    }
-
-    public String getString(String path) {
-        return configurationSection.getString(path);
-    }
-
-    public List<String> getStringList(String path) {
-        return configurationSection.getStringList(path);
-    }
-
     public void setMenu(String path, Menu menu) {
 
-        Config config = Config.getConfig("menu").getConfigurationSection(path);
+        ConfigurationSection config = getConfigurationSection(path);
+
+        if (config == null) return;
 
         String title = config.getString("Title");
         int row = config.getInt("Row");
@@ -95,19 +63,39 @@ public class Config {
         menu.setTitle(title);
         menu.setRow(row);
 
-        Set<String> buttons = config.getConfigurationSection("Buttons").getKeys(false);
+        ConfigurationSection buttons = config.getConfigurationSection("Buttons");
 
-        for (String name : buttons) {
-            Button button = config.getButton(name);
+        for (String name : buttons.getKeys(false)) {
+            Button button = getButton(buttons.getCurrentPath().concat(".").concat(name));
             menu.setButton(button);
         }
+    }
 
+    public void setPageMenu(String path, PageableMenu menu, int storage) {
+        ConfigurationSection config = getConfigurationSection(path);
+
+        if (config == null) return;
+
+        String title = config.getString("Title");
+        int row = config.getInt("Row");
+
+        menu.setRow(row);
+        menu.setMaxPage(storage);
+        menu.setTitle(title.concat(" " + 1 + "/" + menu.getMaxPage()));
+
+        ConfigurationSection buttons = config.getConfigurationSection("Buttons");
+
+        for (String name : buttons.getKeys(false)) {
+            Button button = getButton(buttons.getCurrentPath().concat(".").concat(name));
+            menu.setAllButton(button);
+        }
     }
 
     public Button getButton(String path) {
 
         ItemStack itemStack = getItemStack(path);
-        Config config = getConfigurationSection(path);
+        ConfigurationSection config = getConfigurationSection(path);
+
         String slotConfig = config.getString("slots");
 
         int[] slots;
@@ -139,8 +127,11 @@ public class Config {
 
     public ItemStack getItemStack(String path) {
 
-        Config config = getConfigurationSection(path);
-        Material material = Material.matchMaterial(config.getString("type"));
+        ConfigurationSection config = getConfigurationSection(path);
+
+        String type = config.getString("type");
+
+        Material material = Material.matchMaterial(type == null ? "STONE" : type);
 
         String name = config.getString("name");
         int amount = config.getInt("amount", 1);
@@ -174,7 +165,7 @@ public class Config {
         return new ItemBuilder(material, amount).name(name).lore(lore).build();
     }
 
-    public Set<String> getKeys(boolean deep){
-        return configurationSection.getKeys(deep);
+    public ConfigurationSection getConfigurationSection(String path) {
+        return yamlConfiguration.getConfigurationSection(path);
     }
 }

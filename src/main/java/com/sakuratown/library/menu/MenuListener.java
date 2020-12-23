@@ -91,7 +91,6 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void inventoryCloseEvent(InventoryCloseEvent event) {
-
         Menu menu = getMenu(event);
         if (menu == null || menu.closeEvent == null) return;
 
@@ -102,7 +101,6 @@ public class MenuListener implements Listener {
         Inventory inventory = event.getInventory();
         InventoryHolder holder = inventory.getHolder();
 
-        System.out.println(inventory);
         if (!(holder instanceof Menu)) return null;
 
         return (Menu) holder;

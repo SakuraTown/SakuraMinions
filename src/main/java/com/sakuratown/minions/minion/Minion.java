@@ -77,10 +77,10 @@ public class Minion {
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
-                storageMenu.addItem(collectItems);
+//                storageMenu.addItem(collectItems);
 
             }
-        }.runTaskTimerAsynchronously(Main.getInstance(), 0, Main.getInstance().getConfig().getInt("CollectTime"));
+        }.runTaskTimerAsynchronously(Main.getInstance(), 0, config.getInt("CollectTime") * 20);
 
     }
 

@@ -5,6 +5,7 @@ import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.minion.Minion;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 public class ManagerMenu extends Menu {
 
@@ -38,7 +39,7 @@ public class ManagerMenu extends Menu {
             case "UpgradeEfficiency":
 
                 button.clickEvent = event -> {
-                    minion.upgradeEfficiency(config.getInt("Storage.UpgradeEfficiency"));
+                    minion.upgradeEfficiency(config.getInt("Efficiency.UpgradeEfficiency"));
                 };
                 break;
 
@@ -52,7 +53,9 @@ public class ManagerMenu extends Menu {
             case "OpenStorageMenu":
 
                 button.clickEvent = event -> {
-                    minion.openStorageMenu(event.getWhoClicked().getKiller());
+                    minion.openStorageMenu((Player) event.getWhoClicked());
+                    setTitle("test");
+                    event.getWhoClicked().openInventory(inventory);
                 };
                 break;
         }

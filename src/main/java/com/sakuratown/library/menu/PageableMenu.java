@@ -1,72 +1,96 @@
 package com.sakuratown.library.menu;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class PageableMenu extends Menu implements Iterable<Menu>, InventoryHolder {
+public abstract class PageableMenu extends Menu implements InventoryHolder {
 
-    private final int maxPage;
-    //TODO 翻页菜单也是一种菜单, 你不能打开一个 list 里的菜单, 而是你通过计算获取下一页的物品
-    public List<Inventory> menus = new ArrayList<>();
+    public final Map<Integer, Map<Integer, Button>> pages = new HashMap<>();
     private int currentPage = 1;
-//    public Inventory inventory;
-
-    // 根据按钮数量设置最大页数
-    PageableMenu(List<Button> buttons) {
-        int pageSize = buttons.get(0).slots.length;
-        int buttonSize = buttons.size();
-
-        int maxPage = buttonSize / pageSize;
-
-        if (buttonSize % pageSize != 0) {
-            maxPage += 1;
-        }
-
-        this.maxPage = maxPage;
-    }
-
-    // 根据行数来判断最大页数
-    protected PageableMenu(int row) {
-        if (row <= 6) {
-            maxPage = 1;
-        } else {
-            maxPage = row % 5 == 0 ? (row / 5) : (row / 5 + 1);
-        }
-    }
+    private int maxPage;
 
     public int getMaxPage() {
         return maxPage;
     }
 
+    // 根据拥有行数设定最大页数
+    public void setMaxPage(int storage) {
+
+        int size = getSize();
+        maxPage = (storage * 9 == size ? 0 : storage / size) + 1;
+        for (int i = 0; i < maxPage; i++) {
+            pages.put(i, new HashMap<>());
+        }
+    }
+
+    // 通过按钮数量计算最大页数
+    public void setMaxPage(List<Button> buttons) {
+        setMaxPage(buttons.size());
+    }
+
+    // 统一设置所有界面的按钮
+    public void setAllButton(Button button) {
+
+        for (int i = 0; i < maxPage; i++) {
+
+            for (int slot : button.slots) {
+                pages.get(i).put(slot, button);
+                inventory.setItem(slot, button.itemStack);
+            }
+
+            if (button.action != null) {
+                setDefaultButtonAction(button);
+                setButtonAction(button);
+            }
+        }
+    }
+
+    @Override
     public void open(Player player) {
-        menus.get(0).open(player);
+        String title = getTitle();
+        setTitle(title);
+
+        buttonMap = pages.get(0);
+        setButton(buttonMap.values());
+        player.openInventory(inventory);
     }
 
     public void previousPage(Player player) {
         if (currentPage == 1) return;
 
-        int index = --currentPage;
-        player.openInventory(inventory);
-        menus.get(index - 1).open(player);
+        int index = currentPage - 1;
+        Map<Integer, Button> buttons = pages.get(index - 1);
+        setTitle(getTitle().replace(currentPage + "/" + maxPage, currentPage - 1 + "/" + maxPage));
+
+        currentPage -= 1;
+        setButton(buttons.values());
+        open(player);
     }
 
     public void nextPage(Player player) {
         if (currentPage == maxPage) return;
-        menus.get(currentPage++).open(player);
+
+        int index = currentPage - 1;
+        Map<Integer, Button> buttons = pages.get(index + 1);
+
+        setTitle(getTitle().replace(currentPage + "/" + maxPage, currentPage + 1 + "/" + maxPage));
+        currentPage += 1;
+        setButton(buttons.values());
+        open(player);
     }
 
-    // 设置按钮的默认行为
-    public void setDefaultAction(Button button, int page) {
+    @Override
+    public void setDefaultButtonAction(Button button) {
+
+        if (button.action == null) return;
 
         switch (button.action) {
 
@@ -79,9 +103,10 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
                     }
                 };
 
-                if (page == maxPage) {
-                    button.itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
+                if (currentPage == maxPage) {
+                    setButton(new Button(new ItemStack(Material.BLUE_STAINED_GLASS_PANE), button.slots));
                 }
+
                 break;
 
             case "PreviousPage":
@@ -93,8 +118,8 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
                     }
                 };
 
-                if (page == 1) {
-                    button.itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
+                if (currentPage == 1) {
+                    setButton(new Button(new ItemStack(Material.BLUE_STAINED_GLASS_PANE), button.slots));
                 }
 
                 break;
@@ -104,19 +129,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
                 button.clickEvent = event -> event.getWhoClicked().closeInventory();
                 break;
         }
-
-        setButtonAction(button);
     }
 
     public abstract void setButtonAction(Button button);
-
-    @Override
-    public Iterator<Menu> iterator() {
-        return menus.iterator();
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return super.getInventory();
-    }
 }
