@@ -5,11 +5,12 @@ import com.sakuratown.library.menu.PageableMenu;
 import com.sakuratown.library.utils.Config;
 import org.bukkit.inventory.InventoryHolder;
 
-public class StorageMenu extends PageableMenu implements InventoryHolder {
+public class StorageMenu extends PageableMenu {
 
     public StorageMenu(int storage) {
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
-        openEvent = event -> System.out.println("测试");
+        openEvent = event -> System.out.println("开启菜单事件");
+        closeEvent = event -> System.out.println("关闭菜单事件");
     }
 
 //    public void addItem(Map<Material, Integer> collectItems) {

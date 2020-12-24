@@ -86,24 +86,16 @@ public class MenuListener implements Listener {
     public void inventoryOpenEvent(InventoryOpenEvent event) {
 
         Menu menu = getMenu(event);
-        if (menu == null || menu.openEvent == null) return;
 
-        // 防止每次翻页都触发 InventoryOpenEvent, 也许有更好的写法
+        if (menu == null || menu.openEvent == null) return;
         if (menu instanceof PageableMenu) {
 
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Inventory topInventory = event.getPlayer().getOpenInventory().getTopInventory();
-                    if (!topInventory.equals(menu.inventory)) {
-                        menu.openEvent.accept(event);
-                    }
-                }
-            }.runTaskLater(Main.getInstance(), 1);
+            PageableMenu pageableMenu = (PageableMenu) menu;
+            boolean isFirstPage = pageableMenu.pages.get(0).equals(event.getInventory());
 
-        } else {
-            menu.openEvent.accept(event);
+            if (!isFirstPage) return;
         }
+        menu.openEvent.accept(event);
     }
 
     @EventHandler

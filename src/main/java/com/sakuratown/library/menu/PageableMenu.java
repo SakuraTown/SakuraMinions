@@ -1,21 +1,21 @@
 package com.sakuratown.library.menu;
 
 
+import jdk.swing.interop.SwingInterOpUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
-public abstract class PageableMenu extends Menu implements Iterable<Menu>, InventoryHolder {
+public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
 
-    private final List<Menu> pages = new ArrayList<>();
+    public final List<Inventory> pages = new ArrayList<>();
     private int currentPage = 1;
     private int maxPage = 1;
 
@@ -23,19 +23,8 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
 
         for (int i = 0; i < maxPage; i++) {
             int page = i + 1;
-
-            Menu menu = new Menu() {
-                @Override
-                public void setButtonAction(Button button) {
-                    PageableMenu.this.setDefaultButtonAction(button, page);
-                }
-            };
-
-            menu.setTitle(getTitle().concat(" " + page + "/" + maxPage));
-            menu.setRow(getRow());
-            menu.isLock = isLock;
-
-            pages.add(menu);
+            Inventory inventory = Bukkit.createInventory(this, getSize(), getTitle().concat(" " + page + "/" + maxPage));
+            pages.add(inventory);
         }
     }
 
@@ -46,8 +35,8 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
         int index = currentPage - 1;
         currentPage--;
 
-        Menu menu = pages.get(index - 1);
-        menu.open(player);
+        inventory = pages.get(index - 1);
+        player.openInventory(inventory);
     }
 
     public void nextPage(Player player) {
@@ -56,8 +45,8 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
         int index = currentPage - 1;
         currentPage++;
 
-        Menu menu = pages.get(index + 1);
-        menu.open(player);
+        inventory = pages.get(index + 1);
+        player.openInventory(inventory);
     }
 
     public int getMaxPage() {
@@ -79,19 +68,32 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
     public void open(Player player) {
         currentPage = 1;
 
-        Menu menu = pages.get(0);
-        menu.open(player);
+        inventory = pages.get(0);
+        player.openInventory(inventory);
     }
 
     @Override
     public void setButton(Button button) {
-        for (Menu menu : pages) {
-            menu.setButton(button);
+
+        for (int i = 0; i < pages.size(); i++) {
+
+            this.inventory = pages.get(i);
+
+            for (int slot : button.slots) {
+                buttonMap.put(slot, button);
+                inventory.setItem(slot, button.itemStack);
+            }
+
+            if (button.action != null) {
+                int page = i + 1;
+                setDefaultButtonAction(button, page);
+                setButtonAction(button);
+            }
         }
     }
 
     @Override
-    public Iterator<Menu> iterator() {
+    public Iterator<Inventory> iterator() {
         return pages.iterator();
     }
 
@@ -112,7 +114,9 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
 
                 if (page == maxPage) {
                     ItemStack itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
-                    pages.get(maxPage - 1).setButton(new Button(itemStack, button.slots));
+                    Button next = new Button(itemStack, button.slots);
+                    next.clickEvent = button.clickEvent;
+                    super.setButton(next);
                 }
 
                 break;
@@ -128,8 +132,9 @@ public abstract class PageableMenu extends Menu implements Iterable<Menu>, Inven
 
                 if (page == 1) {
                     ItemStack itemStack = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
-                    pages.get(0).setButton(new Button(itemStack, button.slots));
-
+                    Button previous = new Button(itemStack, button.slots);
+                    previous.clickEvent = button.clickEvent;
+                    super.setButton(previous);
                 }
 
                 break;

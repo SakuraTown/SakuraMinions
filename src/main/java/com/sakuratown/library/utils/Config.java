@@ -87,7 +87,7 @@ public class Config {
         ConfigurationSection buttons = config.getConfigurationSection("Buttons");
 
         for (String name : buttons.getKeys(false)) {
-            Button button = getButton(buttons.getCurrentPath().concat(".").concat(name));
+            Button button = getButton(buttons.getCurrentPath().concat("." + name));
             menu.setButton(button);
         }
     }
