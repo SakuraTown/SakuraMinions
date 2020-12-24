@@ -31,8 +31,10 @@ public class Main extends JavaPlugin {
         PluginCommand command = Bukkit.getPluginCommand("SakuraMinions");
 
         if (command != null) {
-            command.setExecutor(new MainCommand());
-            command.setTabCompleter(new MainCommand());
+            MainCommand executor = new MainCommand();
+
+            command.setExecutor(executor);
+            command.setTabCompleter(executor);
         }
 
         setupConfig();

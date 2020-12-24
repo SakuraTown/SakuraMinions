@@ -1,5 +1,6 @@
 package com.sakuratown.library.menu;
 
+import com.sakuratown.minions.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class MenuListener implements Listener {
 
@@ -86,15 +88,45 @@ public class MenuListener implements Listener {
         Menu menu = getMenu(event);
         if (menu == null || menu.openEvent == null) return;
 
-        menu.openEvent.accept(event);
+        // 防止每次翻页都触发 InventoryOpenEvent, 也许有更好的写法
+        if (menu instanceof PageableMenu) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Inventory topInventory = event.getPlayer().getOpenInventory().getTopInventory();
+                    if (!topInventory.equals(menu.inventory)) {
+                        menu.openEvent.accept(event);
+                    }
+                }
+            }.runTaskLater(Main.getInstance(), 1);
+
+        } else {
+            menu.openEvent.accept(event);
+        }
     }
 
     @EventHandler
     public void inventoryCloseEvent(InventoryCloseEvent event) {
-        Menu menu = getMenu(event);
-        if (menu == null || menu.closeEvent == null) return;
 
-        menu.closeEvent.accept(event);
+        Menu menu = getMenu(event);
+
+        if (menu == null || menu.closeEvent == null) return;
+        if (menu instanceof PageableMenu) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Inventory topInventory = event.getPlayer().getOpenInventory().getTopInventory();
+                    if (!topInventory.equals(menu.inventory)) {
+                        menu.closeEvent.accept(event);
+                    }
+                }
+            }.runTaskLater(Main.getInstance(), 1);
+
+        } else {
+            menu.closeEvent.accept(event);
+        }
     }
 
     private Menu getMenu(InventoryEvent event) {

@@ -12,15 +12,23 @@ import java.util.List;
 
 public abstract class InventoryMenu extends Menu {
 
-    private final List<Inventory> inventories = new LinkedList<>();
+    private final List<Menu> inventories = new LinkedList<>();
     private int currentPage = 1;
     private int maxPage;
 
     public InventoryMenu(Player player) {
-        inventories.add(Bukkit.createInventory(this, 9, "第一页"));
-        inventories.add(Bukkit.createInventory(this, 18, "第二页"));
+        Menu menu = new Menu() {
+            @Override
+            public void setButtonAction(Button button) {
 
-        inventory = inventories.get(0);
+            }
+        };
+
+        inventories.add(menu);
+        inventories.add(menu);
+
+        inventory = inventories.get(0).getInventory();
+
         Button next = new Button(new ItemStack(Material.STONE), 8);
         Button previous = new Button(new ItemStack(Material.DIAMOND), 0);
 
@@ -30,18 +38,17 @@ public abstract class InventoryMenu extends Menu {
         setButton(next);
         setButton(previous);
 
+        openEvent = event -> System.out.println("触发开启事件");
     }
 
     public void previousPage(Player player) {
-        inventory = inventories.get(0);
+        inventory = inventories.get(0).getInventory();
         open(player);
     }
 
     public void nextPage(Player player) {
-        inventory = inventories.get(1);
-        player.updateInventory();
-//        open(player);
-
+        inventory = inventories.get(1).getInventory();
+        open(player);
     }
 
     @Override

@@ -79,15 +79,16 @@ public class Config {
         String title = config.getString("Title");
         int row = config.getInt("Row");
 
+        menu.setTitle(title);
         menu.setRow(row);
-        menu.setMaxPage(storage);
-        menu.setTitle(title.concat(" " + 1 + "/" + menu.getMaxPage()));
+        menu.setTotalRow(storage);
+        menu.initPages();
 
         ConfigurationSection buttons = config.getConfigurationSection("Buttons");
 
         for (String name : buttons.getKeys(false)) {
             Button button = getButton(buttons.getCurrentPath().concat(".").concat(name));
-            menu.setAllButton(button);
+            menu.setButton(button);
         }
     }
 

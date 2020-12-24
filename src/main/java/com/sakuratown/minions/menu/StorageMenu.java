@@ -3,31 +3,25 @@ package com.sakuratown.minions.menu;
 import com.sakuratown.library.menu.Button;
 import com.sakuratown.library.menu.PageableMenu;
 import com.sakuratown.library.utils.Config;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.InventoryHolder;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class StorageMenu extends PageableMenu {
+public class StorageMenu extends PageableMenu implements InventoryHolder {
 
     public StorageMenu(int storage) {
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
+        openEvent = event -> System.out.println("测试");
     }
 
-    public Map<Integer, List<ItemStack>> setPages() {
-        return new HashMap<>();
-    }
-
-    //
 //    public void addItem(Map<Material, Integer> collectItems) {
 //        collectItems.forEach((k, v) -> {
 //
 //            ItemStack itemStack = new ItemStack(k, v);
 //
+//
+//
 //            for (Menu menu : menus) {
-//                HashMap<Integer, ItemStack> addFailedItems = menu.getInventory().addItem(itemStack);
-//                if (addFailedItems.isEmpty()) return;
+//                HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
+//                if (failedItems.isEmpty()) return;
 //            }
 //        });
 //    }
@@ -107,6 +101,7 @@ public class StorageMenu extends PageableMenu {
                 break;
         }
     }
+
 //
 //    @Override
 //    public Inventory getInventory() {

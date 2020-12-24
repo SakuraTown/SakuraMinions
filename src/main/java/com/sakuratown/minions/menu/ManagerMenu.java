@@ -54,7 +54,7 @@ public class ManagerMenu extends Menu {
 
                 button.clickEvent = event -> {
                     minion.openStorageMenu((Player) event.getWhoClicked());
-                    setTitle("test");
+                    setTitle("setDefaultButtonAction");
                     event.getWhoClicked().openInventory(inventory);
                 };
                 break;

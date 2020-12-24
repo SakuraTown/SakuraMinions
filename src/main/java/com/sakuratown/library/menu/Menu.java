@@ -20,39 +20,22 @@ public abstract class Menu implements InventoryHolder {
 
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
-    private Integer size = 3 * 9;
-    private String title = "Menu";
 
-    protected Inventory inventory = Bukkit.createInventory(this, size, title);
     Map<Integer, Button> buttonMap = new HashMap<>();
 
-    public void removeButton(int slot) {
-        buttonMap.remove(slot);
-    }
+    private int size = 3 * 9;
+    private String title = "Menu";
 
-    public boolean isOpen(Player player) {
-        Inventory topInventory = player.getOpenInventory().getTopInventory();
-        Inventory menInventory = getInventory();
-
-        return topInventory.equals(menInventory);
-    }
-
-    public boolean isButton(int slot) {
-        return buttonMap.get(slot) != null;
-    }
+    public Inventory inventory = Bukkit.createInventory(this, size, title);
 
     public void open(Player player) {
         player.openInventory(inventory);
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public void setTitle(String title) {
         this.title = Message.toColor(title);
         inventory = Bukkit.createInventory(this, size, this.title);
-//        setButton(buttonMap.values());
+        setButton(buttonMap.values());
     }
 
     public void setRow(int row) {
@@ -61,8 +44,10 @@ public abstract class Menu implements InventoryHolder {
         setButton(buttonMap.values());
     }
 
-    public Button getButton(int slot) {
-        return buttonMap.get(slot);
+    public void setHolder(InventoryHolder holder) {
+        this.title = Message.toColor(title);
+        inventory = Bukkit.createInventory(holder, size, this.title);
+        setButton(buttonMap.values());
     }
 
     public void setButton(Collection<Button> buttons) {
@@ -84,18 +69,34 @@ public abstract class Menu implements InventoryHolder {
         }
     }
 
-    @Override
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     public void setDefaultButtonAction(Button button) {
         if (button.action.equals("Close")) {
             button.clickEvent = event -> event.getWhoClicked().closeInventory();
         }
     }
 
+    public boolean isOpen(Player player) {
+        Inventory topInventory = player.getOpenInventory().getTopInventory();
+        return topInventory.equals(inventory);
+    }
+
+    public void removeButton(int slot) {
+        buttonMap.remove(slot);
+    }
+
+    public boolean isButton(int slot) {
+        return buttonMap.get(slot) != null;
+    }
+
     public abstract void setButtonAction(Button button);
+
+    public Button getButton(int slot) {
+        return buttonMap.get(slot);
+    }
+
+    public String getTitle() {
+        return title;
+    }
 
     public int getSize() {
         return size;
@@ -103,6 +104,15 @@ public abstract class Menu implements InventoryHolder {
 
     public int getRow() {
         return size / 9;
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    protected  Map<Integer, Button> getButtonMap(){
+        return buttonMap;
     }
 }
 
