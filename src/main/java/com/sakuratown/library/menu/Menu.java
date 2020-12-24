@@ -21,7 +21,7 @@ public abstract class Menu implements InventoryHolder {
     public Consumer<InventoryOpenEvent> openEvent;
     public Consumer<InventoryCloseEvent> closeEvent;
 
-    Map<Integer, Button> buttonMap = new HashMap<>();
+    public final Map<Integer, Button> buttonMap = new HashMap<>();
 
     private int size = 3 * 9;
     private String title = "Menu";
@@ -30,24 +30,6 @@ public abstract class Menu implements InventoryHolder {
 
     public void open(Player player) {
         player.openInventory(inventory);
-    }
-
-    public void setTitle(String title) {
-        this.title = Message.toColor(title);
-        inventory = Bukkit.createInventory(this, size, this.title);
-        setButton(buttonMap.values());
-    }
-
-    public void setRow(int row) {
-        size = row * 9;
-        inventory = Bukkit.createInventory(this, size, title);
-        setButton(buttonMap.values());
-    }
-
-    public void setHolder(InventoryHolder holder) {
-        this.title = Message.toColor(title);
-        inventory = Bukkit.createInventory(holder, size, this.title);
-        setButton(buttonMap.values());
     }
 
     public void setButton(Collection<Button> buttons) {
@@ -98,6 +80,11 @@ public abstract class Menu implements InventoryHolder {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = Message.toColor(title);
+        inventory = Bukkit.createInventory(this, size, this.title);
+    }
+
     public int getSize() {
         return size;
     }
@@ -106,13 +93,15 @@ public abstract class Menu implements InventoryHolder {
         return size / 9;
     }
 
+    public void setRow(int row) {
+        size = row * 9;
+        inventory = Bukkit.createInventory(this, size, title);
+    }
+
     @Override
     public Inventory getInventory() {
         return inventory;
     }
 
-    protected  Map<Integer, Button> getButtonMap(){
-        return buttonMap;
-    }
 }
 

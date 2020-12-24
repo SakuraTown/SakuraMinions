@@ -19,6 +19,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
     private int currentPage = 1;
     private int maxPage = 1;
 
+    // 初始化所有界面
     public void initPages() {
 
         for (int i = 0; i < maxPage; i++) {
@@ -26,6 +27,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
             Inventory inventory = Bukkit.createInventory(this, getSize(), getTitle().concat(" " + page + "/" + maxPage));
             pages.add(inventory);
         }
+
     }
 
     public void previousPage(Player player) {
@@ -53,6 +55,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
         return maxPage;
     }
 
+    // 设置可用行数
     public void setTotalRow(int row) {
         int pageSize = getSize();
         int totalSize = row * 9;
@@ -72,6 +75,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
         player.openInventory(inventory);
     }
 
+    // 一次性将按钮设置到全部界面
     @Override
     public void setButton(Button button) {
 
@@ -97,6 +101,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
         return pages.iterator();
     }
 
+    // 设置按钮默认行为
     public void setDefaultButtonAction(Button button, int page) {
 
         if (button.action == null) return;

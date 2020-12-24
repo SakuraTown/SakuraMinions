@@ -16,7 +16,6 @@ public class StorageMenu extends PageableMenu {
     public StorageMenu(int storage, Minion minion) {
         isLock = false;
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
-        openEvent = event -> System.out.println("开启菜单事件");
         closeEvent = event -> minion.collectItem();
     }
 
@@ -38,12 +37,14 @@ public class StorageMenu extends PageableMenu {
         return false;
     }
 
+    // 排序物品
     public void sortItem() {
         HashMap<Material, Integer> allItemCount = getAllItemCount();
         clearAllItems();
         addItem(allItemCount);
     }
 
+    // 获取所有界面的物品
     public HashMap<Material, Integer> getAllItemCount() {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
@@ -56,6 +57,7 @@ public class StorageMenu extends PageableMenu {
         return itemCount;
     }
 
+    // 获取 inv 中的除按钮以外的物品并计算数量总和
     private HashMap<Material, Integer> getMenuItemCount(Inventory inventory) {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
@@ -75,6 +77,7 @@ public class StorageMenu extends PageableMenu {
         return itemCount;
     }
 
+    // 清理除按钮以外的所有物品
     public void clearAllItems() {
 
         for (Inventory inventory : pages) {
@@ -107,14 +110,12 @@ public class StorageMenu extends PageableMenu {
                 break;
 
             case "TakeOutItem":
-                //TODO
+
+                button.clickEvent = event -> {
+                    takeOutItem();
+                };
+
                 break;
         }
     }
-
-//
-//    @Override
-//    public Inventory getInventory() {
-//        return menus.get(0).getInventory();
-//    }
 }
