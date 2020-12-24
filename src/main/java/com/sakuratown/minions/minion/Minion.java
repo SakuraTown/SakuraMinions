@@ -65,22 +65,21 @@ public class Minion {
 
     public void collectItem() {
 
-        //TODO 背包满了停止收集物品
         new BukkitRunnable() {
             @Override
             public void run() {
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 如果效率 1000 要循环 1000 次, 降低循环次数
+                //TODO 如果效率 1000 要循环获取 1000 次物品, 降低循环次数
                 for (int i = 0; i < efficiency; i++) {
                     Material randomMaterial = getRandomMaterial();
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
-//                storageMenu.addItem(collectItems);
-
+                boolean isFull = storageMenu.addItem(collectItems);
+                if (isFull)  cancel();
             }
-        }.runTaskTimerAsynchronously(Main.getInstance(), 0, config.getInt("CollectTime") * 20);
+        }.runTaskTimer(Main.getInstance(), 0, 2);
 
     }
 
@@ -95,7 +94,7 @@ public class Minion {
 
     private void setupMenu() {
         managerMenu = new ManagerMenu(this);
-        storageMenu = new StorageMenu(storage);
+        storageMenu = new StorageMenu(storage, this);
     }
 
     private Material getRandomMaterial() {

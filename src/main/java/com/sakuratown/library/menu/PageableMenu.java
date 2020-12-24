@@ -33,9 +33,9 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
         if (currentPage == 1) return;
 
         int index = currentPage - 1;
-        currentPage--;
-
         inventory = pages.get(index - 1);
+
+        currentPage--;
         player.openInventory(inventory);
     }
 
@@ -43,9 +43,9 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
         if (currentPage == maxPage) return;
 
         int index = currentPage - 1;
-        currentPage++;
-
         inventory = pages.get(index + 1);
+
+        currentPage++;
         player.openInventory(inventory);
     }
 
