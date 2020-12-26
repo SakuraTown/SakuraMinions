@@ -29,13 +29,7 @@ public class MainCommand extends SimpleCommand implements CommandExecutor {
         Player player = (Player) sender;
 
         minion.openStorageMenu(player);
-//        InventoryMenu inventoryMenu = new InventoryMenu(player) {
-//            @Override
-//            public void setButtonAction(Button button) {
-//
-//            }
-//        };
-//        inventoryMenu.open(player);
+
         return true;
     }
 }

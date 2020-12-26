@@ -11,11 +11,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class Minion {
 
     private final String type;
     private final int totalWeight;
+
+    //TODO 使用 reload  的时候这个 collectItemList 不会更新
     private final Set<String> collectItemList;
     private final ConfigurationSection config;
 
@@ -31,6 +34,7 @@ public class Minion {
         this.type = type;
         this.storage = storage;
         this.efficiency = efficiency;
+
 
         config = Config.getConfig("minions").getConfigurationSection(type);
 
@@ -77,9 +81,10 @@ public class Minion {
                 }
 
                 boolean isFull = storageMenu.addItem(collectItems);
-                if (isFull)  cancel();
+                if (isFull) cancel();
+
             }
-        }.runTaskTimer(Main.getInstance(), 0, 2);
+        }.runTaskTimer(Main.getInstance(), 0, 20);
 
     }
 

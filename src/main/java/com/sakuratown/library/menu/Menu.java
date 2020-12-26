@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+//TODO 配置文件重载对所有菜单按钮都不生效
 public abstract class Menu implements InventoryHolder {
 
     public boolean isLock = true;

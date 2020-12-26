@@ -13,13 +13,18 @@ import java.util.Map;
 
 public class StorageMenu extends PageableMenu {
 
+    //TODO 添加红色玻璃板来控制仓库大小, 现在如果设置 7 行, 实际有 10 行大小,
     public StorageMenu(int storage, Minion minion) {
         isLock = false;
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
-        closeEvent = event -> minion.collectItem();
+
+        closeEvent = event -> {
+            minion.collectItem();
+            sortItem();
+        };
     }
 
-    // 返回背包是否已满
+    //TODO 返回工人仓库是否已满, 但是现在无法等到已满才返回, 总有几个物品无法堆叠到 64 个就提示已满
     public boolean addItem(Map<Material, Integer> collectItems) {
 
         for (Map.Entry<Material, Integer> entry : collectItems.entrySet()) {
@@ -28,7 +33,7 @@ public class StorageMenu extends PageableMenu {
 
             for (Inventory inventory : pages) {
                 HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
-                if (failedItems.isEmpty()) continue;
+                if (failedItems.isEmpty()) break;
 
                 boolean isFull = pages.get(pages.size() - 1).equals(inventory);
                 if (isFull) return true;
@@ -79,21 +84,39 @@ public class StorageMenu extends PageableMenu {
 
     // 清理除按钮以外的所有物品
     public void clearAllItems() {
-
         for (Inventory inventory : pages) {
-            ItemStack[] itemStacks = inventory.getContents();
-
-            for (int i = 0; i < itemStacks.length; i++) {
-                if (!isButton(i)) {
-                    itemStacks[i] = null;
-                }
-            }
-            inventory.setContents(itemStacks);
+            clearPageItems(inventory);
         }
     }
 
-    private void takeOutItem() {
-        //TODO 把当前界面物品取到玩家背包
+    // 清理页面上除了按钮以外的物品
+    public void clearPageItems(Inventory inventory) {
+
+        ItemStack[] itemStacks = inventory.getContents();
+
+        for (int i = 0; i < itemStacks.length; i++) {
+            if (!isButton(i)) {
+                itemStacks[i] = null;
+            }
+        }
+        inventory.setContents(itemStacks);
+    }
+
+    // 将 inv 中的物品取到 target 中
+    private void takeOutItem(Inventory inventory, Inventory target) {
+        HashMap<Material, Integer> itemCount = getMenuItemCount(inventory);
+        clearPageItems(inventory);
+
+        itemCount.forEach((k, v) -> {
+            ItemStack itemStack = new ItemStack(k, v);
+            HashMap<Integer, ItemStack> failedItems = target.addItem(itemStack);
+
+            if (!failedItems.isEmpty()) {
+                for (ItemStack value : failedItems.values()) {
+                    inventory.addItem(value);
+                }
+            }
+        });
     }
 
     @Override
@@ -112,7 +135,7 @@ public class StorageMenu extends PageableMenu {
             case "TakeOutItem":
 
                 button.clickEvent = event -> {
-                    takeOutItem();
+                    takeOutItem(event.getInventory(), event.getWhoClicked().getInventory());
                 };
 
                 break;
