@@ -73,7 +73,7 @@ public class Minion {
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
                 //TODO 当前运行 10 万次 20ms
-                for (int i = 0; i < 100000; i++) {
+                for (int i = 0; i < 5000; i++) {
                     Material randomMaterial = getRandomMaterial(collectItemList);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }

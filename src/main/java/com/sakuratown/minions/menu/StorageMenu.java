@@ -19,10 +19,8 @@ public class StorageMenu extends PageableMenu {
         isLock = false;
         new Config("menu").setPageMenu("工人仓库", this, storage);
 
-        closeEvent = event -> {
-            minion.collectItem();
-            sortItem();
-        };
+        closeEvent = event -> minion.collectItem();
+        openEvent = event -> sortItem();
     }
 
     public boolean addItem(Map<Material, Integer> collectItems) {
