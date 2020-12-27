@@ -25,6 +25,7 @@ public class Minion {
     private String name = "EnTIv 的工人";
 
     private BukkitRunnable runnable;
+    private final ConfigurationSection config;
 
     public Minion(String type, int storage, int efficiency) {
 
@@ -32,14 +33,12 @@ public class Minion {
         this.storage = storage;
         this.efficiency = efficiency;
 
+        //TODO 每个工人 new 一个 config 好像不太对, 有没有办法统一获取呢?
+        config = new Config("minions").getConfigurationSection(type);
         totalWeight = getTotalWeight();
 
         setupMenu();
         collectItem();
-    }
-
-    public ConfigurationSection getConfig() {
-        return Config.getConfig("minions").getConfigurationSection(type);
     }
 
     public void openStorageMenu(Player player) {
@@ -62,17 +61,18 @@ public class Minion {
 
     public void collectItem() {
 
+        Set<String> collectItemList = config.getConfigurationSection("CollectItemList").getKeys(false);
 
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
+
                 long start = System.currentTimeMillis();
 
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 性能瓶颈 循环 1000 次 耗时 1000ms
-                for (int i = 0; i < 100; i++) {
-                    Material randomMaterial = getRandomMaterial(getCollectItemList().getKeys(false));
+                for (int i = 0; i < 100000; i++) {
+                    Material randomMaterial = getRandomMaterial(collectItemList);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
@@ -82,7 +82,6 @@ public class Minion {
                 long end = System.currentTimeMillis();
                 long time = end - start;
                 System.out.println("运行耗时: " + time + " ms");
-
             }
         };
 
@@ -144,6 +143,10 @@ public class Minion {
     }
 
     private ConfigurationSection getCollectItemList() {
-        return getConfig().getConfigurationSection("CollectItemList");
+        return config.getConfigurationSection("CollectItemList");
+    }
+
+    public ConfigurationSection getConfig(){
+        return config;
     }
 }

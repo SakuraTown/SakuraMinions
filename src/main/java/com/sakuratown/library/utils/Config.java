@@ -21,7 +21,7 @@ public class Config {
     private static final HashMap<String, Config> configs = new HashMap<>();
     private final YamlConfiguration yamlConfiguration;
 
-    private Config(String fileName) {
+    public Config(String fileName) {
         File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
         yamlConfiguration = YamlConfiguration.loadConfiguration(file);
     }
