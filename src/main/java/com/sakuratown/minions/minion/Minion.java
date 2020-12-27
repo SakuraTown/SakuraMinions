@@ -63,6 +63,7 @@ public class Minion {
 
         Set<String> collectItemList = config.getConfigurationSection("CollectItemList").getKeys(false);
 
+        //TODO 弄个方法返回 runnable
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -71,6 +72,7 @@ public class Minion {
 
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
+                //TODO 当前运行 10 万次 20ms
                 for (int i = 0; i < 100000; i++) {
                     Material randomMaterial = getRandomMaterial(collectItemList);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
@@ -85,7 +87,7 @@ public class Minion {
             }
         };
 
-        //TODO 如果仓库未满, 则不执行
+        //TODO 防止重复运行任务
         runnable.runTaskTimer(Main.getInstance(), 0, 20);
 
     }
