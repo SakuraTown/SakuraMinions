@@ -66,6 +66,8 @@ public class Minion {
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
+                long start = System.currentTimeMillis();
+
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
                 //TODO 性能瓶颈 循环 1000 次 耗时 1000ms
@@ -76,6 +78,10 @@ public class Minion {
 
                 boolean isFull = storageMenu.addItem(collectItems);
                 if (isFull) cancel();
+
+                long end = System.currentTimeMillis();
+                long time = end - start;
+                System.out.println("运行耗时: " + time + " ms");
 
             }
         };
