@@ -59,7 +59,7 @@ public abstract class PageableMenu extends Menu implements Iterable<Inventory> {
     public void setTotalRow(int row) {
         int pageSize = getSize();
         int totalSize = row * 9;
-        maxPage = (totalSize == pageSize ? 0 : totalSize / pageSize) + 1;
+        maxPage = (totalSize == pageSize - 9 ? 0 : totalSize / pageSize) + 1;
     }
 
     // 通过按钮数量计算最大页数

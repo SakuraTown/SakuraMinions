@@ -121,9 +121,7 @@ public class StorageMenu extends PageableMenu {
 
             case "SortItem":
 
-                button.clickEvent = event -> {
-                    sortItem();
-                };
+                button.clickEvent = event -> sortItem();
 
                 break;
 

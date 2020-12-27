@@ -61,7 +61,8 @@ public class Minion {
 
     public void collectItem() {
 
-        Set<String> collectItemList = config.getConfigurationSection("CollectItemList").getKeys(false);
+        ConfigurationSection collectItemListConfig = getCollectItemList();
+        Set<String> collectItemList = collectItemListConfig.getKeys(false);
 
         //TODO 弄个方法返回 runnable
         runnable = new BukkitRunnable() {
@@ -69,21 +70,24 @@ public class Minion {
             public void run() {
 
                 long start = System.currentTimeMillis();
-
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 当前运行 10 万次 20ms
-                for (int i = 0; i < 5000; i++) {
-                    Material randomMaterial = getRandomMaterial(collectItemList);
+                //TODO 当前运行 10 万次 14ms
+                for (int i = 0; i < 100000; i++) {
+                    Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
-
-                boolean isFull = storageMenu.addItem(collectItems);
-                if (isFull) cancel();
 
                 long end = System.currentTimeMillis();
                 long time = end - start;
                 System.out.println("运行耗时: " + time + " ms");
+                boolean isFull = storageMenu.addItem(collectItems);
+
+
+
+                if (isFull) cancel();
+
+
             }
         };
 
@@ -106,7 +110,7 @@ public class Minion {
         storageMenu = new StorageMenu(storage, this);
     }
 
-    private Material getRandomMaterial(Set<String> collectItemList) {
+    private Material getRandomMaterial(Set<String> collectItemList, ConfigurationSection collectItemListConfig) {
 
         int chance = 0;
         double randomNum = Math.random() * totalWeight;
@@ -115,7 +119,7 @@ public class Minion {
 
         for (String material : collectItemList) {
 
-            int weight = getCollectItemList().getInt(material);
+            int weight = collectItemListConfig.getInt(material);
             chance += weight;
 
             if (randomNum <= chance) {
