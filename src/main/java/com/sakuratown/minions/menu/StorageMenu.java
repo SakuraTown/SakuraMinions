@@ -7,6 +7,7 @@ import com.sakuratown.minions.minion.Minion;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,6 @@ public class StorageMenu extends PageableMenu {
         };
     }
 
-    //TODO 返回工人仓库是否已满, 但是现在无法等到已满才返回, 总有几个物品无法堆叠到 64 个就提示已满
     public boolean addItem(Map<Material, Integer> collectItems) {
 
         for (Map.Entry<Material, Integer> entry : collectItems.entrySet()) {
@@ -35,6 +35,7 @@ public class StorageMenu extends PageableMenu {
                 HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
                 if (failedItems.isEmpty()) break;
 
+                //TODO 返回工人仓库是否已满, 但是现在无法等到已满才返回, 总有几个物品无法堆叠到 64 个就提示已满
                 boolean isFull = pages.get(pages.size() - 1).equals(inventory);
                 if (isFull) return true;
             }
@@ -42,14 +43,12 @@ public class StorageMenu extends PageableMenu {
         return false;
     }
 
-    // 排序物品
     public void sortItem() {
         HashMap<Material, Integer> allItemCount = getAllItemCount();
         clearAllItems();
         addItem(allItemCount);
     }
 
-    // 获取所有界面的物品
     public HashMap<Material, Integer> getAllItemCount() {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
@@ -62,7 +61,6 @@ public class StorageMenu extends PageableMenu {
         return itemCount;
     }
 
-    // 获取 inv 中的除按钮以外的物品并计算数量总和
     private HashMap<Material, Integer> getMenuItemCount(Inventory inventory) {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
@@ -82,7 +80,6 @@ public class StorageMenu extends PageableMenu {
         return itemCount;
     }
 
-    // 清理除按钮以外的所有物品
     public void clearAllItems() {
         for (Inventory inventory : pages) {
             clearPageItems(inventory);
@@ -135,7 +132,9 @@ public class StorageMenu extends PageableMenu {
             case "TakeOutItem":
 
                 button.clickEvent = event -> {
-                    takeOutItem(event.getInventory(), event.getWhoClicked().getInventory());
+                    Inventory inventory = event.getInventory();
+                    PlayerInventory target = event.getWhoClicked().getInventory();
+                    takeOutItem(inventory, target);
                 };
 
                 break;

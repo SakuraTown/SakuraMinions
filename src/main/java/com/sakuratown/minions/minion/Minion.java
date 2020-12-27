@@ -11,16 +11,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class Minion {
 
     private final String type;
     private final int totalWeight;
-
-    //TODO 使用 reload  的时候这个 collectItemList 不会更新
-    private final Set<String> collectItemList;
-    private final ConfigurationSection config;
 
     private StorageMenu storageMenu;
     private ManagerMenu managerMenu;
@@ -29,16 +24,14 @@ public class Minion {
     private int efficiency;
     private String name = "EnTIv 的工人";
 
+    private BukkitRunnable runnable;
+
     public Minion(String type, int storage, int efficiency) {
 
         this.type = type;
         this.storage = storage;
         this.efficiency = efficiency;
 
-
-        config = Config.getConfig("minions").getConfigurationSection(type);
-
-        collectItemList = config.getConfigurationSection("CollectItemList").getKeys(false);
         totalWeight = getTotalWeight();
 
         setupMenu();
@@ -46,7 +39,7 @@ public class Minion {
     }
 
     public ConfigurationSection getConfig() {
-        return config;
+        return Config.getConfig("minions").getConfigurationSection(type);
     }
 
     public void openStorageMenu(Player player) {
@@ -69,14 +62,15 @@ public class Minion {
 
     public void collectItem() {
 
-        new BukkitRunnable() {
+
+        runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 如果效率 1000 要循环获取 1000 次物品, 降低循环次数
-                for (int i = 0; i < efficiency; i++) {
-                    Material randomMaterial = getRandomMaterial();
+                //TODO 性能瓶颈 循环 1000 次 耗时 1000ms
+                for (int i = 0; i < 100; i++) {
+                    Material randomMaterial = getRandomMaterial(getCollectItemList().getKeys(false));
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
@@ -84,7 +78,10 @@ public class Minion {
                 if (isFull) cancel();
 
             }
-        }.runTaskTimer(Main.getInstance(), 0, 20);
+        };
+
+        //TODO 如果仓库未满, 则不执行
+        runnable.runTaskTimer(Main.getInstance(), 0, 20);
 
     }
 
@@ -102,7 +99,7 @@ public class Minion {
         storageMenu = new StorageMenu(storage, this);
     }
 
-    private Material getRandomMaterial() {
+    private Material getRandomMaterial(Set<String> collectItemList) {
 
         int chance = 0;
         double randomNum = Math.random() * totalWeight;
@@ -111,7 +108,7 @@ public class Minion {
 
         for (String material : collectItemList) {
 
-            int weight = config.getInt("CollectItemList.".concat(material));
+            int weight = getCollectItemList().getInt(material);
             chance += weight;
 
             if (randomNum <= chance) {
@@ -132,11 +129,15 @@ public class Minion {
 
         int totalWeight = 0;
 
-        for (String material : collectItemList) {
-            int weight = config.getInt("CollectItemList.".concat(material));
+        for (String material : getCollectItemList().getKeys(false)) {
+            int weight = getCollectItemList().getInt(material);
             totalWeight += weight;
         }
 
         return totalWeight;
+    }
+
+    private ConfigurationSection getCollectItemList() {
+        return getConfig().getConfigurationSection("CollectItemList");
     }
 }

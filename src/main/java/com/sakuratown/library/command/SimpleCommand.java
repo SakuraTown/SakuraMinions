@@ -23,11 +23,7 @@ public abstract class SimpleCommand implements TabCompleter {
 
     public void sendHelpMessage(CommandSender sender, String[] args) {
 
-        if (args.length == 0) {
-
-            Message.send(sender, getHelpMessage(sender));
-
-        } else {
+        if (args.length != 0) {
 
             for (SimpleSubCommand subCommand : subCommands) {
 
@@ -39,8 +35,8 @@ public abstract class SimpleCommand implements TabCompleter {
                 }
             }
 
-             Message.send(sender, getHelpMessage(sender));
         }
+        Message.send(sender, getHelpMessage(sender));
     }
 
     private List<String> getHelpMessage(CommandSender sender) {
