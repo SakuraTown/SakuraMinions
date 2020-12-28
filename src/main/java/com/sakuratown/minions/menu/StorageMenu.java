@@ -17,7 +17,7 @@ public class StorageMenu extends PageableMenu {
     //TODO 添加红色玻璃板来控制仓库大小, 现在如果设置 7 行, 实际有 10 行大小,
     public StorageMenu(int storage, Minion minion) {
         isLock = false;
-        new Config("menu").setPageMenu("工人仓库", this, storage);
+        Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
 
         closeEvent = event -> minion.collectItem();
         openEvent = event -> sortItem();

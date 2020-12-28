@@ -21,13 +21,15 @@ public class Config {
     private static final HashMap<String, Config> configs = new HashMap<>();
     private final YamlConfiguration yamlConfiguration;
 
-    public Config(String fileName) {
+    private Config(String fileName) {
         File file = new File(Main.getInstance().getDataFolder(), fileName + ".yml");
         yamlConfiguration = YamlConfiguration.loadConfiguration(file);
     }
 
     public static Config getConfig(String name) {
-        configs.putIfAbsent(name, new Config(name));
+        if (configs.get(name) == null) {
+            configs.put(name, new Config(name));
+        }
         return configs.get(name);
     }
 

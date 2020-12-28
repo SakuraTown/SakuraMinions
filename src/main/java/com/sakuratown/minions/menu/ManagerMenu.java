@@ -13,7 +13,7 @@ public class ManagerMenu extends Menu {
 
     public ManagerMenu(Minion minion) {
         this.minion = minion;
-        new Config("menu").setMenu("管理菜单", this);
+        Config.getConfig("menu").setMenu("管理菜单", this);
     }
 
     @Override

@@ -33,8 +33,7 @@ public class Minion {
         this.storage = storage;
         this.efficiency = efficiency;
 
-        //TODO 每个工人 new 一个 config 好像不太对, 有没有办法统一获取呢?
-        config = new Config("minions").getConfigurationSection(type);
+        config = Config.getConfig("minions").getConfigurationSection(type);
         totalWeight = getTotalWeight();
 
         setupMenu();
@@ -61,37 +60,32 @@ public class Minion {
 
     public void collectItem() {
 
+        if (runnable != null) return;
+
         ConfigurationSection collectItemListConfig = getCollectItemList();
         Set<String> collectItemList = collectItemListConfig.getKeys(false);
 
-        //TODO 弄个方法返回 runnable
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
 
-                long start = System.currentTimeMillis();
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 当前运行 10 万次 14ms
-                for (int i = 0; i < 100000; i++) {
+                //TODO 当前运行 10 万次 14ms, 时间复杂度 O(n), 有机会优化一下
+                for (int i = 0; i < efficiency; i++) {
                     Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
-                long end = System.currentTimeMillis();
-                long time = end - start;
-                System.out.println("运行耗时: " + time + " ms");
                 boolean isFull = storageMenu.addItem(collectItems);
 
-
-
-                if (isFull) cancel();
-
-
+                if (isFull) {
+                    cancel();
+                    runnable = null;
+                }
             }
         };
 
-        //TODO 防止重复运行任务
         runnable.runTaskTimer(Main.getInstance(), 0, 20);
 
     }
