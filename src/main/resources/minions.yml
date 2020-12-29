@@ -6,14 +6,11 @@ Miner:
     # 物品名称标准在这里查：https://bukkit.windit.net/javadoc/org/bukkit/Material.html
     # 获取原石的权重是 0.3
     STONE: 50
-    DIAMOND_ORE: 10
-    GOLD_ORE: 20
-    IRON_ORE: 30
-    REDSTONE_ORE: 40
+
   # 工人效率设置
   Efficiency:
     # 默认每次获取 50 个方块
-    Default: 100
+    Default: 64
     # 升级效率需要花费 500 金币
     UpgradeCost: 500
     # 每升级一次多获取 100 个方块

@@ -15,11 +15,19 @@ import java.util.Map;
 public class StorageMenu extends PageableMenu {
 
     //TODO 添加红色玻璃板来控制仓库大小, 现在如果设置 7 行, 实际有 10 行大小,
+    // 玩家翻页时会一起翻页，需要把翻页单独设置
+    // 菜单无法重载, 需要重新设置菜单
+    private int currentCollationInventory;
+
     public StorageMenu(int storage, Minion minion) {
         isLock = false;
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
 
-        closeEvent = event -> minion.collectItem();
+        closeEvent = event -> {
+            minion.collectItem();
+            currentCollationInventory = 0;
+        };
+
         openEvent = event -> sortItem();
     }
 
@@ -29,15 +37,21 @@ public class StorageMenu extends PageableMenu {
 
             ItemStack itemStack = new ItemStack(entry.getKey(), entry.getValue());
 
-            for (Inventory inventory : pages) {
-                HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
-                if (failedItems.isEmpty()) break;
+            for (int i = 0; i < pages.size(); i++) {
+                Inventory inventory = pages.get(currentCollationInventory);
 
-                //TODO 返回工人仓库是否已满, 但是现在无法等到已满才返回, 总有几个物品无法堆叠到 64 个就提示已满
-                boolean isFull = pages.get(pages.size() - 1).equals(inventory);
-                if (isFull) return true;
+                HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
+
+                if (failedItems.isEmpty()) break;
+                else currentCollationInventory++;
+
+                if (currentCollationInventory == pages.size()) {
+                    currentCollationInventory = 0;
+                    return true;
+                }
             }
         }
+
         return false;
     }
 

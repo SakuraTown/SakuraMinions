@@ -5,8 +5,10 @@ import com.sakuratown.library.utils.Config;
 import com.sakuratown.library.utils.Message;
 import com.sakuratown.minions.command.MainCommand;
 import com.sakuratown.minions.listener.PlayerListener;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -16,11 +18,14 @@ public class Main extends JavaPlugin {
     public static Main getInstance() {
         return plugin;
     }
+    private static Economy eco = null;
 
     @Override
     public void onEnable() {
 
         plugin = this;
+        setupEconomy();
+
         String[] message = {
                 "§a樱花工人插件§e v" + getDescription().getVersion() + " §a已启用",
                 "§a插件制作作者:§e EnTIv §aQQ群:§e 600731934"
@@ -59,4 +64,15 @@ public class Main extends JavaPlugin {
         Config.saveDefaultConfig("menu");
     }
 
+    private void setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp == null) return;
+            eco = rsp.getProvider();
+        } else {
+            String message = "&c未检测到&e Vault &c插件, 樱花工人插件即将卸载";
+            Message.sendConsole(message);
+            getServer().getPluginManager().disablePlugin(this);
+        }
+    }
 }

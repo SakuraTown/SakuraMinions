@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class MainCommand extends SimpleCommand implements CommandExecutor {
 
-    Minion minion = new Minion("Miner", 10000, 64);
+    Minion minion = new Minion("Miner", 100000, 64);
     
     public MainCommand() {
         registerSubCommands();

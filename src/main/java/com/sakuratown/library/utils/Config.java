@@ -46,11 +46,12 @@ public class Config {
 
     public static void reload() {
 
+        Main.getInstance().reloadConfig();
+
         for (String fileName : configs.keySet()) {
             Config config = new Config(fileName);
             configs.put(fileName, config);
         }
-
     }
 
     public void setMenu(String path, Menu menu) {

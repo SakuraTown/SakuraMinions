@@ -6,7 +6,7 @@ MinionItem:
         - '&e效率:&c%Amount%'
 
 # 工人每次收集时间
-CollectTime: 1
+CollectTime: 20
 
 Message:
   NoMinions: 你还没有工人

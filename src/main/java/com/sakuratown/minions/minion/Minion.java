@@ -15,7 +15,6 @@ import java.util.Set;
 public class Minion {
 
     private final String type;
-    private final int totalWeight;
 
     private StorageMenu storageMenu;
     private ManagerMenu managerMenu;
@@ -25,16 +24,12 @@ public class Minion {
     private String name = "EnTIv 的工人";
 
     private BukkitRunnable runnable;
-    private final ConfigurationSection config;
 
     public Minion(String type, int storage, int efficiency) {
 
         this.type = type;
         this.storage = storage;
         this.efficiency = efficiency;
-
-        config = Config.getConfig("minions").getConfigurationSection(type);
-        totalWeight = getTotalWeight();
 
         setupMenu();
         collectItem();
@@ -65,6 +60,8 @@ public class Minion {
         ConfigurationSection collectItemListConfig = getCollectItemList();
         Set<String> collectItemList = collectItemListConfig.getKeys(false);
 
+        int totalWeight = getTotalWeight(collectItemListConfig);
+
         runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -72,8 +69,8 @@ public class Minion {
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
                 //TODO 当前运行 10 万次 14ms, 时间复杂度 O(n), 有机会优化一下
-                for (int i = 0; i < efficiency; i++) {
-                    Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig);
+                for (int i = 0; i < 64 * 6; i++) {
+                    Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig, totalWeight);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
 
@@ -86,7 +83,8 @@ public class Minion {
             }
         };
 
-        runnable.runTaskTimer(Main.getInstance(), 0, 20);
+        int collectTime = Main.getInstance().getConfig().getInt("CollectTime");
+        runnable.runTaskTimer(Main.getInstance(), 0, 5);
 
     }
 
@@ -104,7 +102,7 @@ public class Minion {
         storageMenu = new StorageMenu(storage, this);
     }
 
-    private Material getRandomMaterial(Set<String> collectItemList, ConfigurationSection collectItemListConfig) {
+    private Material getRandomMaterial(Set<String> collectItemList, ConfigurationSection collectItemListConfig, int totalWeight) {
 
         int chance = 0;
         double randomNum = Math.random() * totalWeight;
@@ -130,12 +128,12 @@ public class Minion {
 
     }
 
-    private int getTotalWeight() {
+    private int getTotalWeight(ConfigurationSection collectItemList) {
 
         int totalWeight = 0;
 
-        for (String material : getCollectItemList().getKeys(false)) {
-            int weight = getCollectItemList().getInt(material);
+        for (String material : collectItemList.getKeys(false)) {
+            int weight = collectItemList.getInt(material);
             totalWeight += weight;
         }
 
@@ -143,10 +141,10 @@ public class Minion {
     }
 
     private ConfigurationSection getCollectItemList() {
-        return config.getConfigurationSection("CollectItemList");
+        return getConfig().getConfigurationSection("CollectItemList");
     }
 
-    public ConfigurationSection getConfig(){
-        return config;
+    public ConfigurationSection getConfig() {
+        return Config.getConfig("minions").getConfigurationSection(type);
     }
 }
