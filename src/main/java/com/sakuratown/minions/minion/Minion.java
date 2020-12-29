@@ -68,8 +68,7 @@ public class Minion {
 
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                //TODO 当前运行 10 万次 14ms, 时间复杂度 O(n), 有机会优化一下
-                for (int i = 0; i < 64 * 6; i++) {
+                for (int i = 0; i < 100000; i++) {
                     Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig, totalWeight);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
@@ -84,7 +83,7 @@ public class Minion {
         };
 
         int collectTime = Main.getInstance().getConfig().getInt("CollectTime");
-        runnable.runTaskTimer(Main.getInstance(), 0, 5);
+        runnable.runTaskTimer(Main.getInstance(), 0, collectTime);
 
     }
 

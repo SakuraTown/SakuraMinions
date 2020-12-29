@@ -23,11 +23,7 @@ public class StorageMenu extends PageableMenu {
         isLock = false;
         Config.getConfig("menu").setPageMenu("工人仓库", this, storage);
 
-        closeEvent = event -> {
-            minion.collectItem();
-            currentCollationInventory = 0;
-        };
-
+        closeEvent = event -> minion.collectItem();
         openEvent = event -> sortItem();
     }
 
@@ -58,6 +54,7 @@ public class StorageMenu extends PageableMenu {
     public void sortItem() {
         HashMap<Material, Integer> allItemCount = getAllItemCount();
         clearAllItems();
+        currentCollationInventory = 0;
         addItem(allItemCount);
     }
 
