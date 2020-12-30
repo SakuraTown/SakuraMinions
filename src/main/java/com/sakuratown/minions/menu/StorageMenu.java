@@ -17,7 +17,7 @@ public class StorageMenu extends PageableMenu {
     //TODO 添加红色玻璃板来控制仓库大小, 现在如果设置 7 行, 实际有 10 行大小,
     // 玩家翻页时会一起翻页，需要把翻页单独设置
     // 菜单无法重载, 需要重新设置菜单
-    private int currentCollationInventory;
+    private int addItemPage;
 
     public StorageMenu(int storage, Minion minion) {
         isLock = false;
@@ -34,15 +34,15 @@ public class StorageMenu extends PageableMenu {
             ItemStack itemStack = new ItemStack(entry.getKey(), entry.getValue());
 
             for (int i = 0; i < pages.size(); i++) {
-                Inventory inventory = pages.get(currentCollationInventory);
+                Inventory inventory = pages.get(addItemPage);
 
                 HashMap<Integer, ItemStack> failedItems = inventory.addItem(itemStack);
 
                 if (failedItems.isEmpty()) break;
-                else currentCollationInventory++;
+                else addItemPage++;
 
-                if (currentCollationInventory == pages.size()) {
-                    currentCollationInventory = 0;
+                if (addItemPage == pages.size()) {
+                    addItemPage = 0;
                     return true;
                 }
             }
@@ -52,25 +52,25 @@ public class StorageMenu extends PageableMenu {
     }
 
     public void sortItem() {
-        HashMap<Material, Integer> allItemCount = getAllItemCount();
+        HashMap<Material, Integer> itemCount = getStorageItemCount();
         clearAllItems();
-        currentCollationInventory = 0;
-        addItem(allItemCount);
+        addItemPage = 0;
+        addItem(itemCount);
     }
 
-    public HashMap<Material, Integer> getAllItemCount() {
+    public HashMap<Material, Integer> getStorageItemCount() {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
 
         for (Inventory inventory : pages) {
-            HashMap<Material, Integer> menuItemCount = getMenuItemCount(inventory);
+            HashMap<Material, Integer> menuItemCount = getItemCount(inventory);
             menuItemCount.forEach((k, v) -> itemCount.merge(k, v, Integer::sum));
         }
 
         return itemCount;
     }
 
-    private HashMap<Material, Integer> getMenuItemCount(Inventory inventory) {
+    private HashMap<Material, Integer> getItemCount(Inventory inventory) {
 
         HashMap<Material, Integer> itemCount = new HashMap<>();
 
@@ -110,7 +110,7 @@ public class StorageMenu extends PageableMenu {
 
     // 将 inv 中的物品取到 target 中
     private void takeOutItem(Inventory inventory, Inventory target) {
-        HashMap<Material, Integer> itemCount = getMenuItemCount(inventory);
+        HashMap<Material, Integer> itemCount = getItemCount(inventory);
         clearPageItems(inventory);
 
         itemCount.forEach((k, v) -> {

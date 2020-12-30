@@ -14,14 +14,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class MenuListener implements Listener {
 
-    //TODO SHIFT 点击可以拿下菜单
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent event) {
 
         if (!(event.getWhoClicked() instanceof Player)) return;
 
         Inventory inventory = event.getInventory();
-        ItemStack currentItem = event.getCurrentItem();
 
         Menu menu = getMenu(event);
         if (menu == null) return;
@@ -32,15 +30,7 @@ public class MenuListener implements Listener {
 
         int rawSlot = event.getRawSlot();
 
-        Button button;
-
-        if (event.isShiftClick()) {
-            int shiftClickSlot = InventoryUtil.getShiftClickSlot(inventory, currentItem);
-            button = menu.getButton(shiftClickSlot);
-        } else {
-            button = menu.getButton(rawSlot);
-        }
-
+        Button button = menu.getButton(rawSlot);
         if (button == null) return;
 
         event.setCancelled(button.isLock);

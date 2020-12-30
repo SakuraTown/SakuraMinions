@@ -46,18 +46,6 @@ public class InventoryUtil {
         return amount;
     }
 
-    public static int getShiftClickSlot(Inventory inventory, ItemStack itemStack) {
-
-        int slot = 0;
-
-        for (ItemStack invStack : inventory.getStorageContents()) {
-            if (invStack == null || invStack.isSimilar(itemStack) && invStack.getAmount() <= itemStack.getMaxStackSize()) return slot;
-            slot++;
-        }
-
-        return -1;
-    }
-
     public static int hasItemAmount(Inventory inventory, ItemStack itemStack) {
 
         int amount = 0;

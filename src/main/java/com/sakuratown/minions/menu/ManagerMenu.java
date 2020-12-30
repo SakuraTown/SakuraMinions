@@ -5,6 +5,7 @@ import com.sakuratown.library.menu.Menu;
 import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.minion.Minion;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 public class ManagerMenu extends Menu {
@@ -32,14 +33,24 @@ public class ManagerMenu extends Menu {
             case "UpgradeStorage":
 
                 button.clickEvent = event -> {
-                    minion.upgradeStorage(config.getInt("Storage.UpgradeAmount"));
+                    HumanEntity whoClicked = event.getWhoClicked();
+
+                    if (whoClicked instanceof Player) {
+                        minion.upgradeStorage((Player) whoClicked, config.getInt("Efficiency.UpgradeEfficiency"));
+
+                    }
                 };
                 break;
 
             case "UpgradeEfficiency":
 
                 button.clickEvent = event -> {
-                    minion.upgradeEfficiency(config.getInt("Efficiency.UpgradeEfficiency"));
+                    HumanEntity whoClicked = event.getWhoClicked();
+
+                    if (whoClicked instanceof Player) {
+                        minion.upgradeEfficiency((Player) whoClicked, config.getInt("Efficiency.UpgradeEfficiency"));
+
+                    }
                 };
                 break;
 

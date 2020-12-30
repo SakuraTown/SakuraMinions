@@ -4,6 +4,7 @@ import com.sakuratown.library.utils.Config;
 import com.sakuratown.minions.Main;
 import com.sakuratown.minions.menu.ManagerMenu;
 import com.sakuratown.minions.menu.StorageMenu;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -17,7 +18,6 @@ public class Minion {
     private final String type;
 
     private StorageMenu storageMenu;
-    private ManagerMenu managerMenu;
 
     private int storage;
     private int efficiency;
@@ -40,16 +40,22 @@ public class Minion {
     }
 
     public void openManagerMenu(Player player) {
-        managerMenu.open(player);
+        new ManagerMenu(this).open(player);
     }
 
-    public void upgradeStorage(int row) {
-        //TODO 扣钱
+    public void upgradeStorage(Player player, int row) {
+        Economy economy = Main.getEconomy();
+        double cost = getConfig().getDouble("Storage.UpgradeCost");
+        economy.withdrawPlayer(player, cost);
+
         this.storage += row;
     }
 
-    public void upgradeEfficiency(int amount) {
-        //TODO 扣钱
+    public void upgradeEfficiency(Player player, int amount) {
+        Economy economy = Main.getEconomy();
+        double cost = getConfig().getDouble("Efficiency.UpgradeCost");
+        economy.withdrawPlayer(player, cost);
+
         this.efficiency += amount;
     }
 
@@ -68,7 +74,7 @@ public class Minion {
 
                 HashMap<Material, Integer> collectItems = new HashMap<>();
 
-                for (int i = 0; i < 100000; i++) {
+                for (int i = 0; i < efficiency; i++) {
                     Material randomMaterial = getRandomMaterial(collectItemList, collectItemListConfig, totalWeight);
                     collectItems.merge(randomMaterial, 1, Integer::sum);
                 }
@@ -97,7 +103,6 @@ public class Minion {
     }
 
     private void setupMenu() {
-        managerMenu = new ManagerMenu(this);
         storageMenu = new StorageMenu(storage, this);
     }
 

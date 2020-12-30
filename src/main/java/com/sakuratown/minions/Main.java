@@ -75,4 +75,8 @@ public class Main extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
         }
     }
+
+    public static Economy getEconomy() {
+        return eco;
+    }
 }
